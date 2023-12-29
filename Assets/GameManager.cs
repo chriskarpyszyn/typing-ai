@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
         charArray = textMeshArray.ToCharArray();
         charArraySize = textMeshArray.Length;
 
+
+        AssignWordList();
+
     }
 
     
@@ -48,11 +51,11 @@ public class GameManager : MonoBehaviour
             Debug.Log("SUCCESSFULLY COMPLETED WORD!");
             wordCompleted = true;
             //todo-ck logic to change to the next word and reset.
-            changeWord();
+            ChangeWord();
         }
 
         //check on keystroke if we typed the right letter
-        if (Input.anyKeyDown && !isMouseButtonClick())
+        if (Input.anyKeyDown && !IsMouseButtonClick())
         {
 
             if (successCount < charArraySize)
@@ -86,25 +89,48 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private bool isMouseButtonClick()
+    private bool IsMouseButtonClick()
     {
         return (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2));
     }
 
-    private void changeWord()
+    private void ChangeWord()
     {
-        textMeshPro.text = "DOG";
+
+        string nextWord = wordList[0];
+        wordList.RemoveAt(0);
+
+        textMeshPro.text = nextWord;
         string textMeshArray = textMeshPro.text.ToLower(); //todo-ck maybe not the best soln here
         charArray = textMeshArray.ToCharArray();
         charArraySize = textMeshArray.Length;
-        resetProperties();
+        ResetProperties();
     }
 
-    private void resetProperties()
+    private void ResetProperties()
     {
         successCount = 0;
         wordCompleted = false;
         textMeshProSuccess.text = "";
     }
 
+    private void AssignWordList()
+    {
+        wordList = new List<string>();
+        foreach (string line in LoadLinesFromFile())
+        {
+            wordList.Add(line.Trim());
+        }
+    }
+
+    private string[] LoadLinesFromFile()
+    {
+        TextAsset textWordList = Resources.Load<TextAsset>("word-list");
+        if (textWordList != null)
+        {
+            string[] lines = textWordList.text.Split('\n');
+            return lines;
+        }
+        return null;
+    }
 }

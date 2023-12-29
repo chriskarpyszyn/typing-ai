@@ -1,0 +1,5 @@
+DOG
+PET
+STOP
+HELP
+MILK
