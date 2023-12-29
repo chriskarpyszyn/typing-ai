@@ -13,6 +13,13 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI textMeshProSuccess;
     public TextMeshProUGUI textMeshProFailure;
 
+    public Canvas gameCanvas;
+    public Canvas endGameCanvas;
+
+    public TextMeshProUGUI textElapsedTime;
+    public TextMeshProUGUI textStreak;
+    public TextMeshProUGUI textFailures;
+
     private char[] charArray;
     private int charArraySize;
     private int successCount = 0;
@@ -84,7 +91,7 @@ public class GameManager : MonoBehaviour
         }
 
         //check on keystroke if we typed the right letter
-        if (Input.anyKeyDown && !IsMouseButtonClick() && canType) 
+        if (Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished) 
         {
 
             if (successCount < charArraySize)
@@ -113,7 +120,15 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        elapsedTime += Time.deltaTime;
+        if (!gameFinished)
+        {
+            elapsedTime += Time.deltaTime;
+        }
+
+        if (Input.anyKeyDown && !IsMouseButtonClick() && canType && gameFinished)
+        {
+            StartNewGame();
+        }
     }
 
     private void CalculateLongestStreak()
@@ -183,14 +198,23 @@ public class GameManager : MonoBehaviour
     private void EndGame()
     {
         gameFinished = true;
-        Debug.Log("Elapsed Time: " + elapsedTime + " seconds");
-        Debug.Log("Longest Streak: " + keystrokeStreakMax);
-        Debug.Log("Failures" + failures);
+        gameCanvas.enabled = false;
+        endGameCanvas.enabled = true;
+        //Debug.Log("Time: " + elapsedTime + " seconds");
+        //Debug.Log("Longest Keystroke Streak: " + keystrokeStreakMax);
+        //Debug.Log("Missed Keys Total" + failures);
 
+        textElapsedTime.text = "Time: " + elapsedTime + " seconds";
+        textStreak.text = "Longest Keystroke Streak: " + keystrokeStreakMax;
+        textFailures.text = "Total Missed Keys: " + failures;
     }
     
     private void StartNewGame()
     {
         ResetStats();
+        AssignWordList(); //todo-ck refactor repeated code, youll know.
+        ChangeWord();
+        gameCanvas.enabled = true;
+        endGameCanvas.enabled = false;
     }
 }
