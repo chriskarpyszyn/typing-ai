@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI textElapsedTime;
     public TextMeshProUGUI textStreak;
     public TextMeshProUGUI textFailures;
+    public TextMeshProUGUI textCopied;
 
     private char[] charArray;
     private int charArraySize;
@@ -149,6 +150,13 @@ public class GameManager : MonoBehaviour
         canType = true;
     }
 
+    private IEnumerator ShowCopiedTextTemporarily()
+    {
+        textCopied.enabled = true;
+        yield return new WaitForSeconds(0.5f);
+        textCopied.enabled = false;
+    }
+
     private bool IsMouseButtonClick()
     {
         return (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2));
@@ -201,8 +209,8 @@ public class GameManager : MonoBehaviour
         gameCanvas.enabled = false;
         endGameCanvas.enabled = true;
         //Debug.Log("Time: " + elapsedTime + " seconds");
-        //Debug.Log("Longest Keystroke Streak: " + keystrokeStreakMax);
-        //Debug.Log("Missed Keys Total" + failures);
+        //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
+        //Debug.Log("Missed Keys: " + failures);
 
         textElapsedTime.text = "Time: " + elapsedTime + " seconds";
         textStreak.text = "Longest Keystroke Streak: " + keystrokeStreakMax;
@@ -216,5 +224,19 @@ public class GameManager : MonoBehaviour
         ChangeWord();
         gameCanvas.enabled = true;
         endGameCanvas.enabled = false;
+    }
+
+    public void CopyText()
+    {
+        ShowCopiedTextTemporarily();
+        //Debug.Log("Time: " + elapsedTime + " seconds");
+        //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
+        //Debug.Log("Missed Keys: " + failures);
+        string textToCopy = "Time: " + elapsedTime + " seconds \n" 
+            + "Keystroke Streak: " + keystrokeStreakMax + "\n"
+            + "Total Missed Keys: " + failures;
+        GUIUtility.systemCopyBuffer = textToCopy;
+        
+        Debug.Log("copied");
     }
 }
