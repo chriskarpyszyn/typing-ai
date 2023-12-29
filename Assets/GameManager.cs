@@ -16,10 +16,11 @@ public class GameManager : MonoBehaviour
     public Canvas gameCanvas;
     public Canvas endGameCanvas;
 
+    //todo-ck refactor these names to be clearer tmp
     public TextMeshProUGUI textElapsedTime;
     public TextMeshProUGUI textStreak;
     public TextMeshProUGUI textFailures;
-    public TextMeshProUGUI textCopied;
+    public TextMeshProUGUI textCopied2;
 
     private char[] charArray;
     private int charArraySize;
@@ -150,11 +151,12 @@ public class GameManager : MonoBehaviour
         canType = true;
     }
 
+    //todo-ck refactor copied method
     private IEnumerator ShowCopiedTextTemporarily()
     {
-        textCopied.enabled = true;
+        textCopied2.enabled = true;
         yield return new WaitForSeconds(0.5f);
-        textCopied.enabled = false;
+        textCopied2.enabled = false;
     }
 
     private bool IsMouseButtonClick()
@@ -228,7 +230,7 @@ public class GameManager : MonoBehaviour
 
     public void CopyText()
     {
-        ShowCopiedTextTemporarily();
+        StartCoroutine(ShowCopiedTextTemporarily());
         //Debug.Log("Time: " + elapsedTime + " seconds");
         //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
         //Debug.Log("Missed Keys: " + failures);
@@ -236,7 +238,7 @@ public class GameManager : MonoBehaviour
             + "Keystroke Streak: " + keystrokeStreakMax + "\n"
             + "Total Missed Keys: " + failures;
         GUIUtility.systemCopyBuffer = textToCopy;
-        
+        //textCopied2.enabled = true;
         Debug.Log("copied");
     }
 }

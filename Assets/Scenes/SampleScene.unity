@@ -430,7 +430,7 @@ MonoBehaviour:
   textElapsedTime: {fileID: 1397999794}
   textStreak: {fileID: 889649399}
   textFailures: {fileID: 1304169403}
-  textCopied: {fileID: 1702060475}
+  textCopied2: {fileID: 1702060475}
 --- !u!4 &377956874
 Transform:
   m_ObjectHideFlags: 0
