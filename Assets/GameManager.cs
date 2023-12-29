@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -10,15 +11,43 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI textMeshPro;
     public TextMeshProUGUI textMeshProSuccess;
+    public TextMeshProUGUI textMeshProFailure;
+
     private char[] charArray;
     private int charArraySize;
     private int successCount = 0;
     private bool wordCompleted = false;
+    private bool canType = true;
 
     private List<string> wordList;
-    
-    
-    
+
+
+    //stats
+    private int keystrokeStreak = 0;
+    private int keystrokeStreakMax = 0;
+    private int failures = 0;
+    private float elapsedTime = 0f;
+
+
+    Boolean gameFinished = false;
+
+
+    private void ResetProperties()
+    {
+        successCount = 0;
+        wordCompleted = false;
+        textMeshProSuccess.text = "";
+    }
+
+    private void ResetStats()
+    {
+        keystrokeStreakMax = 0;
+        keystrokeStreak = 0;
+        failures = 0;
+        elapsedTime = 0;
+        gameFinished = false;
+    }
+
     void Start()
     {
         Application.targetFrameRate = 60;
@@ -49,14 +78,13 @@ public class GameManager : MonoBehaviour
         //check if we're successfully compelted all letters!
         if (successCount == charArraySize && !wordCompleted)
         {
-            Debug.Log("SUCCESSFULLY COMPLETED WORD!");
             wordCompleted = true;
             //todo-ck logic to change to the next word and reset.
             ChangeWord();
         }
 
         //check on keystroke if we typed the right letter
-        if (Input.anyKeyDown && !IsMouseButtonClick())
+        if (Input.anyKeyDown && !IsMouseButtonClick() && canType) 
         {
 
             if (successCount < charArraySize)
@@ -71,23 +99,39 @@ public class GameManager : MonoBehaviour
 
                 if (theChar != '\0' && theChar == charArray[successCount])
                 {
-                    Debug.Log("Success");
                     textMeshProSuccess.text = textMeshProSuccess.text + theChar.ToString().ToUpper();
                     successCount++;
-
-                    //Debug.Log("Success Count: " + successCount);
-                    //Debug.Log("Char Array Size:" + charArraySize);
-
-                    //todo-ck logic to change the color of the chars
+                    CalculateLongestStreak();
 
                 } else
                 {
-                    Debug.Log("Fail"); 
+                    failures++;
+                    keystrokeStreak = 0;
+                    StartCoroutine(ShowTextTemporarily());
+                    
                 }
             }
-
-
         }
+
+        elapsedTime += Time.deltaTime;
+    }
+
+    private void CalculateLongestStreak()
+    {
+        keystrokeStreak++;
+        if (keystrokeStreak > keystrokeStreakMax)
+        {
+            keystrokeStreakMax = keystrokeStreak;
+        } 
+    }
+
+    private IEnumerator ShowTextTemporarily()
+    {
+        canType = false;
+        textMeshProFailure.enabled = true;
+        yield return new WaitForSeconds(0.25f);
+        textMeshProFailure.enabled = false;
+        canType = true;
     }
 
     private bool IsMouseButtonClick()
@@ -97,23 +141,24 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
+        if (wordList.Count == 0)
+        {
+            EndGame();
+        } else
+        {
+            string nextWord = wordList[0];
+            wordList.RemoveAt(0);
 
-        string nextWord = wordList[0];
-        wordList.RemoveAt(0);
-
-        textMeshPro.text = nextWord;
-        string textMeshArray = textMeshPro.text.ToLower(); //todo-ck maybe not the best soln here
-        charArray = textMeshArray.ToCharArray();
-        charArraySize = textMeshArray.Length;
-        ResetProperties();
+            textMeshPro.text = nextWord;
+            string textMeshArray = textMeshPro.text.ToLower(); //todo-ck maybe not the best soln here
+            charArray = textMeshArray.ToCharArray();
+            charArraySize = textMeshArray.Length;
+            ResetProperties();
+        }
+ 
     }
 
-    private void ResetProperties()
-    {
-        successCount = 0;
-        wordCompleted = false;
-        textMeshProSuccess.text = "";
-    }
+
 
     private void AssignWordList()
     {
@@ -133,5 +178,19 @@ public class GameManager : MonoBehaviour
             return lines;
         }
         return null;
+    }
+
+    private void EndGame()
+    {
+        gameFinished = true;
+        Debug.Log("Elapsed Time: " + elapsedTime + " seconds");
+        Debug.Log("Longest Streak: " + keystrokeStreakMax);
+        Debug.Log("Failures" + failures);
+
+    }
+    
+    private void StartNewGame()
+    {
+        ResetStats();
     }
 }
