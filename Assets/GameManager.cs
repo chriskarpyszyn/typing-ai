@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
 
         AssignWordList();
+        ChangeWord();
 
     }
 
@@ -119,7 +120,7 @@ public class GameManager : MonoBehaviour
         wordList = new List<string>();
         foreach (string line in LoadLinesFromFile())
         {
-            wordList.Add(line.Trim());
+            wordList.Add(line.Trim().ToUpper());
         }
     }
 
