@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using TMPro;
-using UnityEditor.UIElements;
 using UnityEngine;
+using System.Runtime.InteropServices;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
 
 
     Boolean gameFinished = false;
+
+    [DllImport("__Internal")]
+    private static extern void CopyToClipboard(string text);
 
 
     private void ResetProperties()
@@ -234,11 +237,24 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Time: " + elapsedTime + " seconds");
         //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
         //Debug.Log("Missed Keys: " + failures);
-        string textToCopy = "Time: " + elapsedTime + " seconds \n" 
-            + "Keystroke Streak: " + keystrokeStreakMax + "\n"
+        string textToCopy = "Time: " + elapsedTime + " seconds   " + Environment.NewLine 
+            + "Keystroke Streak: " + keystrokeStreakMax + "   " + Environment.NewLine
             + "Total Missed Keys: " + failures;
-        GUIUtility.systemCopyBuffer = textToCopy;
-        //textCopied2.enabled = true;
-        Debug.Log("copied");
+        //GUIUtility.systemCopyBuffer = textToCopy; //ck-not working in webgl
+        SetText(textToCopy);
+    }
+
+    //public void CopyToClipboardExternal(string text)
+    //{
+    //    Application.ExternalEval($"copyTextToClipboard(\"{text}\")");
+    //}
+
+    public static void SetText(string text)
+    {
+#if UNITY_WEBGL && UNITY_EDITOR == false
+            CopyToClipboard(text);
+#else
+        GUIUtility.systemCopyBuffer = text;
+#endif
     }
 }
