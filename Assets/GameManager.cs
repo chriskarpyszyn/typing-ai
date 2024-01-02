@@ -37,6 +37,14 @@ public class GameManager : MonoBehaviour
     private int failures = 0;
     private float elapsedTime = 0f;
 
+    private int level = 1; //todo-ck i can prob find a better way to do this...
+
+    private static string wordList3Char = "word-list-3char";
+    private static string wordList4Char = "word-list-4char";
+    private static string wordList5Char = "word-list-5char";
+
+
+
 
     Boolean gameFinished = false;
 
@@ -70,8 +78,9 @@ public class GameManager : MonoBehaviour
         charArraySize = textMeshArray.Length;
 
 
-        AssignWordList();
+        AssignWordList(wordList3Char);
         ChangeWord();
+
 
     }
 
@@ -171,7 +180,20 @@ public class GameManager : MonoBehaviour
     {
         if (wordList.Count == 0)
         {
-            EndGame();
+            if (level == 1) //todo-ck we need to refactor this out.
+            {
+                level++;
+                AssignWordList(wordList4Char);
+                ChangeWord(); //todo-ck this is also not great, need to refactor out
+            } else if (level == 2)
+            {
+                level++;
+                AssignWordList(wordList5Char);
+                ChangeWord(); //todo-ck this needs to be refactored out
+            } else if (level >= 3) //fyi greater or equal, dont forget
+            {
+                EndGame();
+            }
         } else
         {
             string nextWord = wordList[0];
@@ -188,18 +210,19 @@ public class GameManager : MonoBehaviour
 
 
 
-    private void AssignWordList()
+    private void AssignWordList(string fileName)
     {
         wordList = new List<string>();
-        foreach (string line in LoadLinesFromFile())
+        successCount = 0; //todo-ck spaghetti
+        foreach (string line in LoadLinesFromFile(fileName))
         {
             wordList.Add(line.Trim().ToUpper());
         }
     }
 
-    private string[] LoadLinesFromFile()
+    private string[] LoadLinesFromFile(string fileName)
     {
-        TextAsset textWordList = Resources.Load<TextAsset>("word-list");
+        TextAsset textWordList = Resources.Load<TextAsset>(fileName);
         if (textWordList != null)
         {
             string[] lines = textWordList.text.Split('\n');
@@ -225,7 +248,7 @@ public class GameManager : MonoBehaviour
     private void StartNewGame()
     {
         ResetStats();
-        AssignWordList(); //todo-ck refactor repeated code, youll know.
+        AssignWordList("word-list-3char"); //todo-ck refactor repeated code, youll know.
         ChangeWord();
         gameCanvas.enabled = true;
         endGameCanvas.enabled = false;
