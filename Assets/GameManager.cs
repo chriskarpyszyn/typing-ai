@@ -43,7 +43,9 @@ public class GameManager : MonoBehaviour
     private static string wordList4Char = "word-list-4char";
     private static string wordList5Char = "word-list-5char";
 
-
+    //number of words taken from each list per level.
+    private static int numberWordsPerLevel = 5;
+    private int numberOfWordsCompletedThisLevel = 0;
 
 
     Boolean gameFinished = false;
@@ -178,18 +180,23 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
-        if (wordList.Count == 0)
+        Debug.Log("Level " + level);
+        if (numberOfWordsCompletedThisLevel >= numberWordsPerLevel)
         {
             if (level == 1) //todo-ck we need to refactor this out.
             {
                 level++;
+                numberOfWordsCompletedThisLevel = 0;
                 AssignWordList(wordList4Char);
                 ChangeWord(); //todo-ck this is also not great, need to refactor out
+                
             } else if (level == 2)
             {
                 level++;
+                numberOfWordsCompletedThisLevel = 0;
                 AssignWordList(wordList5Char);
                 ChangeWord(); //todo-ck this needs to be refactored out
+                
             } else if (level >= 3) //fyi greater or equal, dont forget
             {
                 EndGame();
@@ -199,6 +206,8 @@ public class GameManager : MonoBehaviour
             string nextWord = wordList[0];
             wordList.RemoveAt(0);
 
+            numberOfWordsCompletedThisLevel++;
+
             textMeshPro.text = nextWord;
             string textMeshArray = textMeshPro.text.ToLower(); //todo-ck maybe not the best soln here
             charArray = textMeshArray.ToCharArray();
@@ -207,8 +216,6 @@ public class GameManager : MonoBehaviour
         }
  
     }
-
-
 
     private void AssignWordList(string fileName)
     {
