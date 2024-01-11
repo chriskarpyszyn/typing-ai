@@ -12,12 +12,16 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI textMeshPro;
     public TextMeshProUGUI textMeshProSuccess;
     public TextMeshProUGUI textMeshProFailure;
+    public TextMeshProUGUI textScore;
+    public TextMeshProUGUI textTimer;
+
 
     public Canvas gameCanvas;
     public Canvas endGameCanvas;
 
     //todo-ck refactor these names to be clearer tmp
     public TextMeshProUGUI textElapsedTime;
+    public TextMeshProUGUI textTotalScore; //todo-ck better name, move elsewhere?
     public TextMeshProUGUI textStreak;
     public TextMeshProUGUI textFailures;
     public TextMeshProUGUI textCopied2;
@@ -25,6 +29,7 @@ public class GameManager : MonoBehaviour
     private char[] charArray;
     private int charArraySize;
     private int successCount = 0;
+    private int score = 0;
     private bool wordCompleted = false;
     private bool canType = true;
 
@@ -82,8 +87,13 @@ public class GameManager : MonoBehaviour
 
         AssignWordList(wordList3Char);
         ChangeWord();
+    }
 
-
+    private void SetScore(int value)
+    {
+        score = score + value;
+        Debug.Log(score);
+        textScore.text = score.ToString();
     }
 
     
@@ -101,6 +111,7 @@ public class GameManager : MonoBehaviour
         //check if we're successfully compelted all letters!
         if (successCount == charArraySize && !wordCompleted)
         {
+            SetScore(3);
             wordCompleted = true;
             //todo-ck logic to change to the next word and reset.
             ChangeWord();
@@ -124,11 +135,13 @@ public class GameManager : MonoBehaviour
                 {
                     textMeshProSuccess.text = textMeshProSuccess.text + theChar.ToString().ToUpper();
                     successCount++;
+                    SetScore(2);
                     CalculateLongestStreak();
 
                 } else
                 {
                     failures++;
+                    SetScore(-1);
                     keystrokeStreak = 0;
                     StartCoroutine(ShowTextTemporarily());
                     
@@ -139,6 +152,7 @@ public class GameManager : MonoBehaviour
         if (!gameFinished)
         {
             elapsedTime += Time.deltaTime;
+            textTimer.text = elapsedTime.ToString("F1");
         }
 
         if (Input.anyKeyDown && !IsMouseButtonClick() && canType && gameFinished)
@@ -247,7 +261,8 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
         //Debug.Log("Missed Keys: " + failures);
 
-        textElapsedTime.text = "Time: " + elapsedTime + " seconds";
+        textElapsedTime.text = "Time: " + elapsedTime.ToString("F1") + " seconds";
+        textTotalScore.text = "Score: " + score;
         textStreak.text = "Longest Keystroke Streak: " + keystrokeStreakMax;
         textFailures.text = "Total Missed Keys: " + failures;
     }
@@ -267,7 +282,8 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Time: " + elapsedTime + " seconds");
         //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
         //Debug.Log("Missed Keys: " + failures);
-        string textToCopy = "Time: " + elapsedTime + " seconds   " + Environment.NewLine 
+        string textToCopy = "Time: " + elapsedTime.ToString("F1") + " seconds   " + Environment.NewLine
+            + "Score: " + score + Environment.NewLine
             + "Keystroke Streak: " + keystrokeStreakMax + "   " + Environment.NewLine
             + "Total Missed Keys: " + failures;
         //GUIUtility.systemCopyBuffer = textToCopy; //ck-not working in webgl
