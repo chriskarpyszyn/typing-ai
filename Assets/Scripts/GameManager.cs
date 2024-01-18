@@ -15,9 +15,7 @@ public class GameManager : MonoBehaviour
     public int numberWordsPerLevel = 5;
 
     //word texts
-    public TextMeshProUGUI textMeshPro;
-    public TextMeshProUGUI textMeshProSuccess;
-    public TextMeshProUGUI textMeshProFailure;
+    public TextMeshProUGUI wrongCharXTMP;
 
     // game canvases
     public Canvas gameCanvas;
@@ -25,9 +23,8 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI textCopied2;
 
-    private char[] charArray;
-    private int charArraySize;
-    private int successCount = 0;
+    private char[] wordCharArray;
+    private int wordCharArraySize;
     
     private bool wordCompleted = false;
     private bool canType = true;
@@ -42,8 +39,19 @@ public class GameManager : MonoBehaviour
 
     private int numberOfWordsCompletedThisLevel = 0;
 
-
     Boolean gameFinished = false;
+
+    //private string successColor = "70CF7F";
+    public Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
+  
+
+
+    public GameObject letterPrefab;
+    public float letterOffset = 2.5f;
+    private List<GameObject> letterList;
+    private int currentLetterPosition = 0;
+     
+
 
     [DllImport("__Internal")]
     private static extern void CopyToClipboard(string text);
@@ -51,9 +59,8 @@ public class GameManager : MonoBehaviour
 
     private void ResetProperties()
     {
-        successCount = 0;
+        currentLetterPosition = 0;
         wordCompleted = false;
-        textMeshProSuccess.text = "";
     }
 
  
@@ -62,10 +69,7 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         scoreManager = GetComponent<ScoreManager>();
 
-        //Debug.Log(textMeshPro.text);
-        string textMeshArray = textMeshPro.text.ToLower(); //todo-ck maybe not the best soln here
-        charArray = textMeshArray.ToCharArray();
-        charArraySize = textMeshArray.Length;
+        letterList = new List<GameObject>();
 
         AssignWordList(wordList3Char);
         ChangeWord();
@@ -84,7 +88,7 @@ public class GameManager : MonoBehaviour
         }
 
         //check if we're successfully compelted all letters!
-        if (successCount == charArraySize && !wordCompleted)
+        if (currentLetterPosition == wordCharArraySize && !wordCompleted)
         {
             scoreManager.SetScore(3);
             wordCompleted = true;
@@ -96,20 +100,23 @@ public class GameManager : MonoBehaviour
         if (Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished) 
         {
 
-            if (successCount < charArraySize)
+            if (currentLetterPosition < wordCharArraySize)
             {
                 char[] tempArray = Input.inputString.ToCharArray();
-                char theChar = '\0';                
+                char inputChar = '\0';                
                 if (tempArray.Length>0)
                 {
-                    theChar = tempArray[0];
+                    inputChar = tempArray[0];
                 } 
 
 
-                if (theChar != '\0' && theChar == charArray[successCount])
+                if (inputChar != '\0' && inputChar == wordCharArray[currentLetterPosition])
                 {
-                    textMeshProSuccess.text = textMeshProSuccess.text + theChar.ToString().ToUpper();
-                    successCount++;
+                    //set color of word to success!!!
+                    GameObject currentLetter = letterList[currentLetterPosition];
+                    currentLetter.GetComponent<TextMeshPro>().color = successColor;
+
+                    currentLetterPosition++;
                     scoreManager.SetScore(2);
                     CalculateLongestStreak();
 
@@ -143,9 +150,9 @@ public class GameManager : MonoBehaviour
     private IEnumerator ShowTextTemporarily()
     {
         canType = false;
-        textMeshProFailure.enabled = true;
+        wrongCharXTMP.enabled = true;
         yield return new WaitForSeconds(0.25f);
-        textMeshProFailure.enabled = false;
+        wrongCharXTMP.enabled = false;
         canType = true;
     }
 
@@ -187,24 +194,64 @@ public class GameManager : MonoBehaviour
             }
         } else
         {
+            //get the next word and remove it.
             string nextWord = wordList[0];
             wordList.RemoveAt(0);
 
+            //keep track of the number of words completed in this level
+            //todo-ck move to a level manager script
             numberOfWordsCompletedThisLevel++;
 
-            textMeshPro.text = nextWord;
-            string textMeshArray = textMeshPro.text.ToLower(); //todo-ck maybe not the best soln here
-            charArray = textMeshArray.ToCharArray();
-            charArraySize = textMeshArray.Length;
+            //put the characters into an array so that we can do our input checks
+
+            wordCharArray = nextWord.ToLower().ToCharArray();
+            wordCharArraySize = wordCharArray.Length;
+
+            //destroy old list and draw the next word on the scene
+            DestroyGameObjectWordList();
+            CreateGameObjectWordList(wordCharArray);
+            
             ResetProperties();
         }
- 
+    }
+    
+    //Create a list of game objects that spell a word, and draw them to screen.
+    private void CreateGameObjectWordList(char[] wordCharArray)
+    {
+        currentLetterPosition = 0;
+
+        float firstLetterPositionX = -6;
+        foreach (char c in wordCharArray)
+        {
+            //worry about position in a minute
+            Vector3 position = new Vector3(firstLetterPositionX, 0.5f, 0);
+            firstLetterPositionX = firstLetterPositionX + letterOffset;
+            Quaternion rotation = Quaternion.identity;
+
+            GameObject newLetter = Instantiate(letterPrefab, position, rotation);
+            newLetter.name = "offset" + firstLetterPositionX;
+            newLetter.GetComponent<TextMeshPro>().text = c.ToString().ToUpper();
+
+            letterList.Add(newLetter);
+        }
+    }
+
+    //Destroys all the game objects in the word list.
+    private void DestroyGameObjectWordList()
+    {
+        foreach (GameObject go in letterList)
+        {
+            Destroy(go);
+        }
+
+        letterList.Clear();
+
     }
 
     private void AssignWordList(string fileName)
     {
         wordList = new List<string>();
-        successCount = 0; //todo-ck spaghetti
+        currentLetterPosition = 0; //todo-ck spaghetti
         foreach (string line in LoadLinesFromFile(fileName))
         {
             wordList.Add(line.Trim().ToUpper());
