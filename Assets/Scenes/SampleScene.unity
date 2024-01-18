@@ -403,6 +403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 377956874}
   - component: {fileID: 377956873}
+  - component: {fileID: 377956875}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -422,17 +423,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad37ac7ba055224e9cfc8af5b6abb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberWordsPerLevel: 2
   textMeshPro: {fileID: 1565919758}
   textMeshProSuccess: {fileID: 494789720}
   textMeshProFailure: {fileID: 1246771121}
-  textScore: {fileID: 1846284858}
-  textTimer: {fileID: 1634720482}
   gameCanvas: {fileID: 556946950}
   endGameCanvas: {fileID: 993989931}
-  textElapsedTime: {fileID: 1397999794}
-  textTotalScore: {fileID: 1220851443}
-  textStreak: {fileID: 889649399}
-  textFailures: {fileID: 1304169403}
   textCopied2: {fileID: 1702060475}
 --- !u!4 &377956874
 Transform:
@@ -449,6 +445,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &377956875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377956872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6320a66d1f4fe5b4db3b534a3f0a9a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textScore: {fileID: 1634720482}
+  textTimer: {fileID: 1846284858}
+  textElapsedTime: {fileID: 1397999794}
+  textTotalScore: {fileID: 1220851443}
+  textStreak: {fileID: 889649399}
+  textFailures: {fileID: 1304169403}
 --- !u!1 &494789718
 GameObject:
   m_ObjectHideFlags: 0
@@ -2157,7 +2171,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1702060473}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
