@@ -136,10 +136,10 @@ public class GameManager : MonoBehaviour
             scoreManager.TickElapsedTime(Time.deltaTime);
         }
 
-        if (Input.anyKeyDown && !IsMouseButtonClick() && canType && gameFinished)
-        {
-            StartNewGame();
-        }
+        //if (Input.anyKeyDown && !IsMouseButtonClick() && canType && gameFinished)
+        //{
+        //    StartNewGame();
+        //}
     }
 
     private void CalculateLongestStreak()
@@ -271,6 +271,7 @@ public class GameManager : MonoBehaviour
 
     private void EndGame()
     {
+        DestroyGameObjectWordList();
         gameFinished = true;
         gameCanvas.enabled = false;
         endGameCanvas.enabled = true;

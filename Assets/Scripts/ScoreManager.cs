@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
@@ -27,16 +28,17 @@ public class ScoreManager : MonoBehaviour
     private int failures = 0;
     private float elapsedTime = 0f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private TMP_InputField inputHighScoreName;
+    public UnityEvent<string, int> submitScoreEvent;
 
-    // Update is called once per frame
-    void Update()
+    /**
+     * Submit score to the leaderboard
+     */
+    public void SubmitScore()
     {
-        
+        Debug.Log("SubmitScore --> Username: " + inputHighScoreName.text + " Score: " + int.Parse(textScore.text));
+        submitScoreEvent.Invoke(inputHighScoreName.text, int.Parse(textScore.text)); //testing the string value of score
     }
 
     public int GetScore()
