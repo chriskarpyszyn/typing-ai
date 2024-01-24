@@ -43,9 +43,11 @@ public class GameManager : MonoBehaviour
 
     //private string successColor = "70CF7F";
     public Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
-  
 
 
+
+    [SerializeField]
+    private GameObject LetterParent;
     public GameObject letterPrefab;
     public float letterOffset = 2.5f;
     private List<GameObject> letterList;
@@ -224,11 +226,10 @@ public class GameManager : MonoBehaviour
         foreach (char c in wordCharArray)
         {
             //worry about position in a minute
-            Vector3 position = new Vector3(firstLetterPositionX, 0.5f, 0);
-            firstLetterPositionX = firstLetterPositionX + letterOffset;
-            Quaternion rotation = Quaternion.identity;
-
-            GameObject newLetter = Instantiate(letterPrefab, position, rotation);
+            //Vector3 position = new Vector3(firstLetterPositionX, 0.5f, 0);
+            //firstLetterPositionX = firstLetterPositionX + letterOffset;
+            GameObject newLetter = Instantiate(letterPrefab, new Vector3(0,0,0), Quaternion.identity);
+            newLetter.transform.SetParent(LetterParent.transform, false);
             newLetter.name = "offset" + firstLetterPositionX;
             newLetter.GetComponent<TextMeshPro>().text = c.ToString().ToUpper();
 
