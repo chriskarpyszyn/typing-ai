@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
         //check if we're successfully compelted all letters!
         if (currentLetterPosition == wordCharArraySize && !wordCompleted)
         {
-            scoreManager.SetScore(3);
+            scoreManager.IncreaseScore(3);
             wordCompleted = true;
             //todo-ck logic to change to the next word and reset.
             ChangeWord();
@@ -119,13 +119,13 @@ public class GameManager : MonoBehaviour
                     currentLetter.GetComponent<TextMeshPro>().color = successColor;
 
                     currentLetterPosition++;
-                    scoreManager.SetScore(2);
+                    scoreManager.IncreaseScore(2);
                     CalculateLongestStreak();
 
                 } else
                 {
                     scoreManager.IncrementFailures();
-                    scoreManager.SetScore(-1);
+                    scoreManager.IncreaseScore(-1);
                     scoreManager.ResetKeystrokeStreak();
                     StartCoroutine(ShowTextTemporarily());
                     
@@ -135,13 +135,8 @@ public class GameManager : MonoBehaviour
 
         if (!gameFinished)
         {
-            scoreManager.TickElapsedTime(Time.deltaTime);
+            scoreManager.IncreaseElapsedTime(Time.deltaTime);
         }
-
-        //if (Input.anyKeyDown && !IsMouseButtonClick() && canType && gameFinished)
-        //{
-        //    StartNewGame();
-        //}
     }
 
     private void CalculateLongestStreak()
@@ -279,10 +274,14 @@ public class GameManager : MonoBehaviour
         scoreManager.DisplayEndGameStats();
     }
     
-    private void StartNewGame()
+    public void StartNewGame()
     {
+        Debug.Log("START NEW GAME!");
         scoreManager.ResetStats();
+        ResetProperties();
+        numberOfWordsCompletedThisLevel = 0;
         gameFinished = false;
+        level = 1; //todo-ck need a level manager.
         AssignWordList("word-list-3char"); //todo-ck refactor repeated code, youll know.
         ChangeWord();
         gameCanvas.enabled = true;
