@@ -61,14 +61,22 @@ public class ScoreManager : MonoBehaviour
         return this.failures;
     }
 
-    public void SetScore(int v)
+    public void IncreaseScore(int v)
     {
+        Debug.Log("Set Score " + v);
         this.score = this.score + v;
         textScore.text = this.score.ToString();
     }
 
+    private void ResetScore()
+    {
+        this.score = 0;
+    }
+
     public void ResetStats()
     {
+        ResetScore();
+        ResetElapsedTime();
         keystrokeStreakMax = 0;
         keystrokeStreak = 0;
         failures = 0;
@@ -94,10 +102,15 @@ public class ScoreManager : MonoBehaviour
         this.keystrokeStreak = 0;
     }
 
-    public void TickElapsedTime(float t)
+    public void IncreaseElapsedTime(float t)
     {
         this.elapsedTime += t;
         textTimer.text = this.elapsedTime.ToString("F1");
+    }
+
+    private void ResetElapsedTime()
+    {
+        this.elapsedTime = 0;
     }
 
     public void DisplayEndGameStats()

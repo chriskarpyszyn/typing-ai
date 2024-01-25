@@ -13,6 +13,8 @@ public class Leaderboard : MonoBehaviour
     private List<TextMeshProUGUI> names;
     [SerializeField]
     private List<TextMeshProUGUI> scores;
+    [SerializeField]
+    private TMP_InputField userNameInputField; 
 
     //todo-ck for prod- remove, add to config, and do not deploy keys
     private string publicLeaderboardKey;
@@ -54,5 +56,15 @@ public class Leaderboard : MonoBehaviour
             LeaderboardCreator.ResetPlayer();
             GetLeaderboard();
         }));
+    }
+
+    public void EnableLeaderboardInputField()
+    {
+        userNameInputField.interactable = true;
+    }
+
+    public void DisableLeaderboardInputField()
+    {
+        userNameInputField.interactable = false;
     }
 }
