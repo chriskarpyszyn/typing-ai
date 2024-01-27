@@ -6,19 +6,34 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class ScoreManager : MonoBehaviour
+public class ScoreManager
 {
+    // Singleton instance
+    private static ScoreManager _instance;
 
-    [Header("Main Game Scores")]
-    public TextMeshProUGUI textScore;
-    public TextMeshProUGUI textTimer;
+    // Property to access the instance
+    public static ScoreManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new ScoreManager();
+            }
+            return _instance;
+        }
+    }
 
-    [Header("End Game Scores")]
-    //main game score canvas
-    public TextMeshProUGUI textElapsedTime;
-    public TextMeshProUGUI textTotalScore;
-    public TextMeshProUGUI textStreak;
-    public TextMeshProUGUI textFailures;
+    //[Header("Main Game Scores")]
+    //public TextMeshProUGUI textScore;
+    //public TextMeshProUGUI textTimer;
+
+    //[Header("End Game Scores")]
+    ////main game score canvas
+    //public TextMeshProUGUI textElapsedTime;
+    //public TextMeshProUGUI textTotalScore;
+    //public TextMeshProUGUI textStreak;
+    //public TextMeshProUGUI textFailures;
 
     private int score = 0;
 
@@ -28,19 +43,14 @@ public class ScoreManager : MonoBehaviour
     private int failures = 0;
     private float elapsedTime = 0f;
 
-    [SerializeField]
-    private TMP_InputField inputHighScoreName;
-    public UnityEvent<string, int> submitScoreEvent;
+ 
+    
 
-    /**
-     * Submit score to the leaderboard
-     */
-    public void SubmitScore()
+    private ScoreManager()
     {
-        Debug.Log("SubmitScore --> Username: " + inputHighScoreName.text + " Score: " + int.Parse(textScore.text));
-        submitScoreEvent.Invoke(inputHighScoreName.text, int.Parse(textScore.text)); //testing the string value of score
+        // Initialize your score manager here (e.g., set initial score)
     }
-
+    
     public int GetScore()
     {
         return this.score;
@@ -63,9 +73,16 @@ public class ScoreManager : MonoBehaviour
 
     public void IncreaseScore(int v)
     {
-        Debug.Log("Set Score " + v);
+        //Debug.Log("Set Score " + v);
         this.score = this.score + v;
-        textScore.text = this.score.ToString();
+
+        //TODO-CK-17 Refactor this out.
+        GameObject textScoreObject = GameObject.Find("TextScore");
+        if (textScoreObject != null)
+        {
+            TextMeshProUGUI textScore = textScoreObject.GetComponent<TextMeshProUGUI>();
+            textScore.text = this.score.ToString();
+        }
     }
 
     private void ResetScore()
@@ -105,7 +122,14 @@ public class ScoreManager : MonoBehaviour
     public void IncreaseElapsedTime(float t)
     {
         this.elapsedTime += t;
-        textTimer.text = this.elapsedTime.ToString("F1");
+
+        //TODO-CK-17 Refactor this out.
+        GameObject textTimerObject = GameObject.Find("TextTimer");
+        if (textTimerObject != null)
+        {
+            TextMeshProUGUI textTimer = textTimerObject.GetComponent<TextMeshProUGUI>();
+            textTimer.text = this.elapsedTime.ToString("F1");
+        }
     }
 
     private void ResetElapsedTime()
@@ -115,10 +139,21 @@ public class ScoreManager : MonoBehaviour
 
     public void DisplayEndGameStats()
     {
-        textElapsedTime.text = "Time: " + this.elapsedTime.ToString("F1") + " seconds";
-        textTotalScore.text = "Score: " + this.score;
-        textStreak.text = "Longest Keystroke Streak: " + this.keystrokeStreakMax;
-        textFailures.text = "Total Missed Keys: " + this.failures;
+
+        //TODO-CK-17 Refactor this out.
+        Debug.Log("Do i get here");
+        GameObject textTotalScoreObject = GameObject.Find("TextTotalScore");
+        if (textTotalScoreObject != null)
+        {
+            Debug.Log("and do I get... here?");
+            TextMeshProUGUI textTotalScore = textTotalScoreObject.GetComponent<TextMeshProUGUI>();
+            textTotalScore.text = "Total Score: " + this.score;
+        }
+
+
+        //textElapsedTime.text = "Time: " + this.elapsedTime.ToString("F1") + " seconds";
+        //textStreak.text = "Longest Keystroke Streak: " + this.keystrokeStreakMax;
+        //textFailures.text = "Total Missed Keys: " + this.failures;
     }
 
 
