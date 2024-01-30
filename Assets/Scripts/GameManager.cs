@@ -131,6 +131,8 @@ public class GameManager : MonoBehaviour
                     //set color of word to success!!!
                     GameObject currentLetter = letterList[currentLetterPosition];
                     currentLetter.GetComponent<TextMeshPro>().color = successColor;
+                    //currentLetter.transform.Find("LetterParticle").gameObject.GetComponent<ParticleSystem>().Play(); //todo-ck extract hardcoded string
+                    currentLetter.GetComponentInChildren<ParticleSystem>().Play();
 
                     currentLetterPosition++;
                     scoreManager.IncreaseScore(2);
