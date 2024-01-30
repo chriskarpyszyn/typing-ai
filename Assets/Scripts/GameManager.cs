@@ -209,8 +209,9 @@ public class GameManager : MonoBehaviour
         } else
         {
             //get the next word and remove it.
-            string nextWord = wordList[0];
-            wordList.RemoveAt(0);
+            int randomInt = new System.Random().Next(0, wordList.Count);
+            string nextWord = wordList[randomInt];
+            wordList.RemoveAt(randomInt);
 
             //keep track of the number of words completed in this level
             //todo-ck move to a level manager script
