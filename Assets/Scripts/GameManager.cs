@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using System.Runtime.InteropServices;
-
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
-    private ScoreManager scoreManager;
-
+    
     //number of words taken from each list per level.
     [Header("Words Per Round")]
     public int numberWordsPerLevel = 5;
@@ -18,8 +19,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI wrongCharXTMP;
 
     // game canvases
-    public Canvas gameCanvas;
-    public Canvas endGameCanvas;
+    //public Canvas gameCanvas;
+    //public Canvas endGameCanvas;
 
     public TextMeshProUGUI textCopied2;
 
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
     //private string successColor = "70CF7F";
     public Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
 
+    private ScoreManager scoreManager;
 
 
     [SerializeField]
@@ -52,7 +54,9 @@ public class GameManager : MonoBehaviour
     public float letterOffset = 2.5f;
     private List<GameObject> letterList;
     private int currentLetterPosition = 0;
-     
+
+
+    public UnityEvent<string, int> submitScoreEvent;
 
 
     [DllImport("__Internal")]
@@ -69,12 +73,22 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
-        scoreManager = GetComponent<ScoreManager>();
+        Debug.Log("start");
+        scoreManager = ScoreManager.Instance;
+        if (SceneManager.GetActiveScene().buildIndex==1)
+        {
+            Debug.Log("Scene 1 Start()");
+            letterList = new List<GameObject>();
 
-        letterList = new List<GameObject>();
+            AssignWordList(wordList3Char);
+            ChangeWord();
+        }
 
-        AssignWordList(wordList3Char);
-        ChangeWord();
+    }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene(1);
     }
 
     
@@ -90,7 +104,7 @@ public class GameManager : MonoBehaviour
         }
 
         //check if we're successfully compelted all letters!
-        if (currentLetterPosition == wordCharArraySize && !wordCompleted)
+        if (SceneManager.GetActiveScene().buildIndex == 1 && currentLetterPosition == wordCharArraySize && !wordCompleted)
         {
             scoreManager.IncreaseScore(3);
             wordCompleted = true;
@@ -133,9 +147,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (!gameFinished)
+        if (SceneManager.GetActiveScene().buildIndex == 1 && !gameFinished)
         {
-            scoreManager.IncreaseElapsedTime(Time.deltaTime);
+            //scoreManager.IncreaseElapsedTime(Time.deltaTime);
+            ScoreManager.Instance.IncreaseElapsedTime(Time.deltaTime);
         }
     }
 
@@ -267,10 +282,9 @@ public class GameManager : MonoBehaviour
 
     private void EndGame()
     {
+        SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
         DestroyGameObjectWordList();
         gameFinished = true;
-        gameCanvas.enabled = false;
-        endGameCanvas.enabled = true;
         scoreManager.DisplayEndGameStats();
     }
     
@@ -281,11 +295,27 @@ public class GameManager : MonoBehaviour
         ResetProperties();
         numberOfWordsCompletedThisLevel = 0;
         gameFinished = false;
+        SceneManager.LoadScene(1);
         level = 1; //todo-ck need a level manager.
         AssignWordList("word-list-3char"); //todo-ck refactor repeated code, youll know.
         ChangeWord();
-        gameCanvas.enabled = true;
-        endGameCanvas.enabled = false;
+
+    }
+
+    public void SubmitScore()
+    {
+        //Debug.Log("SubmitScore --> Username: " + inputHighScoreName.text + " Score: " + int.Parse(textScore.text));
+        // TMP_InputField inputHighScoreName;
+        //LeaderboardInputField
+
+        //TODO-CK-17 Refactor this out.
+        GameObject inputHighScoreNameObject = GameObject.Find("LeaderboardInputField");
+        if (inputHighScoreNameObject != null)
+        {
+            TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
+            submitScoreEvent.Invoke(inputHighScoreName.text, scoreManager.GetScore()); //testing the string value of score
+        }
+        
     }
 
     public void CopyText()
