@@ -38,6 +38,10 @@ public class GameManager : MonoBehaviour
     private static string wordList4Char = "word-list-4char";
     private static string wordList5Char = "word-list-5char";
 
+    private string ANIMATION_STATE = "ShrinkAnimation";
+    private Animator animator;
+    private bool changeWordNow = false;
+
     private int numberOfWordsCompletedThisLevel = 0;
 
     Boolean gameFinished = false;
@@ -84,6 +88,8 @@ public class GameManager : MonoBehaviour
             ChangeWord();
         }
 
+        animator = LetterParent.GetComponent<Animator>();
+
     }
 
     public void StartGame()
@@ -91,9 +97,30 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    
+    private bool IsAnimatorPlaying()
+    {
+        
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        Debug.Log("Normalized Time: " + stateInfo.normalizedTime);
+        return stateInfo.IsName(ANIMATION_STATE) && stateInfo.normalizedTime < 1.0f;
+    }
+
+    private void ResetAnimation()
+    {
+        animator.Play(ANIMATION_STATE, 0, 0f);
+        animator.Update(0);
+        animator.enabled = false;
+        changeWordNow = true;
+    }
+
+
     void Update()
     {
+       if (!IsAnimatorPlaying())
+        {
+            ResetAnimation();
+        }
+
         //sneaky exit
         if (Input.GetKey(KeyCode.RightShift))
         {
@@ -108,9 +135,20 @@ public class GameManager : MonoBehaviour
         {
             scoreManager.IncreaseScore(3);
             wordCompleted = true;
+            animator.enabled = true;
+            animator.Play(ANIMATION_STATE, 0, 0f);
             //todo-ck logic to change to the next word and reset.
+            
+        }
+
+        //todo-ck I hate this....
+        if (changeWordNow)
+        {
+            changeWordNow = false;
             ChangeWord();
         }
+
+        
 
         //check on keystroke if we typed the right letter
         if (Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished) 
