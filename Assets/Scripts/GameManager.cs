@@ -8,6 +8,44 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
+/*
+ * Ideas
+ * - After level 3, you have to complete a word in a timeframe, speeding up the time to type or else game-over
+ * -- Minigames
+ * --- Space flying, typing words faster and faster to shoot asteroids or something
+ * --- like rearranging jumbled letters or completing sentences based on context clues.
+ * --- The culmination of typing skills in high-stakes scenarios. May include branching paths based on player choices and typing performance. (quick time events?)
+ * - Achievements
+ * - Story Mode
+ * --- Spaceship, in space, alone.
+ * --- AI elements? The AI is talking to us through the words we type? Can we craft an interesting story around that?
+ * 
+ * 
+ * Initial Setting: Aboard a futuristic spaceship.
+   Context: The player is a crew member (or perhaps the captain) starting to interact with the ship's AI for routine tasks.
+    
+
+-- (In the gameplay to start, the words we're typing are just a simple diagnostic to test a restarting system is working) ("systems online")
+-- Multiple endings based on player choices and typing accuracy.
+
+Visuals:
+Start with a clean, minimalist spaceship interface.
+As the mystery deepens, introduce visual changes to the interface (e.g., glitch effects, hidden messages appearing).
+For dramatic moments, use full-screen visuals that break away from the standard interface.
+Audio:
+Begin with ambient space sounds and a calm AI voice.
+Gradually introduce a more suspenseful soundtrack and subtle changes in the AI's voice tone.
+
+--Branching narratives
+--Between intro and next level, pull camera back to show a simple computer screen
+--"Typing isn't just a mechanic; it's a means of communication, investigation, and interaction with the game world."
+
+Prologue
+- System Check: "Initiating system diagnostics. Please confirm."
+- last one: "Crew Morale: "Crew morale check. Your input?" - "Happy" (AURA: "Crew morale evaluation. How would you rate current morale?" Player Response: "[Player chooses a response, e.g., 'Good', 'Fair', 'Poor']"
+ 
+ */
+
 public class GameManager : MonoBehaviour
 {
     
