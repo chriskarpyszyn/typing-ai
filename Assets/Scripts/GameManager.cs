@@ -99,18 +99,23 @@ public class GameManager : MonoBehaviour
 
     private bool IsAnimatorPlaying()
     {
-        
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        Debug.Log("Normalized Time: " + stateInfo.normalizedTime);
-        return stateInfo.IsName(ANIMATION_STATE) && stateInfo.normalizedTime < 1.0f;
+        if (animator!=null)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            return stateInfo.IsName(ANIMATION_STATE) && stateInfo.normalizedTime < 1.0f;
+        }
+        return false;
     }
 
     private void ResetAnimation()
     {
-        animator.Play(ANIMATION_STATE, 0, 0f);
-        animator.Update(0);
-        animator.enabled = false;
-        changeWordNow = true;
+        if (animator!=null)
+        {
+            animator.Play(ANIMATION_STATE, 0, 0f);
+            animator.Update(0);
+            animator.enabled = false;
+            changeWordNow = true;
+        }
     }
 
 
@@ -224,6 +229,8 @@ public class GameManager : MonoBehaviour
     private void ChangeWord()
     {
         Debug.Log("Level " + level);
+        Debug.Log("Number of words completed " + numberOfWordsCompletedThisLevel);
+        Debug.Log("Number of words per level " + numberWordsPerLevel);
         if (numberOfWordsCompletedThisLevel >= numberWordsPerLevel)
         {
             if (level == 1) //todo-ck we need to refactor this out.
