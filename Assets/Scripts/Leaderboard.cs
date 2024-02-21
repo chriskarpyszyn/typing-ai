@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using Dan;
 using Dan.Main;
+using Unity.VisualScripting;
+using System;
 
 public class Leaderboard : MonoBehaviour
 {
@@ -48,12 +50,18 @@ public class Leaderboard : MonoBehaviour
         }));
     }
 
-    public void SetLeaderboardEntry(string userName, int scoreValue)
+    public void SetLeaderboardEntry(string userName, string timeValue)
     {
-        Debug.Log("SetLeaderboardEntry --> Username: " + userName + " Score: " + scoreValue);
-        LeaderboardCreator.UploadNewEntry(publicLeaderboardKey, userName, scoreValue, ((msg) =>
+        Debug.Log("SetLeaderboardEntry --> Username: " + userName + " Time: " + timeValue);
+
+        float floatTime = float.Parse(timeValue);
+        int intTime = (int)Math.Round(floatTime); //todo-ck need to submit a float.
+
+        LeaderboardCreator.UploadNewEntry(publicLeaderboardKey, userName, intTime, ((msg) =>
         {
-            LeaderboardCreator.ResetPlayer();
+            //todo-ck need to convert decimal to int, and then do math when displaying back to string
+            //LeaderboardCreator.ResetPlayer();
+            
             GetLeaderboard();
         }));
     }
