@@ -16,9 +16,11 @@ public class Leaderboard : MonoBehaviour
     [SerializeField]
     private List<TextMeshProUGUI> scores;
     [SerializeField]
-    private TMP_InputField userNameInputField; 
+    private TMP_InputField userNameInputField;
 
-    //todo-ck for prod- remove, add to config, and do not deploy keys
+    private String userName;
+    private float highScore;
+
     private string publicLeaderboardKey;
 
     private void Start()
@@ -39,13 +41,24 @@ public class Leaderboard : MonoBehaviour
 
     public void GetLeaderboard()
     {
+        LeaderboardCreator.GetPersonalEntry(publicLeaderboardKey, ((msg) =>
+        {
+            this.userName = msg.Username;
+            this.highScore = (float)msg.Score / 10;
+            Debug.Log("Your Last Score Was: " + this.highScore + " for username: " + this.userName);
+
+            CanvasManager cm = GameObject.FindObjectOfType<CanvasManager>();
+            cm.UpdateFinalScore(this.highScore, this.userName);
+
+        }));
+
         LeaderboardCreator.GetLeaderboard(publicLeaderboardKey, ((msg) =>
         {
             int loopLength = (msg.Length < names.Count) ? msg.Length : names.Count;
             for (int i = 0; i<loopLength; i++)
             {
                 names[i].text = msg[i].Username;
-                scores[i].text = msg[i].Score.ToString();
+                scores[i].text = ((float)msg[i].Score / 10).ToString();
             }
         }));
     }
@@ -55,13 +68,11 @@ public class Leaderboard : MonoBehaviour
         Debug.Log("SetLeaderboardEntry --> Username: " + userName + " Time: " + timeValue);
 
         float floatTime = float.Parse(timeValue);
-        int intTime = (int)Math.Round(floatTime); //todo-ck need to submit a float.
-
+        float timeValuex10 = floatTime * 10;
+        int intTime = (int)Math.Round(timeValuex10);
         LeaderboardCreator.UploadNewEntry(publicLeaderboardKey, userName, intTime, ((msg) =>
         {
-            //todo-ck need to convert decimal to int, and then do math when displaying back to string
-            //LeaderboardCreator.ResetPlayer();
-            
+            //LeaderboardCreator.ResetPlayer  
             GetLeaderboard();
         }));
     }
@@ -74,5 +85,15 @@ public class Leaderboard : MonoBehaviour
     public void DisableLeaderboardInputField()
     {
         userNameInputField.interactable = false;
+    }
+
+    public String GetUserName()
+    {
+        return userName;
+    }
+
+    public float GetHighScore()
+    {
+        return highScore;
     }
 }

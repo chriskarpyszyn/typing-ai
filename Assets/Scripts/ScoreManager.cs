@@ -56,9 +56,14 @@ public class ScoreManager
         return this.score;
     }
 
-    public string GetElapsedTime()
+    public string GetElapsedTimeString()
     {
         return this.elapsedTime.ToString("F1");
+    }
+
+    public float GetElapsedTimeFloat()
+    {
+        return this.elapsedTime;
     }
 
     public int GetKeyStrokeMax()
@@ -145,7 +150,7 @@ public class ScoreManager
         if (textTotalScoreObject != null)
         {
             TextMeshProUGUI textTotalScore = textTotalScoreObject.GetComponent<TextMeshProUGUI>();
-            textTotalScore.text = "FUCKTotal Score: " + this.score;
+            textTotalScore.text = "Total Score: " + this.score;
         }
 
 

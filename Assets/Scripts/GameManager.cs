@@ -110,6 +110,11 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public ScoreManager GetScoreManager()
+    {
+        return ScoreManager.Instance;
+    }
+
     private bool IsAnimatorPlaying()
     {
         if (animator!=null)
@@ -241,9 +246,9 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
-        Debug.Log("Level " + level);
-        Debug.Log("Number of words completed " + numberOfWordsCompletedThisLevel);
-        Debug.Log("Number of words per level " + numberWordsPerLevel);
+        //Debug.Log("Level " + level);
+        //Debug.Log("Number of words completed " + numberOfWordsCompletedThisLevel);
+        //Debug.Log("Number of words per level " + numberWordsPerLevel);
         if (numberOfWordsCompletedThisLevel >= numberWordsPerLevel)
         {
             if (level == 1) //todo-ck we need to refactor this out.
@@ -376,7 +381,7 @@ public class GameManager : MonoBehaviour
         if (inputHighScoreNameObject != null)
         {
             TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
-            submitScoreEvent.Invoke(inputHighScoreName.text, scoreManager.GetElapsedTime()); //testing the string value of score
+            submitScoreEvent.Invoke(inputHighScoreName.text, scoreManager.GetElapsedTimeString()); //testing the string value of score
         }
         
     }
@@ -387,7 +392,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Time: " + elapsedTime + " seconds");
         //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
         //Debug.Log("Missed Keys: " + failures);
-        string textToCopy = "Time: " + scoreManager.GetElapsedTime() + " seconds   " + Environment.NewLine
+        string textToCopy = "Time: " + scoreManager.GetElapsedTimeString() + " seconds   " + Environment.NewLine
             + "Score: " + scoreManager.GetScore() + Environment.NewLine
             + "Keystroke Streak: " + scoreManager.GetKeyStrokeMax() + "   " + Environment.NewLine
             + "Total Missed Keys: " + scoreManager.GetFailures();

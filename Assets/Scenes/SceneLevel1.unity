@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad37ac7ba055224e9cfc8af5b6abb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberWordsPerLevel: 1
+  numberWordsPerLevel: 10
   wrongCharXTMP: {fileID: 1246771121}
   textCopied2: {fileID: 0}
   successColor: {r: 0.439, g: 0.812, b: 0.498, a: 1}
