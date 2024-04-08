@@ -56,9 +56,14 @@ public class ScoreManager
         return this.score;
     }
 
-    public string GetElapsedTime()
+    public string GetElapsedTimeString()
     {
         return this.elapsedTime.ToString("F1");
+    }
+
+    public float GetElapsedTimeFloat()
+    {
+        return this.elapsedTime;
     }
 
     public int GetKeyStrokeMax()
@@ -141,14 +146,14 @@ public class ScoreManager
     {
 
         //TODO-CK-17 Refactor this out.
-        Debug.Log("Do i get here");
         GameObject textTotalScoreObject = GameObject.Find("TextTotalScore");
         if (textTotalScoreObject != null)
         {
-            Debug.Log("and do I get... here?");
             TextMeshProUGUI textTotalScore = textTotalScoreObject.GetComponent<TextMeshProUGUI>();
             textTotalScore.text = "Total Score: " + this.score;
         }
+
+
 
 
         //textElapsedTime.text = "Time: " + this.elapsedTime.ToString("F1") + " seconds";

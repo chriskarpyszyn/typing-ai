@@ -10,6 +10,15 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
+
+    /**
+     * TODO
+     * - GameManager one instance, does not get destroyed.
+     * - ScoreManager, remove all attempts at modify UI in this class
+     * - Move them to a separate CanvasManager script for each level.
+     * - Leaderboard takes int, not float, need to do math 
+     */
+
     
     //number of words taken from each list per level.
     [Header("Words Per Round")]
@@ -49,7 +58,7 @@ public class GameManager : MonoBehaviour
     //private string successColor = "70CF7F";
     public Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
 
-    private ScoreManager scoreManager;
+    public ScoreManager scoreManager;
 
 
     [SerializeField]
@@ -60,7 +69,7 @@ public class GameManager : MonoBehaviour
     private int currentLetterPosition = 0;
 
 
-    public UnityEvent<string, int> submitScoreEvent;
+    public UnityEvent<string, string> submitScoreEvent;
 
 
     [DllImport("__Internal")]
@@ -88,13 +97,22 @@ public class GameManager : MonoBehaviour
             ChangeWord();
         }
 
-        animator = LetterParent.GetComponent<Animator>();
+        if (LetterParent!=null)
+        {
+            animator = LetterParent.GetComponent<Animator>();
+
+        }
 
     }
 
     public void StartGame()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public ScoreManager GetScoreManager()
+    {
+        return ScoreManager.Instance;
     }
 
     private bool IsAnimatorPlaying()
@@ -228,9 +246,9 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
-        Debug.Log("Level " + level);
-        Debug.Log("Number of words completed " + numberOfWordsCompletedThisLevel);
-        Debug.Log("Number of words per level " + numberWordsPerLevel);
+        //Debug.Log("Level " + level);
+        //Debug.Log("Number of words completed " + numberOfWordsCompletedThisLevel);
+        //Debug.Log("Number of words per level " + numberWordsPerLevel);
         if (numberOfWordsCompletedThisLevel >= numberWordsPerLevel)
         {
             if (level == 1) //todo-ck we need to refactor this out.
@@ -356,12 +374,14 @@ public class GameManager : MonoBehaviour
         // TMP_InputField inputHighScoreName;
         //LeaderboardInputField
 
+        Debug.Log("SUBMIT SCORE FUNCTION");
+
         //TODO-CK-17 Refactor this out.
         GameObject inputHighScoreNameObject = GameObject.Find("LeaderboardInputField");
         if (inputHighScoreNameObject != null)
         {
             TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
-            submitScoreEvent.Invoke(inputHighScoreName.text, scoreManager.GetScore()); //testing the string value of score
+            submitScoreEvent.Invoke(inputHighScoreName.text, scoreManager.GetElapsedTimeString()); //testing the string value of score
         }
         
     }
@@ -372,7 +392,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Time: " + elapsedTime + " seconds");
         //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
         //Debug.Log("Missed Keys: " + failures);
-        string textToCopy = "Time: " + scoreManager.GetElapsedTime() + " seconds   " + Environment.NewLine
+        string textToCopy = "Time: " + scoreManager.GetElapsedTimeString() + " seconds   " + Environment.NewLine
             + "Score: " + scoreManager.GetScore() + Environment.NewLine
             + "Keystroke Streak: " + scoreManager.GetKeyStrokeMax() + "   " + Environment.NewLine
             + "Total Missed Keys: " + scoreManager.GetFailures();
