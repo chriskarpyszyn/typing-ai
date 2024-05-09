@@ -201,9 +201,11 @@ public class GameManager : MonoBehaviour
 
                 } else
                 {
+                    //todo-ck extract this into an error / wrong letter method for clarity at... some.... point...
                     scoreManager.IncrementFailures();
                     scoreManager.IncreaseScore(-1);
                     scoreManager.ResetKeystrokeStreak();
+                    LetterParent.GetComponent<LetterSounds>().playErrorSound();
                     StartCoroutine(ShowTextTemporarily());
                     
                 }
