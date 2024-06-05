@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene(1);
+        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
     }
 
     public ScoreManager GetScoreManager()

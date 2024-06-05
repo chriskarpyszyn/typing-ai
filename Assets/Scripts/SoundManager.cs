@@ -7,7 +7,7 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
-    private AudioSource audioSource;
+    private AudioSource[] audioSources;
 
     private int pitchTick = 0;
     private int pitchTickRefreshAt = 10;
@@ -16,7 +16,7 @@ public class SoundManager : MonoBehaviour
     {
         if (Instance == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            audioSources = GetComponents<AudioSource>();
             Instance = this;
             DontDestroyOnLoad(gameObject);
         } else
@@ -38,7 +38,7 @@ public class SoundManager : MonoBehaviour
         if (pitchTick >= pitchTickRefreshAt)
         {
             int getPosOrNeg = GetPosOrNeg();
-            float pitch = audioSource.pitch;
+            float pitch = audioSources[0].pitch;
 
             float pitchChangeAmount = 0.005f;
             float pitchCeiling = 1.0f;
@@ -54,14 +54,20 @@ public class SoundManager : MonoBehaviour
                     pitch = pitch + pitchChangeAmount;
             }
 
-            audioSource.pitch = pitch;
+            audioSources[0].pitch = pitch;
             pitchTick = 0;
-            Debug.Log(pitch);
         } else
         {
             pitchTick++;
         }
+    }
 
+    public void PlayBackgroundNoise()
+    {
+        //todo-ck can't assume the list will be initialized in order...
+        audioSources[0].volume = 0.02f;
+        audioSources[1].Play();
+        audioSources[2].Play();
     }
 
     private int GetPosOrNeg() { 
