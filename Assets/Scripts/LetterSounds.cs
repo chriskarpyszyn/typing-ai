@@ -6,7 +6,12 @@ public class LetterSounds : MonoBehaviour
 {
     private AudioSource audioSource;
 
-    public AudioClip errorSound;
+    [SerializeField]
+    private AudioClip errorSound;
+    [SerializeField]
+    private AudioClip positiveSound;
+    [SerializeField]
+    private float positiveSoundVol = 0.5f;
 
     void Start()
     {
@@ -19,6 +24,11 @@ public class LetterSounds : MonoBehaviour
         playSound(errorSound, 1.2f, 0.3f, false);
     }
 
+    public void playPositiveSound()
+    {
+        playSound(positiveSound, 1f, positiveSoundVol, true);
+    }
+
     private void playSound(AudioClip audioClip, float pitch, float vol, bool shiftPitch)
     {
         //AudioSource audioSource = getAvailableAudioSource()
@@ -26,9 +36,22 @@ public class LetterSounds : MonoBehaviour
         {
             audioSource.clip = audioClip;
             audioSource.volume = vol;
-            audioSource.pitch = pitch;
+            if (shiftPitch)
+            {
+                audioSource.pitch = SlightPitchShift(pitch);
+            }
+            else
+            {
+                audioSource.pitch = pitch;
+            }
+            
             audioSource.Play();
         }
+    }
+
+    private float SlightPitchShift(float startingNumber)
+    {
+        return Random.Range(startingNumber - 0.2f, startingNumber + 0.2f);
     }
 
     /**
