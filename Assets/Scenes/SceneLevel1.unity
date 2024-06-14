@@ -711,6 +711,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   errorSound: {fileID: 8300000, guid: 00bb75aa9e7a8eb4fad00c2414a01ffb, type: 3}
+  positiveSound: {fileID: 8300000, guid: b421c037b19adb645bbda7c64af72b57, type: 3}
+  positiveSoundVol: 0.5
 --- !u!1 &1246771119
 GameObject:
   m_ObjectHideFlags: 0

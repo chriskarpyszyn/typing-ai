@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
     private List<GameObject> letterList;
     private int currentLetterPosition = 0;
 
+    private LetterSounds letterSounds;
+
 
     public UnityEvent<string, string> submitScoreEvent;
 
@@ -92,15 +94,14 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Scene 1 Start()");
             letterList = new List<GameObject>();
-
             AssignWordList(wordList3Char);
             ChangeWord();
+            letterSounds = LetterParent.GetComponent<LetterSounds>();
         }
 
         if (LetterParent!=null)
         {
             animator = LetterParent.GetComponent<Animator>();
-
         }
 
     }
@@ -196,6 +197,8 @@ public class GameManager : MonoBehaviour
                     //currentLetter.transform.Find("LetterParticle").gameObject.GetComponent<ParticleSystem>().Play(); //todo-ck extract hardcoded string
                     currentLetter.GetComponentInChildren<ParticleSystem>().Play();
 
+                    letterSounds.playPositiveSound();
+
                     currentLetterPosition++;
                     scoreManager.IncreaseScore(2);
                     CalculateLongestStreak();
@@ -206,7 +209,7 @@ public class GameManager : MonoBehaviour
                     scoreManager.IncrementFailures();
                     scoreManager.IncreaseScore(-1);
                     scoreManager.ResetKeystrokeStreak();
-                    LetterParent.GetComponent<LetterSounds>().playErrorSound();
+                    letterSounds.playErrorSound();
                     StartCoroutine(ShowTextTemporarily());
                     
                 }

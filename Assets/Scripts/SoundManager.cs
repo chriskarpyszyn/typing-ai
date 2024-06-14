@@ -50,6 +50,7 @@ public class SoundManager : MonoBehaviour
         audioSources = GetComponents<AudioSource>();
         audioSources[0].clip = titleMusic;
         audioSources[0].volume = titleMusicVol;
+        audioSources[0].loop = true;
         audioSources[0].Play();
     }
 
@@ -90,11 +91,14 @@ public class SoundManager : MonoBehaviour
     public void PlayBackgroundNoise()
     {
         //todo-ck (we probably want to initialize all AudioSource component settings in code?
+        //todo-ck extract this into a method to setup looping music
         audioSources[0].volume = 0.1f;
         audioSources[1].clip = spaceshipHum;
         audioSources[1].volume = spaceshipHumVol;
+        audioSources[1].loop = true;
         audioSources[2].clip = radioSound;
         audioSources[2].volume = radioSoundVol;
+        audioSources[2].loop = true;
         audioSources[1].Play();
         audioSources[2].Play();
     }
