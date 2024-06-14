@@ -931,8 +931,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1945719947}
-  - component: {fileID: 1945719946}
   - component: {fileID: 1945719945}
+  - component: {fileID: 1945719946}
   - component: {fileID: 1945719949}
   - component: {fileID: 1945719948}
   m_Layer: 0
@@ -954,6 +954,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d816808aefa3ae45a9d8572fda0ca25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  titleMusic: {fileID: 8300000, guid: c88266d91badeb149b03a2b7cd57f7c4, type: 3}
+  backgroundMusic: {fileID: 8300000, guid: 7eaacbfc05da33e4b8e545d8cf0fad90, type: 3}
+  spaceshipHum: {fileID: 8300000, guid: 15a7f5c3b70e3cb4aa3fe58272824fcb, type: 3}
+  radioSound: {fileID: 8300000, guid: e85c8ac7bd251d542bc3b822fde9da02, type: 3}
+  titleMusicVol: 0.7
+  spaceshipHumVol: 0.2
+  radioSoundVol: 0.02
 --- !u!82 &1945719946
 AudioSource:
   m_ObjectHideFlags: 0
@@ -964,11 +971,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7eaacbfc05da33e4b8e545d8cf0fad90, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 0.04
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1075,7 +1082,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e85c8ac7bd251d542bc3b822fde9da02, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 0.1
   m_Pitch: 1
@@ -1171,7 +1178,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 15a7f5c3b70e3cb4aa3fe58272824fcb, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

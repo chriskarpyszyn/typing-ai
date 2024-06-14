@@ -9,6 +9,22 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
     private AudioSource[] audioSources;
 
+    [SerializeField]
+    private AudioClip titleMusic;
+    [SerializeField]
+    private AudioClip backgroundMusic;
+    [SerializeField]
+    private AudioClip spaceshipHum;
+    [SerializeField]
+    private AudioClip radioSound;
+
+    [SerializeField]
+    private float titleMusicVol = 0.7f;
+    [SerializeField]
+    private float spaceshipHumVol = 0.25f;
+    [SerializeField]
+    private float radioSoundVol = 0.05f;
+
     private int pitchTick = 0;
     private int pitchTickRefreshAt = 10;
 
@@ -16,9 +32,10 @@ public class SoundManager : MonoBehaviour
     {
         if (Instance == null)
         {
-            audioSources = GetComponents<AudioSource>();
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            Initialize();
         } else
         {
             if (Instance != null)
@@ -28,9 +45,17 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    private void Initialize()
+    {
+        audioSources = GetComponents<AudioSource>();
+        audioSources[0].clip = titleMusic;
+        audioSources[0].volume = titleMusicVol;
+        audioSources[0].Play();
+    }
+
     private void Update()
     {
-        PitchShift();
+        //PitchShift();
     }
 
     public void PitchShift()
@@ -64,14 +89,17 @@ public class SoundManager : MonoBehaviour
 
     public void PlayBackgroundNoise()
     {
-        //todo-ck can't assume the list will be initialized in order...
-        audioSources[0].volume = 0.02f;
+        //todo-ck (we probably want to initialize all AudioSource component settings in code?
+        audioSources[0].volume = 0.1f;
+        audioSources[1].clip = spaceshipHum;
+        audioSources[1].volume = spaceshipHumVol;
+        audioSources[2].clip = radioSound;
+        audioSources[2].volume = radioSoundVol;
         audioSources[1].Play();
         audioSources[2].Play();
     }
 
     private int GetPosOrNeg() { 
-    
         return (int)Mathf.Sign(Random.value - 0.5f);
     }
 }
