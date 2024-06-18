@@ -46,7 +46,6 @@ Gas
 Gem
 Get
 Gin
-God
 Gun
 Gym
 Hat

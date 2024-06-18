@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+using System.Runtime.ConstrainedExecution;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -70,9 +72,13 @@ public class GameManager : MonoBehaviour
 
     private LetterSounds letterSounds;
 
-
     public UnityEvent<string, string> submitScoreEvent;
 
+    private String WORD_1 = "God";
+    private String WORD_2 = "Help";
+    private String WORD_3 = "Truth";
+    private int randomWordPosition;
+    private String nextHardCodedWord;
 
     [DllImport("__Internal")]
     private static extern void CopyToClipboard(string text);
@@ -95,6 +101,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Scene 1 Start()");
             letterList = new List<GameObject>();
             AssignWordList(wordList3Char);
+            nextHardCodedWord = WORD_1;
+            randomWordPosition = Random.Range(1, numberWordsPerLevel); //todo-ck SPAGHAT
             ChangeWord();
             letterSounds = LetterParent.GetComponent<LetterSounds>();
         }
@@ -174,8 +182,6 @@ public class GameManager : MonoBehaviour
             ChangeWord();
         }
 
-        
-
         //check on keystroke if we typed the right letter
         if (Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished) 
         {
@@ -253,9 +259,6 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
-        //Debug.Log("Level " + level);
-        //Debug.Log("Number of words completed " + numberOfWordsCompletedThisLevel);
-        //Debug.Log("Number of words per level " + numberWordsPerLevel);
         if (numberOfWordsCompletedThisLevel >= numberWordsPerLevel)
         {
             if (level == 1) //todo-ck we need to refactor this out.
@@ -264,6 +267,8 @@ public class GameManager : MonoBehaviour
                 numberOfWordsCompletedThisLevel = 0;
                 AssignWordList(wordList4Char);
                 ChangeWord(); //todo-ck this is also not great, need to refactor out
+                randomWordPosition = Random.Range(1, numberWordsPerLevel);
+                nextHardCodedWord = WORD_2;
                 
             } else if (level == 2)
             {
@@ -271,24 +276,34 @@ public class GameManager : MonoBehaviour
                 numberOfWordsCompletedThisLevel = 0;
                 AssignWordList(wordList5Char);
                 ChangeWord(); //todo-ck this needs to be refactored out
-                
+                randomWordPosition = Random.Range(1, numberWordsPerLevel);
+                nextHardCodedWord = WORD_3;
+
             } else if (level >= 3) //fyi greater or equal, dont forget
             {
                 EndGame();
             }
         } else
         {
-            //get the next word and remove it.
-            int randomInt = new System.Random().Next(0, wordList.Count);
-            string nextWord = wordList[randomInt];
-            wordList.RemoveAt(randomInt);
+            string nextWord = "";
+            if (numberOfWordsCompletedThisLevel == randomWordPosition)
+            {
+                //insert one of the words not from the list
+                nextWord = nextHardCodedWord;
+            } else
+            {
+                //get the next word and remove it.
+                int randomInt = new System.Random().Next(0, wordList.Count);
+                nextWord = wordList[randomInt];
+                wordList.RemoveAt(randomInt);
+            }
+
 
             //keep track of the number of words completed in this level
             //todo-ck move to a level manager script
             numberOfWordsCompletedThisLevel++;
 
             //put the characters into an array so that we can do our input checks
-
             wordCharArray = nextWord.ToLower().ToCharArray();
             wordCharArraySize = wordCharArray.Length;
 
@@ -308,14 +323,10 @@ public class GameManager : MonoBehaviour
         float firstLetterPositionX = -6;
         foreach (char c in wordCharArray)
         {
-            //worry about position in a minute
-            //Vector3 position = new Vector3(firstLetterPositionX, 0.5f, 0);
-            //firstLetterPositionX = firstLetterPositionX + letterOffset;
             GameObject newLetter = Instantiate(letterPrefab, new Vector3(0,0,0), Quaternion.identity);
             newLetter.transform.SetParent(LetterParent.transform, false);
             newLetter.name = "offset" + firstLetterPositionX;
             newLetter.GetComponent<TextMeshPro>().text = c.ToString().ToUpper();
-
             letterList.Add(newLetter);
         }
     }
