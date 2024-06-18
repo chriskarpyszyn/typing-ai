@@ -162,6 +162,7 @@ public class GameManager : MonoBehaviour
             wordCompleted = true;
             animator.enabled = true;
             animator.Play(ANIMATION_STATE, 0, 0f);
+            letterSounds.playPositiveLongSound();
             //todo-ck logic to change to the next word and reset.
             
         }
