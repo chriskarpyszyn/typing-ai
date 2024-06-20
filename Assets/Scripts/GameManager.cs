@@ -116,7 +116,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        Debug.Log("Start Coroutine");
+        FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(1);
+        Debug.Log("End Coroutine");
         GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
     }
 
@@ -366,7 +368,8 @@ public class GameManager : MonoBehaviour
 
     private void EndGame()
     {
-        SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
+        //SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
+        FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(2); 
         DestroyGameObjectWordList();
         gameFinished = true;
         scoreManager.DisplayEndGameStats();
