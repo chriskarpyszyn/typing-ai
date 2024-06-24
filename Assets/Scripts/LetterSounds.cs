@@ -11,7 +11,12 @@ public class LetterSounds : MonoBehaviour
     [SerializeField]
     private AudioClip positiveSound;
     [SerializeField]
+    private AudioClip positiveLongSound;
+
+    [SerializeField]
     private float positiveSoundVol = 0.5f;
+    [SerializeField]
+    private float positiveLongSoungVol = 0.5f;
 
     void Start()
     {
@@ -27,6 +32,11 @@ public class LetterSounds : MonoBehaviour
     public void playPositiveSound()
     {
         playSound(positiveSound, 1f, positiveSoundVol, true);
+    }
+
+    public void playPositiveLongSound()
+    {
+        playSound(positiveLongSound, 1f, positiveLongSoungVol, true);
     }
 
     private void playSound(AudioClip audioClip, float pitch, float vol, bool shiftPitch)
