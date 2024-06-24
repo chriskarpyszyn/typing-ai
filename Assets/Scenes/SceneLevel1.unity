@@ -857,6 +857,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7826351344726591221, guid: 472bab4940f8862489c71e1105226e05, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7826351344726591221, guid: 472bab4940f8862489c71e1105226e05, type: 3}
+      propertyPath: m_Color.b
+      value: 0.09433961
+      objectReference: {fileID: 0}
+    - target: {fileID: 7826351344726591221, guid: 472bab4940f8862489c71e1105226e05, type: 3}
+      propertyPath: m_Color.g
+      value: 0.09433961
+      objectReference: {fileID: 0}
+    - target: {fileID: 7826351344726591221, guid: 472bab4940f8862489c71e1105226e05, type: 3}
+      propertyPath: m_Color.r
+      value: 0.09433961
+      objectReference: {fileID: 0}
     - target: {fileID: 8854164544475658626, guid: 472bab4940f8862489c71e1105226e05, type: 3}
       propertyPath: m_Name
       value: LevelLoader
