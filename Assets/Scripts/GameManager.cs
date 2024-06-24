@@ -158,8 +158,7 @@ public class GameManager : MonoBehaviour
                 if (tempArray.Length>0)
                 {
                     inputChar = tempArray[0];
-                } 
-
+                }
 
                 if (inputChar != '\0' && inputChar == wordCharArray[currentLetterPosition])
                 {
@@ -174,6 +173,21 @@ public class GameManager : MonoBehaviour
                     currentLetterPosition++;
                     scoreManager.IncreaseScore(2);
                     CalculateLongestStreak();
+
+                    //return letter size when successfully typed
+                    StartCoroutine(scaleTextAnimation.Scale(
+                        currentLetter,
+                        currentLetter.transform.localScale,
+                        Vector3.one,
+                        0.1f
+                    ));
+
+                    if (currentLetterPosition < wordCharArraySize)
+                    {
+                        //todo-ck hey dummy, youve already increased the letter position
+                        GameObject nextLetter = letterList[currentLetterPosition];
+                        IncreaseLetterScale(nextLetter);
+                    }
 
                 } else
                 {
@@ -194,6 +208,17 @@ public class GameManager : MonoBehaviour
             //scoreManager.IncreaseElapsedTime(Time.deltaTime);
             ScoreManager.Instance.IncreaseElapsedTime(Time.deltaTime);
         }
+    }
+
+    private void IncreaseLetterScale(GameObject nextLetter)
+    {
+        float s = 1.2f;
+        StartCoroutine(scaleTextAnimation.Scale(
+           nextLetter,
+           nextLetter.transform.localScale,
+           new Vector3(s, s, s),
+           0.1f
+        ));
     }
     IEnumerator ChangeWordWithAnimation()
     {
@@ -273,6 +298,9 @@ public class GameManager : MonoBehaviour
                 wordList.RemoveAt(randomInt);
             }
 
+            
+            
+
 
             //keep track of the number of words completed in this level
             //todo-ck move to a level manager script
@@ -287,6 +315,8 @@ public class GameManager : MonoBehaviour
             CreateGameObjectWordList(wordCharArray);
             
             ResetProperties();
+
+            IncreaseLetterScale(letterList[0]);
         }
     }
     
