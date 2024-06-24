@@ -9,6 +9,7 @@ using UnityEngine.Events;
 using UnityEngine.UIElements;
 using System.Runtime.ConstrainedExecution;
 using Random = UnityEngine.Random;
+using System.Runtime.CompilerServices;
 
 public class GameManager : MonoBehaviour
 {
@@ -49,10 +50,6 @@ public class GameManager : MonoBehaviour
     private static string wordList4Char = "word-list-4char";
     private static string wordList5Char = "word-list-5char";
 
-    private string ANIMATION_STATE = "ShrinkAnimation";
-    private Animator animator;
-    private bool changeWordNow = false;
-
     private int numberOfWordsCompletedThisLevel = 0;
 
     Boolean gameFinished = false;
@@ -64,7 +61,7 @@ public class GameManager : MonoBehaviour
 
 
     [SerializeField]
-    private GameObject LetterParent;
+    private GameObject letterParent;
     public GameObject letterPrefab;
     public float letterOffset = 2.5f;
     private List<GameObject> letterList;
@@ -83,6 +80,10 @@ public class GameManager : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void CopyToClipboard(string text);
 
+    private ScaleTextAnimation scaleTextAnimation;
+
+    [SerializeField]
+    private float textShrinkAnimationDuration = 0.2f;
 
     private void ResetProperties()
     {
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         Debug.Log("start");
+        scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
         if (SceneManager.GetActiveScene().buildIndex==1)
         {
@@ -104,14 +106,8 @@ public class GameManager : MonoBehaviour
             nextHardCodedWord = WORD_1;
             randomWordPosition = Random.Range(1, numberWordsPerLevel); //todo-ck SPAGHAT
             ChangeWord();
-            letterSounds = LetterParent.GetComponent<LetterSounds>();
+            letterSounds = letterParent.GetComponent<LetterSounds>();
         }
-
-        if (LetterParent!=null)
-        {
-            animator = LetterParent.GetComponent<Animator>();
-        }
-
     }
 
     public void StartGame()
@@ -127,35 +123,8 @@ public class GameManager : MonoBehaviour
         return ScoreManager.Instance;
     }
 
-    private bool IsAnimatorPlaying()
-    {
-        if (animator!=null)
-        {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            return stateInfo.IsName(ANIMATION_STATE) && stateInfo.normalizedTime < 1.0f;
-        }
-        return false;
-    }
-
-    private void ResetAnimation()
-    {
-        if (animator!=null)
-        {
-            animator.Play(ANIMATION_STATE, 0, 0f);
-            animator.Update(0);
-            animator.enabled = false;
-            changeWordNow = true;
-        }
-    }
-
-
     void Update()
     {
-       if (!IsAnimatorPlaying())
-        {
-            ResetAnimation();
-        }
-
         //sneaky exit
         if (Input.GetKey(KeyCode.RightShift))
         {
@@ -170,18 +139,12 @@ public class GameManager : MonoBehaviour
         {
             scoreManager.IncreaseScore(3);
             wordCompleted = true;
-            animator.enabled = true;
-            animator.Play(ANIMATION_STATE, 0, 0f);
             letterSounds.playPositiveLongSound();
-            //todo-ck logic to change to the next word and reset.
-            
-        }
 
-        //todo-ck I hate this....
-        if (changeWordNow)
-        {
-            changeWordNow = false;
-            ChangeWord();
+            //todo-ck logic to change to the next word and reset.    {
+            //got compelted word
+            //coroutine here for animation
+            StartCoroutine(ChangeWordWithAnimation());
         }
 
         //check on keystroke if we typed the right letter
@@ -222,7 +185,8 @@ public class GameManager : MonoBehaviour
                     StartCoroutine(ShowTextTemporarily());
                     
                 }
-            }
+            } 
+
         }
 
         if (SceneManager.GetActiveScene().buildIndex == 1 && !gameFinished)
@@ -230,6 +194,14 @@ public class GameManager : MonoBehaviour
             //scoreManager.IncreaseElapsedTime(Time.deltaTime);
             ScoreManager.Instance.IncreaseElapsedTime(Time.deltaTime);
         }
+    }
+    IEnumerator ChangeWordWithAnimation()
+    {
+        yield return scaleTextAnimation.Scale(letterParent,
+            letterParent.transform.localScale,
+            Vector3.zero,
+            textShrinkAnimationDuration);
+        ChangeWord();
     }
 
     private void CalculateLongestStreak()
@@ -261,6 +233,7 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
+        letterParent.transform.localScale = Vector3.one;
         if (numberOfWordsCompletedThisLevel >= numberWordsPerLevel)
         {
             if (level == 1) //todo-ck we need to refactor this out.
@@ -326,7 +299,7 @@ public class GameManager : MonoBehaviour
         foreach (char c in wordCharArray)
         {
             GameObject newLetter = Instantiate(letterPrefab, new Vector3(0,0,0), Quaternion.identity);
-            newLetter.transform.SetParent(LetterParent.transform, false);
+            newLetter.transform.SetParent(letterParent.transform, false);
             newLetter.name = "offset" + firstLetterPositionX;
             newLetter.GetComponent<TextMeshPro>().text = c.ToString().ToUpper();
             letterList.Add(newLetter);

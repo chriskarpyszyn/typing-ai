@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-[RequireComponent(typeof(TextMeshProUGUI))]
+
 public class TextPulse : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -15,36 +15,23 @@ public class TextPulse : MonoBehaviour
     private float scaleMax = 1.3f;
 
     private Vector3 initialScale;
+    ScaleTextAnimation scaleAnimation;
 
-    private TextMeshProUGUI textComponent;
 
 
     private void Start()
     {
+        scaleAnimation = new ScaleTextAnimation();
         initialScale = transform.localScale;
-        textComponent = GetComponent<TextMeshProUGUI>();
         StartCoroutine(PulseText());
-
     }
 
     IEnumerator PulseText()
     {
         while (true)
         {
-            yield return ScaleText(initialScale, initialScale * scaleMax);
-            yield return ScaleText(initialScale * scaleMax, initialScale);
+            yield return scaleAnimation.Scale(this.gameObject, initialScale, initialScale * scaleMax, duration);
+            yield return scaleAnimation.Scale(this.gameObject, initialScale * scaleMax, initialScale, duration);
         }
-    }
-
-    IEnumerator ScaleText(Vector3 startScale, Vector3 endScale)
-    {
-        float elapsedTime = 0f;
-        while (elapsedTime < duration)
-        {
-            transform.localScale = Vector3.Lerp(startScale, endScale, elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        transform.localScale = endScale;
     }
 }
