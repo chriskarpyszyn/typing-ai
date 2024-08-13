@@ -224,12 +224,13 @@ MonoBehaviour:
   wrongCharXTMP: {fileID: 0}
   textCopied2: {fileID: 0}
   successColor: {r: 0.439, g: 0.812, b: 0.498, a: 1}
-  LetterParent: {fileID: 0}
+  letterParent: {fileID: 0}
   letterPrefab: {fileID: 539131232529207551, guid: 9ecb1e064fcaa424dbe8d7018d66ca85, type: 3}
   letterOffset: 2
   submitScoreEvent:
     m_PersistentCalls:
       m_Calls: []
+  textShrinkAnimationDuration: 0.2
 --- !u!4 &377956874
 Transform:
   m_ObjectHideFlags: 0
@@ -822,7 +823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d8e0d536977364a8fe0f447dcf8256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <duration>k__BackingField: 1
+  <duration>k__BackingField: 0.5
   scaleMax: 1.05
 --- !u!1 &497266124
 GameObject:

@@ -6,13 +6,10 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
-using System.Runtime.ConstrainedExecution;
 using Random = UnityEngine.Random;
-using System.Runtime.CompilerServices;
 
 public class GameManager : MonoBehaviour
-{   
+{
     //number of words taken from each list per level.
     [Header("Words Per Round")]
     public int numberWordsPerLevel = 5;
@@ -20,15 +17,11 @@ public class GameManager : MonoBehaviour
     //word texts
     public TextMeshProUGUI wrongCharXTMP;
 
-    // game canvases
-    //public Canvas gameCanvas;
-    //public Canvas endGameCanvas;
-
     public TextMeshProUGUI textCopied2;
 
     private char[] wordCharArray;
     private int wordCharArraySize;
-    
+
     private bool wordCompleted = false;
     private bool canType = true;
 
@@ -81,14 +74,14 @@ public class GameManager : MonoBehaviour
         wordCompleted = false;
     }
 
- 
+
     void Start()
     {
         Application.targetFrameRate = 60;
         Debug.Log("start");
         scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
-        if (SceneManager.GetActiveScene().buildIndex==1)
+        if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             Debug.Log("Scene 1 Start()");
             letterList = new List<GameObject>();
@@ -138,14 +131,14 @@ public class GameManager : MonoBehaviour
         }
 
         //check on keystroke if we typed the right letter
-        if (Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished) 
+        if (Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished)
         {
 
             if (currentLetterPosition < wordCharArraySize)
             {
                 char[] tempArray = Input.inputString.ToCharArray();
-                char inputChar = '\0';                
-                if (tempArray.Length>0)
+                char inputChar = '\0';
+                if (tempArray.Length > 0)
                 {
                     inputChar = tempArray[0];
                 }
@@ -155,7 +148,6 @@ public class GameManager : MonoBehaviour
                     //set color of word to success!!!
                     GameObject currentLetter = letterList[currentLetterPosition];
                     currentLetter.GetComponent<TextMeshPro>().color = successColor;
-                    //currentLetter.transform.Find("LetterParticle").gameObject.GetComponent<ParticleSystem>().Play(); //todo-ck extract hardcoded string
                     currentLetter.GetComponentInChildren<ParticleSystem>().Play();
 
                     letterSounds.playPositiveSound();
@@ -187,9 +179,9 @@ public class GameManager : MonoBehaviour
                     scoreManager.ResetKeystrokeStreak();
                     letterSounds.playErrorSound();
                     StartCoroutine(ShowTextTemporarily());
-                    
+
                 }
-            } 
+            }
 
         }
 
@@ -259,7 +251,7 @@ public class GameManager : MonoBehaviour
                 ChangeWord(); //todo-ck this is also not great, need to refactor out
                 randomWordPosition = Random.Range(1, numberWordsPerLevel);
                 nextHardCodedWord = WORD_2;
-                
+
             } else if (level == 2)
             {
                 level++;
@@ -288,8 +280,8 @@ public class GameManager : MonoBehaviour
                 wordList.RemoveAt(randomInt);
             }
 
-            
-            
+
+
 
 
             //keep track of the number of words completed in this level
@@ -303,13 +295,13 @@ public class GameManager : MonoBehaviour
             //destroy old list and draw the next word on the scene
             DestroyGameObjectWordList();
             CreateGameObjectWordList(wordCharArray);
-            
+
             ResetProperties();
 
             IncreaseLetterScale(letterList[0]);
         }
     }
-    
+
     //Create a list of game objects that spell a word, and draw them to screen.
     private void CreateGameObjectWordList(char[] wordCharArray)
     {
@@ -318,7 +310,7 @@ public class GameManager : MonoBehaviour
         float firstLetterPositionX = -6;
         foreach (char c in wordCharArray)
         {
-            GameObject newLetter = Instantiate(letterPrefab, new Vector3(0,0,0), Quaternion.identity);
+            GameObject newLetter = Instantiate(letterPrefab, new Vector3(0, 0, 0), Quaternion.identity);
             newLetter.transform.SetParent(letterParent.transform, false);
             newLetter.name = "offset" + firstLetterPositionX;
             newLetter.GetComponent<TextMeshPro>().text = c.ToString().ToUpper();
@@ -362,12 +354,12 @@ public class GameManager : MonoBehaviour
     private void EndGame()
     {
         //SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
-        FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(2); 
+        FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(2);
         DestroyGameObjectWordList();
         gameFinished = true;
         scoreManager.DisplayEndGameStats();
     }
-    
+
     public void StartNewGame()
     {
         Debug.Log("START NEW GAME!");
@@ -384,12 +376,6 @@ public class GameManager : MonoBehaviour
 
     public void SubmitScore()
     {
-        //Debug.Log("SubmitScore --> Username: " + inputHighScoreName.text + " Score: " + int.Parse(textScore.text));
-        // TMP_InputField inputHighScoreName;
-        //LeaderboardInputField
-
-        Debug.Log("SUBMIT SCORE FUNCTION");
-
         //TODO-CK-17 Refactor this out.
         GameObject inputHighScoreNameObject = GameObject.Find("LeaderboardInputField");
         if (inputHighScoreNameObject != null)
@@ -397,34 +383,5 @@ public class GameManager : MonoBehaviour
             TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
             submitScoreEvent.Invoke(inputHighScoreName.text, scoreManager.GetElapsedTimeString()); //testing the string value of score
         }
-        
-    }
-
-    public void CopyText()
-    {
-        StartCoroutine(ShowCopiedTextTemporarily());
-        //Debug.Log("Time: " + elapsedTime + " seconds");
-        //Debug.Log("Keystroke Streak: " + keystrokeStreakMax);
-        //Debug.Log("Missed Keys: " + failures);
-        string textToCopy = "Time: " + scoreManager.GetElapsedTimeString() + " seconds   " + Environment.NewLine
-            + "Score: " + scoreManager.GetScore() + Environment.NewLine
-            + "Keystroke Streak: " + scoreManager.GetKeyStrokeMax() + "   " + Environment.NewLine
-            + "Total Missed Keys: " + scoreManager.GetFailures();
-        //GUIUtility.systemCopyBuffer = textToCopy; //ck-not working in webgl
-        SetText(textToCopy);
-    }
-
-    //public void CopyToClipboardExternal(string text)
-    //{
-    //    Application.ExternalEval($"copyTextToClipboard(\"{text}\")");
-    //}
-
-    public static void SetText(string text)
-    {
-#if UNITY_WEBGL && UNITY_EDITOR == false
-            CopyToClipboard(text);
-#else
-        GUIUtility.systemCopyBuffer = text;
-#endif
     }
 }

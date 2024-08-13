@@ -24,17 +24,6 @@ public class ScoreManager
         }
     }
 
-    //[Header("Main Game Scores")]
-    //public TextMeshProUGUI textScore;
-    //public TextMeshProUGUI textTimer;
-
-    //[Header("End Game Scores")]
-    ////main game score canvas
-    //public TextMeshProUGUI textElapsedTime;
-    //public TextMeshProUGUI textTotalScore;
-    //public TextMeshProUGUI textStreak;
-    //public TextMeshProUGUI textFailures;
-
     private int score = 0;
 
     //end game stats
@@ -42,9 +31,6 @@ public class ScoreManager
     private int keystrokeStreakMax = 0;
     private int failures = 0;
     private float elapsedTime = 0f;
-
- 
-    
 
     private ScoreManager()
     {
@@ -152,14 +138,5 @@ public class ScoreManager
             TextMeshProUGUI textTotalScore = textTotalScoreObject.GetComponent<TextMeshProUGUI>();
             textTotalScore.text = "Total Score: " + this.score;
         }
-
-
-
-
-        //textElapsedTime.text = "Time: " + this.elapsedTime.ToString("F1") + " seconds";
-        //textStreak.text = "Longest Keystroke Streak: " + this.keystrokeStreakMax;
-        //textFailures.text = "Total Missed Keys: " + this.failures;
     }
-
-
 }
