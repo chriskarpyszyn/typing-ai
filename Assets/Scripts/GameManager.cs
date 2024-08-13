@@ -78,12 +78,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
-        Debug.Log("start");
         scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            Debug.Log("Scene 1 Start()");
             letterList = new List<GameObject>();
             AssignWordList(wordList3Char);
             nextHardCodedWord = WORD_1;
@@ -95,9 +93,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("Start Coroutine");
         FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(1);
-        Debug.Log("End Coroutine");
         GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
     }
 
@@ -362,7 +358,6 @@ public class GameManager : MonoBehaviour
 
     public void StartNewGame()
     {
-        Debug.Log("START NEW GAME!");
         scoreManager.ResetStats();
         ResetProperties();
         numberOfWordsCompletedThisLevel = 0;

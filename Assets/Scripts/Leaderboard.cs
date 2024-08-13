@@ -45,7 +45,6 @@ public class Leaderboard : MonoBehaviour
         {
             this.userName = msg.Username;
             this.highScore = (float)msg.Score / 10;
-            Debug.Log("Your Last Score Was: " + this.highScore + " for username: " + this.userName);
 
             CanvasManager cm = GameObject.FindObjectOfType<CanvasManager>();
             cm.UpdateFinalScore(this.highScore, this.userName);
@@ -65,8 +64,6 @@ public class Leaderboard : MonoBehaviour
 
     public void SetLeaderboardEntry(string userName, string timeValue)
     {
-        Debug.Log("SetLeaderboardEntry --> Username: " + userName + " Time: " + timeValue);
-
         float floatTime = float.Parse(timeValue);
         float timeValuex10 = floatTime * 10;
         int intTime = (int)Math.Round(timeValuex10);

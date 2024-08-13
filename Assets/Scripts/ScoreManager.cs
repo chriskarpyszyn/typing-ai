@@ -64,7 +64,6 @@ public class ScoreManager
 
     public void IncreaseScore(int v)
     {
-        //Debug.Log("Set Score " + v);
         this.score = this.score + v;
 
         //TODO-CK-17 Refactor this out.
