@@ -12,17 +12,7 @@ using Random = UnityEngine.Random;
 using System.Runtime.CompilerServices;
 
 public class GameManager : MonoBehaviour
-{
-
-    /**
-     * TODO
-     * - GameManager one instance, does not get destroyed.
-     * - ScoreManager, remove all attempts at modify UI in this class
-     * - Move them to a separate CanvasManager script for each level.
-     * - Leaderboard takes int, not float, need to do math 
-     */
-
-    
+{   
     //number of words taken from each list per level.
     [Header("Words Per Round")]
     public int numberWordsPerLevel = 5;
