@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using Random = UnityEngine.Random;
 using UnityEditor;
 using UnityEngine.XR;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class GameManager : MonoBehaviour
 {
@@ -129,26 +130,12 @@ public class GameManager : MonoBehaviour
             {
                 //set color of word to success!!!
                 GameObject currentLetter = letterList[currentLetterPosition];
-                currentLetter.GetComponent<TextMeshPro>().color = successColor;
-                currentLetter.GetComponentInChildren<ParticleSystem>().Play();
-
-                letterSounds.playPositiveSound();
+                TypedCorrectLetter(currentLetter);
+                DecreaseLetterScale(currentLetter);
 
                 currentLetterPosition++;
-                scoreManager.IncreaseScore(2);
-                scoreManager.IncrementKeystrokeStreak();
-
-                //return letter size when successfully typed
-                StartCoroutine(scaleTextAnimation.Scale(
-                    currentLetter,
-                    currentLetter.transform.localScale,
-                    Vector3.one,
-                    0.1f
-                ));
-
                 if (currentLetterPosition < wordCharArraySize)
                 {
-                    //todo-ck hey dummy, youve already increased the letter position
                     GameObject nextLetter = letterList[currentLetterPosition];
                     IncreaseLetterScale(nextLetter);
                 }
@@ -160,6 +147,15 @@ public class GameManager : MonoBehaviour
             }
 
         }
+    }
+
+    private void TypedCorrectLetter(GameObject letter)
+    {
+        letter.GetComponent<TextMeshPro>().color = successColor;
+        letter.GetComponentInChildren<ParticleSystem>().Play();
+        letterSounds.playPositiveSound();
+        scoreManager.IncreaseScore(2);
+        scoreManager.IncrementKeystrokeStreak();
     }
 
     private void CheckAndIncreaseTime()
@@ -209,15 +205,24 @@ public class GameManager : MonoBehaviour
         wordCompleted = false;
     }
 
-    private void IncreaseLetterScale(GameObject nextLetter)
+    private void LetterScaleAnimation(float toSize, GameObject letter)
     {
-        float s = 1.2f;
         StartCoroutine(scaleTextAnimation.Scale(
-           nextLetter,
-           nextLetter.transform.localScale,
-           new Vector3(s, s, s),
-           0.1f
+            letter,
+            letter.transform.localScale,
+            new Vector3(toSize, toSize, toSize),
+            0.1f
         ));
+    }
+
+    private void IncreaseLetterScale(GameObject letter)
+    {
+        LetterScaleAnimation(1.2f, letter);
+    }
+
+    private void DecreaseLetterScale(GameObject letter)
+    {
+        LetterScaleAnimation(1f, letter);
     }
 
     private IEnumerator ChangeWordWithAnimation()
