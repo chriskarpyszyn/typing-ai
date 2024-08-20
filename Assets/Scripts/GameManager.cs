@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
+using UnityEditor;
+using UnityEngine.XR;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class GameManager : MonoBehaviour
     private const string WORD_1 = "God";
     private const string WORD_2 = "Help";
     private const string WORD_3 = "Truth";
+    private const char NULL_CHAR = '\0';
 
     #region Serialized Fields
     [Header("References")]
@@ -106,56 +109,54 @@ public class GameManager : MonoBehaviour
 
     private bool IsSuccessfullLetter(char inputChar)
     {
-        return inputChar != '\0' && inputChar == wordCharArray[currentLetterPosition];
+        return inputChar != NULL_CHAR && inputChar == wordCharArray[currentLetterPosition];
     }
 
+    private char ExtractCharFromInput(char[] inputCharArray)
+    {
+        if (inputCharArray.Length>0)
+        {
+            return inputCharArray[0];
+        }
+        return NULL_CHAR;
+    }
     private void CheckLetter()
     {
-        if (IsCharTyped())
+        if (IsCharTyped() && (currentLetterPosition < wordCharArraySize))
         {
-            if (currentLetterPosition < wordCharArraySize)
+            char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
+            if (IsSuccessfullLetter(inputChar))
             {
-                char[] tempArray = Input.inputString.ToCharArray();
-                char inputChar = '\0';
-                if (tempArray.Length > 0)
+                //set color of word to success!!!
+                GameObject currentLetter = letterList[currentLetterPosition];
+                currentLetter.GetComponent<TextMeshPro>().color = successColor;
+                currentLetter.GetComponentInChildren<ParticleSystem>().Play();
+
+                letterSounds.playPositiveSound();
+
+                currentLetterPosition++;
+                scoreManager.IncreaseScore(2);
+                scoreManager.IncrementKeystrokeStreak();
+
+                //return letter size when successfully typed
+                StartCoroutine(scaleTextAnimation.Scale(
+                    currentLetter,
+                    currentLetter.transform.localScale,
+                    Vector3.one,
+                    0.1f
+                ));
+
+                if (currentLetterPosition < wordCharArraySize)
                 {
-                    inputChar = tempArray[0];
+                    //todo-ck hey dummy, youve already increased the letter position
+                    GameObject nextLetter = letterList[currentLetterPosition];
+                    IncreaseLetterScale(nextLetter);
                 }
 
-                if (IsSuccessfullLetter(inputChar))
-                {
-                    //set color of word to success!!!
-                    GameObject currentLetter = letterList[currentLetterPosition];
-                    currentLetter.GetComponent<TextMeshPro>().color = successColor;
-                    currentLetter.GetComponentInChildren<ParticleSystem>().Play();
-
-                    letterSounds.playPositiveSound();
-
-                    currentLetterPosition++;
-                    scoreManager.IncreaseScore(2);
-                    scoreManager.IncrementKeystrokeStreak();
-
-                    //return letter size when successfully typed
-                    StartCoroutine(scaleTextAnimation.Scale(
-                        currentLetter,
-                        currentLetter.transform.localScale,
-                        Vector3.one,
-                        0.1f
-                    ));
-
-                    if (currentLetterPosition < wordCharArraySize)
-                    {
-                        //todo-ck hey dummy, youve already increased the letter position
-                        GameObject nextLetter = letterList[currentLetterPosition];
-                        IncreaseLetterScale(nextLetter);
-                    }
-
-                }
-                else
-                {
-                    TypedWrongLetter();
-
-                }
+            }
+            else
+            {
+                TypedWrongLetter();
             }
 
         }
