@@ -13,7 +13,7 @@ public class StarSparkleAnimation : MonoBehaviour
         Image image = GetComponent<Image>();
         Color currCol = image.color;
         Color noOpacity = new Color(currCol.r, currCol.g, currCol.b, 0);
-        Color fullOpacity = new Color(currCol.r, currCol.g, currCol.b, 1);
+        Color fullOpacity = new Color(currCol.r, currCol.g, currCol.b, 0.5f);
 
         float time = 0.125f;
 
