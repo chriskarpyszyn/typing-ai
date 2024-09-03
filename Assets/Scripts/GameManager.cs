@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 using UnityEditor;
 using UnityEngine.XR;
 using Unity.VisualScripting.Antlr3.Runtime;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Application.targetFrameRate = 60;
+        DOTween.Init().SetCapacity(4000,4000);
         scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
         if (SceneManager.GetActiveScene().buildIndex == 1)

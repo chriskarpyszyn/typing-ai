@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class StarSparkleAnimation : MonoBehaviour
 {
     public bool isPos = true;
+    private Sequence seq;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,8 +18,8 @@ public class StarSparkleAnimation : MonoBehaviour
 
         float time = 0.125f;
 
-        Sequence seq = DOTween.Sequence();
-        seq.SetLoops(-1);
+        seq = DOTween.Sequence();
+        seq.SetLoops(0);
 
         if (isPos)
         {
@@ -40,5 +41,10 @@ public class StarSparkleAnimation : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnDestroy()
+    {
+        seq.Kill();
     }
 }
