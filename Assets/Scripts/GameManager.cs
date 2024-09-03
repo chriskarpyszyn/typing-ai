@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
+using UnityEditor;
+using UnityEngine.XR;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +18,7 @@ public class GameManager : MonoBehaviour
     private const string WORD_1 = "God";
     private const string WORD_2 = "Help";
     private const string WORD_3 = "Truth";
+    private const char NULL_CHAR = '\0';
 
     #region Serialized Fields
     [Header("References")]
@@ -69,6 +73,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        CheckExitGameShortcut();
+        CheckAllLettersCompleted();
+        CheckLetter();
+        CheckAndIncreaseTime();
+    }
+
+    private void CheckExitGameShortcut()
+    {
         //sneaky exit
         if (Input.GetKey(KeyCode.RightShift))
         {
@@ -77,87 +89,114 @@ public class GameManager : MonoBehaviour
                 Application.Quit();
             }
         }
+    }
 
+    private void CheckAllLettersCompleted()
+    {
         //check if we're successfully compelted all letters!
         if (SceneManager.GetActiveScene().buildIndex == 1 && currentLetterPosition == wordCharArraySize && !wordCompleted)
         {
             scoreManager.IncreaseScore(3);
             wordCompleted = true;
             letterSounds.playPositiveLongSound();
-
-            //todo-ck logic to change to the next word and reset.    {
-            //got compelted word
-            //coroutine here for animation
             StartCoroutine(ChangeWordWithAnimation());
         }
+    }
 
-        //check on keystroke if we typed the right letter
-        if (Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished)
+    private bool IsCharTyped()
+    {
+        return Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished;
+    }
+
+    private bool IsSuccessfullLetter(char inputChar)
+    {
+        return inputChar != NULL_CHAR && inputChar == wordCharArray[currentLetterPosition];
+    }
+
+    private char ExtractCharFromInput(char[] inputCharArray)
+    {
+        if (inputCharArray.Length>0)
         {
-
-            if (currentLetterPosition < wordCharArraySize)
+            return inputCharArray[0];
+        }
+        return NULL_CHAR;
+    }
+    private void CheckLetter()
+    {
+        if (IsCharTyped() && (currentLetterPosition < wordCharArraySize))
+        {
+            char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
+            if (IsSuccessfullLetter(inputChar))
             {
-                char[] tempArray = Input.inputString.ToCharArray();
-                char inputChar = '\0';
-                if (tempArray.Length > 0)
+                //set color of word to success!!!
+                GameObject currentLetter = letterList[currentLetterPosition];
+                TypedCorrectLetter(currentLetter);
+                DecreaseLetterScale(currentLetter);
+
+                currentLetterPosition++;
+                if (currentLetterPosition < wordCharArraySize)
                 {
-                    inputChar = tempArray[0];
+                    GameObject nextLetter = letterList[currentLetterPosition];
+                    IncreaseLetterScale(nextLetter);
                 }
 
-                if (inputChar != '\0' && inputChar == wordCharArray[currentLetterPosition])
-                {
-                    //set color of word to success!!!
-                    GameObject currentLetter = letterList[currentLetterPosition];
-                    currentLetter.GetComponent<TextMeshPro>().color = successColor;
-                    currentLetter.GetComponentInChildren<ParticleSystem>().Play();
-
-                    letterSounds.playPositiveSound();
-
-                    currentLetterPosition++;
-                    scoreManager.IncreaseScore(2);
-                    CalculateLongestStreak();
-
-                    //return letter size when successfully typed
-                    StartCoroutine(scaleTextAnimation.Scale(
-                        currentLetter,
-                        currentLetter.transform.localScale,
-                        Vector3.one,
-                        0.1f
-                    ));
-
-                    if (currentLetterPosition < wordCharArraySize)
-                    {
-                        //todo-ck hey dummy, youve already increased the letter position
-                        GameObject nextLetter = letterList[currentLetterPosition];
-                        IncreaseLetterScale(nextLetter);
-                    }
-
-                }
-                else
-                {
-                    //todo-ck extract this into an error / wrong letter method for clarity at... some.... point...
-                    scoreManager.IncrementFailures();
-                    scoreManager.IncreaseScore(-1);
-                    scoreManager.ResetKeystrokeStreak();
-                    letterSounds.playErrorSound();
-                    StartCoroutine(ShowTextTemporarily());
-
-                }
+            }
+            else
+            {
+                TypedWrongLetter();
             }
 
         }
+    }
 
+    private void TypedCorrectLetter(GameObject letter)
+    {
+        letter.GetComponent<TextMeshPro>().color = successColor;
+        letter.GetComponentInChildren<ParticleSystem>().Play();
+        letterSounds.playPositiveSound();
+        scoreManager.IncreaseScore(2);
+        scoreManager.IncrementKeystrokeStreak();
+    }
+
+    private void CheckAndIncreaseTime()
+    {
         if (SceneManager.GetActiveScene().buildIndex == 1 && !gameFinished)
         {
-            //scoreManager.IncreaseElapsedTime(Time.deltaTime);
             ScoreManager.Instance.IncreaseElapsedTime(Time.deltaTime);
         }
     }
 
+    //StartGame is called when clicking the Start Game button on the title screen.
     public void StartGame()
     {
         FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(1);
         GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
+    }
+    //StartNewGame is called when clicking the Start New button on the end screen.
+    public void StartNewGame()
+    {
+        scoreManager.ResetStats();
+        ResetProperties();
+        numberOfWordsCompletedThisLevel = 0;
+        gameFinished = false;
+        SceneManager.LoadScene(1);
+        level = 1; //todo-ck need a level manager.
+        AssignWordList("word-list-3char"); //todo-ck refactor repeated code, youll know.
+        ChangeWord();
+    }
+
+    public ScoreManager GetScoreManager()
+    {
+        return ScoreManager.Instance;
+    }
+
+    private void TypedWrongLetter()
+    {
+        scoreManager.IncrementFailures();
+        scoreManager.IncreaseScore(-1);
+        scoreManager.ResetKeystrokeStreak();
+        letterSounds.playErrorSound();
+        StartCoroutine(ShowTextTemporarily());
     }
 
     private void ResetProperties()
@@ -166,33 +205,33 @@ public class GameManager : MonoBehaviour
         wordCompleted = false;
     }
 
-    public ScoreManager GetScoreManager()
+    private void LetterScaleAnimation(float toSize, GameObject letter)
     {
-        return ScoreManager.Instance;
-    }
-
-    private void IncreaseLetterScale(GameObject nextLetter)
-    {
-        float s = 1.2f;
         StartCoroutine(scaleTextAnimation.Scale(
-           nextLetter,
-           nextLetter.transform.localScale,
-           new Vector3(s, s, s),
-           0.1f
+            letter,
+            letter.transform.localScale,
+            new Vector3(toSize, toSize, toSize),
+            0.1f
         ));
     }
-    IEnumerator ChangeWordWithAnimation()
+
+    private void IncreaseLetterScale(GameObject letter)
+    {
+        LetterScaleAnimation(1.2f, letter);
+    }
+
+    private void DecreaseLetterScale(GameObject letter)
+    {
+        LetterScaleAnimation(1f, letter);
+    }
+
+    private IEnumerator ChangeWordWithAnimation()
     {
         yield return scaleTextAnimation.Scale(letterParent,
             letterParent.transform.localScale,
             Vector3.zero,
             textShrinkAnimationDuration);
         ChangeWord();
-    }
-
-    private void CalculateLongestStreak()
-    {
-        scoreManager.IncrementKeystrokeStreak();
     }
 
     private IEnumerator ShowTextTemporarily()
@@ -250,10 +289,6 @@ public class GameManager : MonoBehaviour
                 nextWord = wordList[randomInt];
                 wordList.RemoveAt(randomInt);
             }
-
-
-
-
 
             //keep track of the number of words completed in this level
             //todo-ck move to a level manager script
@@ -329,19 +364,6 @@ public class GameManager : MonoBehaviour
         DestroyGameObjectWordList();
         gameFinished = true;
         scoreManager.DisplayEndGameStats();
-    }
-
-    public void StartNewGame()
-    {
-        scoreManager.ResetStats();
-        ResetProperties();
-        numberOfWordsCompletedThisLevel = 0;
-        gameFinished = false;
-        SceneManager.LoadScene(1);
-        level = 1; //todo-ck need a level manager.
-        AssignWordList("word-list-3char"); //todo-ck refactor repeated code, youll know.
-        ChangeWord();
-
     }
 
     public void SubmitScore()
