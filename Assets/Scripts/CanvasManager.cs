@@ -23,13 +23,7 @@ public class CanvasManager : MonoBehaviour
     public void UpdateFinalScore(float leaderboardHighScore, string leaderboardUserName)
     {
         string NO_USERNAME_TEXT = "Unknown";
-        Debug.Log("Highscore: " + gm.GetScoreManager().GetElapsedTimeString());
 
-        //Leaderboard lb = lbm.GetComponent<Leaderboard>();
-
-        Debug.Log("current score " + gm.GetScoreManager().GetElapsedTimeFloat());
-        Debug.Log("high score " + leaderboardHighScore);
-        Debug.Log("user name " + leaderboardUserName);
         //current score is less than the high score
         if (gm.GetScoreManager().GetElapsedTimeFloat() >= leaderboardHighScore)
         {

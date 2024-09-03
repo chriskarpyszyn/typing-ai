@@ -1,4 +1,3 @@
-Gum
 Ant
 Bat
 Ace
