@@ -153,7 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc450b3c0af88e4999c504582213590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxStarSize: 0.5
+  maxStarSize: 0.4
+  randomSizeRange: 0.4
 --- !u!1 &5938135249851754120
 GameObject:
   m_ObjectHideFlags: 0

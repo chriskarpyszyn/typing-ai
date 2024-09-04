@@ -13,17 +13,20 @@ public class StarAnimation : MonoBehaviour
     private static int numberOfStars = 0;
 
     private Sequence mySeq;
+
+    [SerializeField] float randomSizeRange = 0.3f;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        float randoFloato = Random.Range(0, duration-0.1f);
+        float randoFloato = Random.Range(0, duration-0.2f);
+        float randomSizeFloat = Random.Range(-randomSizeRange, randomSizeRange);
 
         Sequence mySeq = DOTween.Sequence();
         mySeq.SetLoops(0);
         mySeq.PrependInterval(randoFloato);
-        mySeq.Append(transform.DOScale(maxStarSize, duration).SetEase(Ease.Linear));
+        mySeq.Append(transform.DOScale(maxStarSize+randomSizeFloat, duration).SetEase(Ease.Linear));
         mySeq.Append(transform.DOScale(0f, duration).SetEase(Ease.Linear));
         mySeq.OnComplete(MyCallback);
     }
