@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
             scoreManager.IncreaseScore(3);
             wordCompleted = true;
             letterSounds.playPositiveLongSound();
-            StartCoroutine(ChangeWordWithAnimation());
+            ChangeWordWithAnimation();
         }
     }
 
@@ -208,12 +208,10 @@ public class GameManager : MonoBehaviour
 
     private void LetterScaleAnimation(float toSize, GameObject letter)
     {
-        StartCoroutine(scaleTextAnimation.Scale(
+        scaleTextAnimation.ScaleAnimation(
             letter,
-            letter.transform.localScale,
             new Vector3(toSize, toSize, toSize),
-            0.1f
-        ));
+            0.1f);
     }
 
     private void IncreaseLetterScale(GameObject letter)
@@ -226,10 +224,9 @@ public class GameManager : MonoBehaviour
         LetterScaleAnimation(1f, letter);
     }
 
-    private IEnumerator ChangeWordWithAnimation()
+    private void ChangeWordWithAnimation()
     {
-        yield return scaleTextAnimation.Scale(letterParent,
-            letterParent.transform.localScale,
+        scaleTextAnimation.ScaleAnimation(letterParent,
             Vector3.zero,
             textShrinkAnimationDuration);
         ChangeWord();

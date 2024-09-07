@@ -30,8 +30,8 @@ public class TextPulse : MonoBehaviour
     {
         while (true)
         {
-            yield return scaleAnimation.Scale(this.gameObject, initialScale, initialScale * scaleMax, duration);
-            yield return scaleAnimation.Scale(this.gameObject, initialScale * scaleMax, initialScale, duration);
+            scaleAnimation.ScaleAnimation(this.gameObject, initialScale * scaleMax, duration);
+            scaleAnimation.ScaleAnimation(this.gameObject, initialScale, duration);
         }
     }
 }
