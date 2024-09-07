@@ -17,6 +17,7 @@ public class FadeIn : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
+        image.color = new Color(image.color.r, image.color.g, image.color.b, 1);
         fadeTween = image.DOFade(0f, fadeInDuration).SetDelay(fadeInDelay);
     }
 
