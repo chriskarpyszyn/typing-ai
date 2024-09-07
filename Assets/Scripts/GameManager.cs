@@ -154,7 +154,6 @@ public class GameManager : MonoBehaviour
     private void TypedCorrectLetter(GameObject letter)
     {
         letter.GetComponent<TextMeshPro>().color = successColor;
-        letter.GetComponentInChildren<ParticleSystem>().Play();
         letterSounds.playPositiveSound();
         scoreManager.IncreaseScore(2);
         scoreManager.IncrementKeystrokeStreak();
