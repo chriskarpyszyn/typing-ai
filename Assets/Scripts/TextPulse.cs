@@ -23,15 +23,12 @@ public class TextPulse : MonoBehaviour
     {
         scaleAnimation = new ScaleTextAnimation();
         initialScale = transform.localScale;
-        StartCoroutine(PulseText());
+        PulseText();
     }
 
-    IEnumerator PulseText()
+    private void PulseText()
     {
-        while (true)
-        {
-            scaleAnimation.ScaleAnimation(this.gameObject, initialScale * scaleMax, duration);
-            scaleAnimation.ScaleAnimation(this.gameObject, initialScale, duration);
-        }
+        scaleAnimation.ScaleAnimation(this.gameObject, initialScale * scaleMax, duration);
+        scaleAnimation.ScaleAnimation(this.gameObject, initialScale, duration);
     }
 }
