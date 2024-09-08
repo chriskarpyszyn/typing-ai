@@ -228,8 +228,9 @@ public class GameManager : MonoBehaviour
     {
         scaleTextAnimation.ScaleAnimation(letterParent,
             Vector3.zero,
-            textShrinkAnimationDuration);
-        ChangeWord();
+            textShrinkAnimationDuration).OnComplete(ChangeWord);
+
+        
     }
 
     private IEnumerator ShowTextTemporarily()

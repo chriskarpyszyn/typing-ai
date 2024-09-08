@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class ScaleTextAnimation
 {
+    Tween tween;
     //public IEnumerator Scale(GameObject objectToScale, Vector3 startScale, Vector3 endScale, float duration)
     //{
     //    float elapsedTime = 0f;
@@ -18,8 +19,8 @@ public class ScaleTextAnimation
     //    objectToScale.transform.localScale = endScale;
     //}
 
-    public void ScaleAnimation(GameObject objectToAnimate, Vector3 endVector, float duration)
+    public Tween ScaleAnimation(GameObject objectToAnimate, Vector3 endVector, float duration)
     {
-        objectToAnimate.transform.DOScale(endVector, duration);
+        return objectToAnimate.transform.DOScale(endVector, duration);
     }
 }
