@@ -100,7 +100,8 @@ public class GameManager : MonoBehaviour
         {
             scoreManager.IncreaseScore(3);
             wordCompleted = true;
-            letterSounds.playPositiveLongSound();
+            //letterSounds.playPositiveLongSound(); //todo-ck replace? redo?
+            letterSounds.ResetPositiveSoundPitch();
             ChangeWordWithAnimation();
         }
     }
@@ -229,8 +230,6 @@ public class GameManager : MonoBehaviour
         scaleTextAnimation.ScaleAnimation(letterParent,
             Vector3.zero,
             textShrinkAnimationDuration).OnComplete(ChangeWord);
-
-        
     }
 
     private IEnumerator ShowTextTemporarily()

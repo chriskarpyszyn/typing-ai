@@ -6,17 +6,16 @@ public class LetterSounds : MonoBehaviour
 {
     private AudioSource audioSource;
 
-    [SerializeField]
-    private AudioClip errorSound;
-    [SerializeField]
-    private AudioClip positiveSound;
-    [SerializeField]
-    private AudioClip positiveLongSound;
+    [SerializeField] private AudioClip errorSound;
+    [SerializeField] private AudioClip positiveSound;
+    [SerializeField] private AudioClip positiveLongSound;
 
-    [SerializeField]
-    private float positiveSoundVol = 0.5f;
-    [SerializeField]
-    private float positiveLongSoungVol = 0.5f;
+    [SerializeField] private float positiveSoundVol = 0.5f;
+    [SerializeField] private float positiveLongSoungVol = 0.5f;
+
+    private float positiveIncremenet = 0.2f;
+    private float positiveSoundPitch = 0.8f;
+    private const float POSITIVE_SOUND_PITCH_START_VALUE = 0.8f;
 
     void Start()
     {
@@ -31,12 +30,23 @@ public class LetterSounds : MonoBehaviour
 
     public void playPositiveSound()
     {
-        playSound(positiveSound, 1f, positiveSoundVol, true);
+        playSound(positiveSound, IncreasePositivePitchShift(), positiveSoundVol, false);
     }
 
     public void playPositiveLongSound()
     {
         playSound(positiveLongSound, 1f, positiveLongSoungVol, true);
+    }
+
+    public void ResetPositiveSoundPitch()
+    {
+        positiveSoundPitch = POSITIVE_SOUND_PITCH_START_VALUE;
+    }
+
+    private float IncreasePositivePitchShift()
+    {
+        positiveSoundPitch += positiveIncremenet;
+        return positiveSoundPitch-;
     }
 
     private void playSound(AudioClip audioClip, float pitch, float vol, bool shiftPitch)
@@ -64,7 +74,9 @@ public class LetterSounds : MonoBehaviour
         return Random.Range(startingNumber - 0.2f, startingNumber + 0.2f);
     }
 
-    /**
+
+
+    /** thisd is code to implement multiple audio sources if needed
      *    private void playSound(AudioClip clip, float pitch, float vol, bool shiftPitch)
     {
         AudioSource audioSource1 = getAvailableAudioSource();
