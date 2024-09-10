@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LetterSounds : MonoBehaviour
 {
-    private AudioSource audioSource;
+    private List<AudioSource> audioSources;
 
     [SerializeField] private AudioClip errorSound;
     [SerializeField] private AudioClip positiveSound;
@@ -14,12 +14,12 @@ public class LetterSounds : MonoBehaviour
     [SerializeField] private float positiveLongSoungVol = 0.5f;
 
     private float positiveIncremenet = 0.2f;
-    private float positiveSoundPitch = 0.8f;
-    private const float POSITIVE_SOUND_PITCH_START_VALUE = 0.8f;
+    private float positiveSoundPitch = 0.6f;
+    private const float POSITIVE_SOUND_PITCH_START_VALUE = 0.6f;
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>(); //GetComponents if we need more than one :)
+        audioSources = new List<AudioSource>(GetComponents<AudioSource>());
     }
 
 
@@ -46,26 +46,26 @@ public class LetterSounds : MonoBehaviour
     private float IncreasePositivePitchShift()
     {
         positiveSoundPitch += positiveIncremenet;
-        return positiveSoundPitch-;
+        return positiveSoundPitch;
     }
 
     private void playSound(AudioClip audioClip, float pitch, float vol, bool shiftPitch)
     {
-        //AudioSource audioSource = getAvailableAudioSource()
-        if (audioSource != null)
+        AudioSource audioSources = getAvailableAudioSource();
+        if (audioSources != null)
         {
-            audioSource.clip = audioClip;
-            audioSource.volume = vol;
+            audioSources.clip = audioClip;
+            audioSources.volume = vol;
             if (shiftPitch)
             {
-                audioSource.pitch = SlightPitchShift(pitch);
+                audioSources.pitch = SlightPitchShift(pitch);
             }
             else
             {
-                audioSource.pitch = pitch;
+                audioSources.pitch = pitch;
             }
             
-            audioSource.Play();
+            audioSources.Play();
         }
     }
 
@@ -73,29 +73,8 @@ public class LetterSounds : MonoBehaviour
     {
         return Random.Range(startingNumber - 0.2f, startingNumber + 0.2f);
     }
-
-
-
-    /** thisd is code to implement multiple audio sources if needed
-     *    private void playSound(AudioClip clip, float pitch, float vol, bool shiftPitch)
-    {
-        AudioSource audioSource1 = getAvailableAudioSource();
-        if (audioSource1 != null)
-        {
-            audioSource1.clip = clip;
-            if (shiftPitch)
-                audioSource1.pitch = slightPitchShift(pitch);
-            else
-                audioSource1.pitch = pitch;
-            audioSource1.volume = vol;
-            audioSource1.Play();
-        }
-
-
-    }**/
-
-    /** 
-     *     private AudioSource getAvailableAudioSource()
+   
+    private AudioSource getAvailableAudioSource()
     {
         foreach (AudioSource audioSource in audioSources)
         {
@@ -105,5 +84,5 @@ public class LetterSounds : MonoBehaviour
             }
         }
         return audioSources[0];
-    } **/
+    }
 }
