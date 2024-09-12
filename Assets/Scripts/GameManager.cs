@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
             wordCompleted = true;
             //letterSounds.playPositiveLongSound(); //todo-ck replace? redo?
             letterSounds.ResetPositiveSoundPitch();
-            ChangeWordWithAnimation();
+            ChangeWord();
         }
     }
 
@@ -142,7 +142,6 @@ public class GameManager : MonoBehaviour
                     GameObject nextLetter = letterList[currentLetterPosition];
                     IncreaseLetterScale(nextLetter);
                 }
-
             }
             else
             {
@@ -225,21 +224,6 @@ public class GameManager : MonoBehaviour
         LetterScaleAnimation(1f, letter);
     }
 
-    private void ChangeWordWithAnimation()
-    {
-        ChangeWord(); //todo-ck ugh
-    }
-
-    private void FadeWordIn()
-    {
-        scaleTextAnimation.FadeChildrenAnimation(letterParent, 1, textShrinkAnimationDuration);
-    }
-
-    private void FadeWordOut()
-    {
-        scaleTextAnimation.FadeChildrenAnimation(letterParent, 0, textShrinkAnimationDuration);
-    }
-
     private IEnumerator ShowTextTemporarily()
     {
         canType = false;
@@ -318,7 +302,10 @@ public class GameManager : MonoBehaviour
     private void CreateGameObjectWordList(char[] wordCharArray)
     {
         currentLetterPosition = 0;
-
+        float animationDuration = 0.4f;
+        float overlapDelay = 0.04f;
+        float cumulativeDelay = overlapDelay;
+        
         float firstLetterPositionX = -6;
         foreach (char c in wordCharArray)
         {
@@ -328,10 +315,25 @@ public class GameManager : MonoBehaviour
             newLetter.transform.SetParent(letterParent.transform, false);
             newLetter.name = "offset" + firstLetterPositionX;
             tmpLetter.text = c.ToString().ToUpper();
-            scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, textShrinkAnimationDuration);
-            letterList.Add(newLetter);
+            AddNewLetter(newLetter);
 
+
+            if (letterList.Count == 1)
+            {
+                scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration);
+            } else
+            {
+                Debug.Log(cumulativeDelay);
+                scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration).SetDelay(cumulativeDelay);
+                cumulativeDelay = cumulativeDelay+overlapDelay;
+                
+            }
         }
+    }
+
+    private void AddNewLetter(GameObject letter)
+    {
+        letterList.Add(letter);
     }
 
     //Destroys all the game objects in the word list.
