@@ -374,6 +374,9 @@ MonoBehaviour:
   textShrinkAnimationDuration: 1
   successColor: {r: 0.439, g: 0.812, b: 0.498, a: 1}
   letterOffset: 2
+  threeLetterWords: {fileID: 11400000, guid: 2f7e2d27da349c246aeb68d4c11773e0, type: 2}
+  fourLetterWords: {fileID: 11400000, guid: 9dead4fc7642ba140ad9f7635f3e4a09, type: 2}
+  fiveLetterWords: {fileID: 11400000, guid: 4c68e1ea6686e14439229938199462f9, type: 2}
   submitScoreEvent:
     m_PersistentCalls:
       m_Calls: []

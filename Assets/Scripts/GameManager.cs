@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float textShrinkAnimationDuration = 0.2f;
     [SerializeField] private Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
     [SerializeField] private float letterOffset = 2.5f;
+
+    [Header("Word Lists")]
+    [SerializeField] private WordListSO threeLetterWords;
+    [SerializeField] private WordListSO fourLetterWords;
+    [SerializeField] private WordListSO fiveLetterWords;
+
     #endregion
 
     #region Public Properties
@@ -65,7 +71,7 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             letterList = new List<GameObject>();
-            AssignWordList(WORD_LIST_3CHAR);
+            AssignWordList(threeLetterWords);
             nextHardCodedWord = WORD_1;
             randomWordPosition = Random.Range(1, numWordsPerRound); //todo-ck SPAGHAT
             ChangeWord();
@@ -182,7 +188,7 @@ public class GameManager : MonoBehaviour
         gameFinished = false;
         SceneManager.LoadScene(1);
         level = 1; //todo-ck need a level manager.
-        AssignWordList("word-list-3char"); //todo-ck refactor repeated code, youll know.
+        AssignWordList(threeLetterWords); //todo-ck refactor repeated code, youll know.
         ChangeWord();
     }
 
@@ -247,7 +253,7 @@ public class GameManager : MonoBehaviour
             {
                 level++;
                 numberOfWordsCompletedThisLevel = 0;
-                AssignWordList(WORD_LIST_4CHAR);
+                AssignWordList(fourLetterWords);
                 ChangeWord(); //todo-ck this is also not great, need to refactor out
                 randomWordPosition = Random.Range(1, numWordsPerRound);
                 nextHardCodedWord = WORD_2;
@@ -256,7 +262,7 @@ public class GameManager : MonoBehaviour
             {
                 level++;
                 numberOfWordsCompletedThisLevel = 0;
-                AssignWordList(WORD_LIST_5CHAR);
+                AssignWordList(fiveLetterWords);
                 ChangeWord(); //todo-ck this needs to be refactored out
                 randomWordPosition = Random.Range(1, numWordsPerRound);
                 nextHardCodedWord = WORD_3;
@@ -348,14 +354,17 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void AssignWordList(string fileName)
+    private void AssignWordList(WordListSO wordListSO)
     {
-        wordList = new List<string>();
-        currentLetterPosition = 0; //todo-ck spaghetti
-        foreach (string line in LoadLinesFromFile(fileName))
+        wordList = new List<String>(wordListSO.words);
+        currentLetterPosition = 0;
+        //do i want to uppercase them?
+        /**
+         *         foreach (string line in LoadLinesFromFile(fileName))
         {
             wordList.Add(line.Trim().ToUpper());
         }
+         */
     }
 
     private string[] LoadLinesFromFile(string fileName)
