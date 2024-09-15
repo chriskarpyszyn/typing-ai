@@ -228,7 +228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 257291907783962916, guid: 92e00f15f70d5a44b9578bf7012ac69b, type: 3}
       propertyPath: fadeInDuration
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92e00f15f70d5a44b9578bf7012ac69b, type: 3}
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 283977201}
   - component: {fileID: 283977200}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: FadeInCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

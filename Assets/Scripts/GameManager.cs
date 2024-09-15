@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
     private int randomWordPosition;
     private string nextHardCodedWord;
     private ScaleTextAnimation scaleTextAnimation;
+    private bool isFadeInComplete = false;
     #endregion
 
     private void Start()
@@ -68,8 +69,18 @@ public class GameManager : MonoBehaviour
         DOTween.Init().SetCapacity(4000,4000);
         scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
+        //todo-ck do i create my game manager as a singleton or not?
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
+
+            //having to do this kind of sucks to simply subscribe to an event
+            //todo-ck should null check each line here
+            GameObject fadeInCanvas = GameObject.Find("FadeInCanvas");
+            Transform fadeInImage = fadeInCanvas.transform.Find("FadeInImage");
+            FadeIn fadeInScript = fadeInImage.GetComponent<FadeIn>();
+            fadeInScript.EventOnFadeInComplete += HandleFadeInComplete;
+
+
             letterList = new List<GameObject>();
             AssignWordList(threeLetterWords);
             nextHardCodedWord = WORD_1;
@@ -79,12 +90,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void HandleFadeInComplete()
+    {
+        isFadeInComplete = true;
+    }
+
     private void Update()
     {
-        CheckExitGameShortcut();
-        CheckAllLettersCompleted();
-        CheckLetter();
-        CheckAndIncreaseTime();
+        //is there a way to avoid this check in the update method?
+        if (isFadeInComplete)
+        {
+            CheckExitGameShortcut();
+            CheckAllLettersCompleted();
+            CheckLetter();
+            CheckAndIncreaseTime();
+        }
     }
 
     private void CheckExitGameShortcut()
@@ -246,7 +266,6 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
-        letterParent.transform.localScale = Vector3.one; //todo-ck can i refactor this out w/o harm
         if (numberOfWordsCompletedThisLevel >= numWordsPerRound)
         {
             if (level == 1) //todo-ck we need to refactor this out.
@@ -329,7 +348,6 @@ public class GameManager : MonoBehaviour
                 scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration);
             } else
             {
-                Debug.Log(cumulativeDelay);
                 scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration).SetDelay(cumulativeDelay);
                 cumulativeDelay = cumulativeDelay+overlapDelay;
                 
@@ -358,24 +376,6 @@ public class GameManager : MonoBehaviour
     {
         wordList = new List<String>(wordListSO.words);
         currentLetterPosition = 0;
-        //do i want to uppercase them?
-        /**
-         *         foreach (string line in LoadLinesFromFile(fileName))
-        {
-            wordList.Add(line.Trim().ToUpper());
-        }
-         */
-    }
-
-    private string[] LoadLinesFromFile(string fileName)
-    {
-        TextAsset textWordList = Resources.Load<TextAsset>(fileName);
-        if (textWordList != null)
-        {
-            string[] lines = textWordList.text.Split('\n');
-            return lines;
-        }
-        return null;
     }
 
     private void EndGame()
