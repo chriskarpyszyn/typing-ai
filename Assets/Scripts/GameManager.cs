@@ -171,7 +171,7 @@ public class GameManager : MonoBehaviour
     //StartGame is called when clicking the Start Game button on the title screen.
     public void StartGame()
     {
-        FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(1);
+        new LevelLoader().LoadLevel(1);
         GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
     }
     //StartNewGame is called when clicking the Start New button on the end screen.
@@ -362,7 +362,7 @@ public class GameManager : MonoBehaviour
     private void EndGame()
     {
         //SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
-        FindObjectOfType<LevelLoader>().GetComponent<LevelLoader>().LoadLevel(2);
+        new LevelLoader().LoadLevel(2);
         DestroyGameObjectWordList();
         gameFinished = true;
         scoreManager.DisplayEndGameStats();

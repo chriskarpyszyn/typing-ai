@@ -45,7 +45,6 @@ public class StarAnimation : MonoBehaviour
             int randomInt = Random.Range(1, randomMax);
             if (randomInt == randomMax/2)
             {
-                Debug.Log("test " + randomInt);
                 CreateClone();
             }
 
