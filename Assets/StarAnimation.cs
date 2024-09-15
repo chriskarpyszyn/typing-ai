@@ -13,17 +13,19 @@ public class StarAnimation : MonoBehaviour
     private static int numberOfStars = 0;
 
     private Sequence mySeq;
+
+    [SerializeField] float randomSizeRange = 0.3f;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        float randoFloato = Random.Range(0, duration-0.1f);
+        float randoFloato = Random.Range(0, duration-0.35f);
+        float randomSizeFloat = Random.Range(-randomSizeRange, randomSizeRange);
 
         Sequence mySeq = DOTween.Sequence();
-        mySeq.SetLoops(0);
         mySeq.PrependInterval(randoFloato);
-        mySeq.Append(transform.DOScale(maxStarSize, duration).SetEase(Ease.Linear));
+        mySeq.Append(transform.DOScale(maxStarSize+randomSizeFloat, duration).SetEase(Ease.Linear));
         mySeq.Append(transform.DOScale(0f, duration).SetEase(Ease.Linear));
         mySeq.OnComplete(MyCallback);
     }
@@ -39,13 +41,14 @@ public class StarAnimation : MonoBehaviour
         if (numberOfStars < 200)
         {
             CreateClone();
-            int randomInt = Random.Range(1, 50);
-            if (randomInt == 2)
+            int randomMax = 6;
+            int randomInt = Random.Range(1, randomMax);
+            if (randomInt == randomMax/2)
             {
+                Debug.Log("test " + randomInt);
                 CreateClone();
             }
 
-            CreateClone();
 
         }
         mySeq.Kill();
@@ -64,6 +67,7 @@ public class StarAnimation : MonoBehaviour
         GameObject newStar = Instantiate(gameObject);
         newStar.transform.SetParent(transform.parent);
         newStar.transform.position = new Vector3(randomX, randomY, 0.007943317f);
+        newStar.transform.rotation = Quaternion.Euler(0f, 0f, Random.Range(-180,180));
         return newStar;
     }
 }
