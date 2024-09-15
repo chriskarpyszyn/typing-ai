@@ -227,9 +227,17 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWordWithAnimation()
     {
-        scaleTextAnimation.ScaleAnimation(letterParent,
-            Vector3.zero,
-            textShrinkAnimationDuration).OnComplete(ChangeWord);
+        ChangeWord(); //todo-ck ugh
+    }
+
+    private void FadeWordIn()
+    {
+        scaleTextAnimation.FadeChildrenAnimation(letterParent, 1, textShrinkAnimationDuration);
+    }
+
+    private void FadeWordOut()
+    {
+        scaleTextAnimation.FadeChildrenAnimation(letterParent, 0, textShrinkAnimationDuration);
     }
 
     private IEnumerator ShowTextTemporarily()
@@ -248,7 +256,7 @@ public class GameManager : MonoBehaviour
 
     private void ChangeWord()
     {
-        letterParent.transform.localScale = Vector3.one;
+        letterParent.transform.localScale = Vector3.one; //todo-ck can i refactor this out w/o harm
         if (numberOfWordsCompletedThisLevel >= numWordsPerRound)
         {
             if (level == 1) //todo-ck we need to refactor this out.
@@ -315,10 +323,14 @@ public class GameManager : MonoBehaviour
         foreach (char c in wordCharArray)
         {
             GameObject newLetter = Instantiate(letterPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            TextMeshPro tmpLetter = newLetter.GetComponent<TextMeshPro>();
+            tmpLetter.color = new Color(tmpLetter.color.r, tmpLetter.color.g, tmpLetter.color.b, 0);
             newLetter.transform.SetParent(letterParent.transform, false);
             newLetter.name = "offset" + firstLetterPositionX;
-            newLetter.GetComponent<TextMeshPro>().text = c.ToString().ToUpper();
+            tmpLetter.text = c.ToString().ToUpper();
+            scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, textShrinkAnimationDuration);
             letterList.Add(newLetter);
+
         }
     }
 
