@@ -9,21 +9,15 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
     private AudioSource[] audioSources;
 
-    [SerializeField]
-    private AudioClip titleMusic;
-    [SerializeField]
-    private AudioClip backgroundMusic;
-    [SerializeField]
-    private AudioClip spaceshipHum;
-    [SerializeField]
-    private AudioClip radioSound;
+    [SerializeField] private AudioClip titleMusic;
+    [SerializeField] private AudioClip backgroundMusic;
+    [SerializeField] private AudioClip spaceshipHum;
+    [SerializeField] private AudioClip radioSound;
 
-    [SerializeField]
-    private float titleMusicVol = 0.7f;
-    [SerializeField]
-    private float spaceshipHumVol = 0.25f;
-    [SerializeField]
-    private float radioSoundVol = 0.05f;
+    [SerializeField] private float titleMusicVol = 0.7f;
+    [SerializeField] private float backgroundMusicVol = 0.2f;
+    [SerializeField] private float spaceshipHumVol = 0.35f;
+    [SerializeField] private float radioSoundVol = 0.05f;
 
     private int pitchTick = 0;
     private int pitchTickRefreshAt = 10;
@@ -59,40 +53,41 @@ public class SoundManager : MonoBehaviour
         //PitchShift();
     }
 
-    public void PitchShift()
-    {
-        if (pitchTick >= pitchTickRefreshAt)
-        {
-            int getPosOrNeg = GetPosOrNeg();
-            float pitch = audioSources[0].pitch;
+    //todo-ck no longer wobbling the background music pitch, maybe later?
+    //public void PitchShift()
+    //{
+    //    if (pitchTick >= pitchTickRefreshAt)
+    //    {
+    //        int getPosOrNeg = GetPosOrNeg();
+    //        float pitch = audioSources[0].pitch;
 
-            float pitchChangeAmount = 0.005f;
-            float pitchCeiling = 1.0f;
-            float pitchFloor = 0.75f;
-            if (getPosOrNeg < 0)
-            {
-                if (pitch > pitchFloor)
-                    pitch = pitch - pitchChangeAmount;
-            }
-            else
-            {
-                if (pitch < pitchCeiling)
-                    pitch = pitch + pitchChangeAmount;
-            }
+    //        float pitchChangeAmount = 0.005f;
+    //        float pitchCeiling = 1.0f;
+    //        float pitchFloor = 0.75f;
+    //        if (getPosOrNeg < 0)
+    //        {
+    //            if (pitch > pitchFloor)
+    //                pitch = pitch - pitchChangeAmount;
+    //        }
+    //        else
+    //        {
+    //            if (pitch < pitchCeiling)
+    //                pitch = pitch + pitchChangeAmount;
+    //        }
 
-            audioSources[0].pitch = pitch;
-            pitchTick = 0;
-        } else
-        {
-            pitchTick++;
-        }
-    }
+    //        audioSources[0].pitch = pitch;
+    //        pitchTick = 0;
+    //    } else
+    //    {
+    //        pitchTick++;
+    //    }
+    //}
 
     public void PlayBackgroundNoise()
     {
         //todo-ck (we probably want to initialize all AudioSource component settings in code?
         //todo-ck extract this into a method to setup looping music
-        audioSources[0].volume = 0.1f;
+        audioSources[0].volume = backgroundMusicVol;
         audioSources[1].clip = spaceshipHum;
         audioSources[1].volume = spaceshipHumVol;
         audioSources[1].loop = true;

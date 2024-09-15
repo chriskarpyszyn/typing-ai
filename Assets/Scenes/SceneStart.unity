@@ -1400,8 +1400,9 @@ MonoBehaviour:
   spaceshipHum: {fileID: 8300000, guid: 15a7f5c3b70e3cb4aa3fe58272824fcb, type: 3}
   radioSound: {fileID: 8300000, guid: e85c8ac7bd251d542bc3b822fde9da02, type: 3}
   titleMusicVol: 0.7
-  spaceshipHumVol: 0.2
-  radioSoundVol: 0.02
+  backgroundMusicVol: 0.1
+  spaceshipHumVol: 0.3
+  radioSoundVol: 0.05
 --- !u!82 &1945719946
 AudioSource:
   m_ObjectHideFlags: 0
