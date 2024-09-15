@@ -4,7 +4,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelLoader : MonoBehaviour
+public class LevelLoader
 {
 
     public void LoadLevel(int sceneIndex)
