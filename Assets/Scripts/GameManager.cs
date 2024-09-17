@@ -50,10 +50,10 @@ public class GameManager : MonoBehaviour
     private int wordCharArraySize;
     private bool wordCompleted = false;
     private bool canType = true;
-    private List<string> wordList;
     private int level = 1; //todo-ck i can prob find a better way to do this...
     private int numberOfWordsCompletedThisLevel = 0;
     private bool gameFinished = false;
+    private List<string> wordList;
     private List<GameObject> letterList;
     private int currentLetterPosition = 0;
     private LetterSounds letterSounds;
@@ -75,21 +75,51 @@ public class GameManager : MonoBehaviour
 
             //having to do this kind of sucks to simply subscribe to an event
             //todo-ck should null check each line here
-            GameObject fadeInCanvas = GameObject.Find("FadeInCanvas");
-            Transform fadeInImage = fadeInCanvas.transform.Find("FadeInImage");
-            FadeIn fadeInScript = fadeInImage.GetComponent<FadeIn>();
-            fadeInScript.EventOnFadeInComplete += HandleFadeInComplete;
+            SubscribeToFadeIn();
 
 
             letterList = new List<GameObject>();
             AssignWordList(threeLetterWords);
-            nextHardCodedWord = WORD_1;
-            randomWordPosition = Random.Range(1, numWordsPerRound); //todo-ck SPAGHAT
+            SetLevel1HardcodedWord(WORD_1);
             ChangeWord();
             letterSounds = letterParent.GetComponent<LetterSounds>();
+        } else if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            SubscribeToFadeIn();
+            letterList = new List<GameObject>();
+            AssignWordList(threeLetterWords);
+            ChangeWord();
+
+
+
         }
     }
+   
 
+    /// <summary>
+    /// Helper method to setup the hardcoded word in Level 1 for each
+    /// </summary>
+    /// <param name="word"></param>
+    private void SetLevel1HardcodedWord(String word)
+    {
+        nextHardCodedWord = word;
+        randomWordPosition = Random.Range(1, numWordsPerRound); //todo-ck SPAGHAT
+    }
+
+    /// <summary>
+    /// Find the FadeIn canvas and subscribe to the animation complete event
+    /// TODO: We should move this code elsewhere
+    /// </summary>
+    private void SubscribeToFadeIn()
+    {
+        GameObject fadeInCanvas = GameObject.Find("FadeInCanvas");
+        Transform fadeInImage = fadeInCanvas.transform.Find("FadeInImage");
+        FadeIn fadeInScript = fadeInImage.GetComponent<FadeIn>();
+        fadeInScript.EventOnFadeInComplete += HandleFadeInComplete;
+    }
+    /// <summary>
+    /// Handle the event by flipping a local bool.
+    /// </summary>
     private void HandleFadeInComplete()
     {
         isFadeInComplete = true;
@@ -264,6 +294,18 @@ public class GameManager : MonoBehaviour
         return (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2));
     }
 
+    /// <summary>
+    /// Method for handling the asteroid sprite and word generation.
+    /// </summary>
+    private void ChangeAsteroidWord()
+    {
+
+    }
+
+
+    /// <summary>
+    /// Change Word method for handling all of the Scene 1 logic for changing each word
+    /// </summary>
     private void ChangeWord()
     {
         if (numberOfWordsCompletedThisLevel >= numWordsPerRound)
@@ -372,6 +414,10 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Takes a ScriptableObject with a Word List and assigns it to the local variable in GameManager
+    /// </summary>
+    /// <param name="wordListSO"></param>
     private void AssignWordList(WordListSO wordListSO)
     {
         wordList = new List<String>(wordListSO.words);
