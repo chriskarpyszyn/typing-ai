@@ -20,11 +20,13 @@ public class GameManager : MonoBehaviour
     private const string WORD_2 = "Help";
     private const string WORD_3 = "Truth";
     private const char NULL_CHAR = '\0';
+    private List<GameObject> asteroids;
 
     #region Serialized Fields
     [Header("References")]
     [SerializeField] private GameObject letterParent;
     [SerializeField] private GameObject letterPrefab;
+    [SerializeField] private GameObject asteroidPrefab;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private TextMeshProUGUI wrongCharXTMP;
 
@@ -70,13 +72,13 @@ public class GameManager : MonoBehaviour
         scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
         //todo-ck do i create my game manager as a singleton or not?
+        asteroids = new List<GameObject>();
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
 
             //having to do this kind of sucks to simply subscribe to an event
             //todo-ck should null check each line here
             SubscribeToFadeIn();
-
 
             letterList = new List<GameObject>();
             AssignWordList(threeLetterWords);
@@ -85,13 +87,11 @@ public class GameManager : MonoBehaviour
             letterSounds = letterParent.GetComponent<LetterSounds>();
         } else if (SceneManager.GetActiveScene().buildIndex == 2)
         {
+            Debug.Log("OnStart");
             SubscribeToFadeIn();
             letterList = new List<GameObject>();
             AssignWordList(threeLetterWords);
-            ChangeWord();
-
-
-
+            ChangeAsteroidWord();
         }
     }
    
@@ -299,6 +299,20 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void ChangeAsteroidWord()
     {
+        Debug.Log("ChangeAsteroidWord");
+        GameObject newAsteroid = Instantiate(asteroidPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        asteroids.Add(newAsteroid);
+        //position it randomly x 10, y 7
+        newAsteroid.transform.position = new Vector3(-9.5f, 6.9f, -1f);
+
+        Transform asteroidLetterParentTransform = newAsteroid.transform.Find("LetterParent");
+        GameObject asteroidLetterParent = asteroidLetterParentTransform.gameObject;
+
+        ////add word to asteroid
+        //put the characters into an array so that we can do our input checks (repeated code)
+        wordCharArray = "test".ToLower().ToCharArray();
+        wordCharArraySize = wordCharArray.Length;
+        CreateGameObjectWordList(wordCharArray, asteroidLetterParent);
 
     }
 
@@ -368,11 +382,16 @@ public class GameManager : MonoBehaviour
     //Create a list of game objects that spell a word, and draw them to screen.
     private void CreateGameObjectWordList(char[] wordCharArray)
     {
+        CreateGameObjectWordList(wordCharArray, this.letterParent);
+    }
+
+    private void CreateGameObjectWordList(char[] wordCharArray, GameObject letterParent)
+    {
         currentLetterPosition = 0;
         float animationDuration = 0.4f;
         float overlapDelay = 0.04f;
         float cumulativeDelay = overlapDelay;
-        
+
         float firstLetterPositionX = -6;
         foreach (char c in wordCharArray)
         {
@@ -388,11 +407,12 @@ public class GameManager : MonoBehaviour
             if (letterList.Count == 1)
             {
                 scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration);
-            } else
+            }
+            else
             {
                 scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration).SetDelay(cumulativeDelay);
-                cumulativeDelay = cumulativeDelay+overlapDelay;
-                
+                cumulativeDelay = cumulativeDelay + overlapDelay;
+
             }
         }
     }
