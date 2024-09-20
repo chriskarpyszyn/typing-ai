@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject letterParent;
     [SerializeField] private GameObject letterPrefab;
     [SerializeField] private GameObject asteroidPrefab;
+    [SerializeField] private GameObject level3GameCanvas;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private TextMeshProUGUI wrongCharXTMP;
 
@@ -75,7 +76,7 @@ public class GameManager : MonoBehaviour
         asteroids = new List<GameObject>();
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-
+            letterSounds = letterParent.GetComponent<LetterSounds>(); //todo-ck refactor sound off letter parent
             //having to do this kind of sucks to simply subscribe to an event
             //todo-ck should null check each line here
             SubscribeToFadeIn();
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
             AssignWordList(threeLetterWords);
             SetLevel1HardcodedWord(WORD_1);
             ChangeWord();
-            letterSounds = letterParent.GetComponent<LetterSounds>();
+            
         } else if (SceneManager.GetActiveScene().buildIndex == 2)
         {
             Debug.Log("OnStart");
@@ -182,6 +183,19 @@ public class GameManager : MonoBehaviour
     }
     private void CheckLetter()
     {
+
+        //3 words on screen
+        //fox, kid, bot
+        //start typing F - then I'm typing against Fox
+        //what if I type B next.. is that a wrong input or does it work with the word Bot
+        //then if I type O, do both Fox and Bot register a char
+
+        //if i have two words Foo, Fox.
+        //then typing F would register against both.
+        //then typing o would register against both.
+
+        //another thought, asteroids that require multiple words to destroy... 
+
         if (IsCharTyped() && (currentLetterPosition < wordCharArraySize))
         {
             char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
@@ -210,7 +224,7 @@ public class GameManager : MonoBehaviour
     private void TypedCorrectLetter(GameObject letter)
     {
         letter.GetComponent<TextMeshPro>().color = successColor;
-        letterSounds.playPositiveSound();
+        letterSounds?.playPositiveSound();
         scoreManager.IncreaseScore(2);
         scoreManager.IncrementKeystrokeStreak();
     }
@@ -252,7 +266,7 @@ public class GameManager : MonoBehaviour
         scoreManager.IncrementFailures();
         scoreManager.IncreaseScore(-1);
         scoreManager.ResetKeystrokeStreak();
-        letterSounds.playErrorSound();
+        letterSounds?.playErrorSound();
         StartCoroutine(ShowTextTemporarily());
     }
 
@@ -301,19 +315,21 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("ChangeAsteroidWord");
         GameObject newAsteroid = Instantiate(asteroidPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        newAsteroid.transform.SetParent(level3GameCanvas.transform);
         asteroids.Add(newAsteroid);
         //position it randomly x 10, y 7
-        newAsteroid.transform.position = new Vector3(-9.5f, 6.9f, -1f);
+        float randomX = Random.Range(-10f, 10f);
+        float randomY = Random.Range(-7f, 7f);
+        newAsteroid.transform.position = new Vector3(randomX, randomY, -1f);
 
         Transform asteroidLetterParentTransform = newAsteroid.transform.Find("LetterParent");
         GameObject asteroidLetterParent = asteroidLetterParentTransform.gameObject;
 
         ////add word to asteroid
         //put the characters into an array so that we can do our input checks (repeated code)
-        wordCharArray = "test".ToLower().ToCharArray();
+        wordCharArray = GetAndRemoveNextWord().ToLower().ToCharArray();
         wordCharArraySize = wordCharArray.Length;
         CreateGameObjectWordList(wordCharArray, asteroidLetterParent);
-
     }
 
 
@@ -356,9 +372,7 @@ public class GameManager : MonoBehaviour
             } else
             {
                 //get the next word and remove it.
-                int randomInt = new System.Random().Next(0, wordList.Count);
-                nextWord = wordList[randomInt];
-                wordList.RemoveAt(randomInt);
+                nextWord = GetAndRemoveNextWord();
             }
 
             //keep track of the number of words completed in this level
@@ -377,6 +391,19 @@ public class GameManager : MonoBehaviour
 
             IncreaseLetterScale(letterList[0]);
         }
+    }
+
+    /// <summary>
+    /// Returns the next word to be used in the game and removes it from the list
+    /// </summary>
+    /// <returns></returns>
+    private string GetAndRemoveNextWord()
+    {
+        String ret = "";
+        int randomInt = new System.Random().Next(0, wordList.Count);
+        ret = wordList[randomInt];
+        wordList.RemoveAt(randomInt);
+        return ret;
     }
 
     //Create a list of game objects that spell a word, and draw them to screen.

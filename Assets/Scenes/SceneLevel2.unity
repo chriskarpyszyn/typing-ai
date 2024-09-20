@@ -370,6 +370,7 @@ MonoBehaviour:
   letterParent: {fileID: 3695325012561641475, guid: a73822f4c5ca1d84cacbc1a764ed18f3, type: 3}
   letterPrefab: {fileID: 5811492632237980674, guid: c268ed18b88767841a7b9716e811ab0d, type: 3}
   asteroidPrefab: {fileID: 3101574364483516022, guid: 1574eb0cd7982c64da5a7fc451d94f62, type: 3}
+  level3GameCanvas: {fileID: 556946947}
   wrongCharXTMP: {fileID: 1246771121}
   numWordsPerRound: 5
   textShrinkAnimationDuration: 1
