@@ -10,9 +10,9 @@ using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-    private const string WORD_1 = "God";
-    private const string WORD_2 = "Help";
-    private const string WORD_3 = "Truth";
+    //private const string WORD_1 = "God";
+    //private const string WORD_2 = "Help";
+    //private const string WORD_3 = "Truth";
     private const char NULL_CHAR = '\0';
     private List<GameObject> asteroids;
 
@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float letterOffset = 2.5f;
 
     [Header("Word Lists")]
+    [SerializeField] private WordListSO specialWords;
     [SerializeField] private WordListSO threeLetterWords;
     [SerializeField] private WordListSO fourLetterWords;
     [SerializeField] private WordListSO fiveLetterWords;
@@ -47,7 +48,11 @@ public class GameManager : MonoBehaviour
     private int wordCharArraySize;
     private bool wordCompleted = false;
     private bool canType = true;
-    private int level = 1; //todo-ck i can prob find a better way to do this...
+
+    //minigameOneLevel 1 is referencing a specific minigameOneLevel within the first minigame.
+    private int minigameOneLevel = 1; //todo-ck i can prob find a better way to do this...
+    
+    
     private int numberOfWordsCompletedThisLevel = 0;
     private bool gameFinished = false;
     private List<string> wordList;
@@ -77,7 +82,7 @@ public class GameManager : MonoBehaviour
 
             letterList = new List<GameObject>();
             AssignWordList(threeLetterWords);
-            SetLevel1HardcodedWord(WORD_1);
+            SetLevel1HardcodedWord(specialWords.words[minigameOneLevel-1]);
             ChangeWord();
             
         } else if (SceneManager.GetActiveScene().buildIndex == 2)
@@ -159,7 +164,7 @@ public class GameManager : MonoBehaviour
 
     private bool IsCharTyped()
     {
-        return Input.anyKeyDown && !IsMouseButtonClick() && canType && !gameFinished;
+        return Input.anyKeyDown && canType && !gameFinished;
     }
 
     private bool IsSuccessfullLetter(char inputChar)
@@ -245,10 +250,29 @@ public class GameManager : MonoBehaviour
         numberOfWordsCompletedThisLevel = 0;
         gameFinished = false;
         SceneManager.LoadScene(1);
-        level = 1; //todo-ck need a level manager.
+        minigameOneLevel = 1; //todo-ck need a minigameOneLevel manager.
         AssignWordList(threeLetterWords); //todo-ck refactor repeated code, youll know.
         ChangeWord();
     }
+
+    /*
+     * 
+     * 
+     *         
+        
+        //todo-ck do i create my game manager as a singleton or not?
+        asteroids = new List<GameObject>();
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            
+
+            
+            AssignWordList(threeLetterWords);
+            SetLevel1HardcodedWord(specialWords.words[minigameOneLevel-1]);
+            ChangeWord();
+     * 
+     * 
+     */
 
     public ScoreManager GetScoreManager()
     {
@@ -297,10 +321,10 @@ public class GameManager : MonoBehaviour
         canType = true;
     }
 
-    private bool IsMouseButtonClick()
-    {
-        return (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2));
-    }
+    //private bool IsMouseButtonClick()
+    //{
+    //    return (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2));
+    //}
 
     /// <summary>
     /// Method for handling the asteroid sprite and word generation.
@@ -334,25 +358,25 @@ public class GameManager : MonoBehaviour
     {
         if (numberOfWordsCompletedThisLevel >= numWordsPerRound)
         {
-            if (level == 1) //todo-ck we need to refactor this out.
+            if (minigameOneLevel == 1) //todo-ck we need to refactor this out.
             {
-                level++;
+                minigameOneLevel++;
                 numberOfWordsCompletedThisLevel = 0;
                 AssignWordList(fourLetterWords);
                 ChangeWord(); //todo-ck this is also not great, need to refactor out
                 randomWordPosition = Random.Range(1, numWordsPerRound);
-                nextHardCodedWord = WORD_2;
+                nextHardCodedWord = specialWords.words[minigameOneLevel-1];
 
-            } else if (level == 2)
+            } else if (minigameOneLevel == 2)
             {
-                level++;
+                minigameOneLevel++;
                 numberOfWordsCompletedThisLevel = 0;
                 AssignWordList(fiveLetterWords);
                 ChangeWord(); //todo-ck this needs to be refactored out
                 randomWordPosition = Random.Range(1, numWordsPerRound);
-                nextHardCodedWord = WORD_3;
+                nextHardCodedWord = specialWords.words[minigameOneLevel-1];
 
-            } else if (level >= 3) //fyi greater or equal, dont forget
+            } else if (minigameOneLevel >= 3) //fyi greater or equal, dont forget
             {
                 EndGame();
             }
@@ -369,8 +393,8 @@ public class GameManager : MonoBehaviour
                 nextWord = GetAndRemoveNextWord();
             }
 
-            //keep track of the number of words completed in this level
-            //todo-ck move to a level manager script
+            //keep track of the number of words completed in this minigameOneLevel
+            //todo-ck move to a minigameOneLevel manager script
             numberOfWordsCompletedThisLevel++;
 
             //put the characters into an array so that we can do our input checks
