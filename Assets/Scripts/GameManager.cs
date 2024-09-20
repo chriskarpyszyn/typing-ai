@@ -6,16 +6,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
-using UnityEditor;
-using UnityEngine.XR;
-using Unity.VisualScripting.Antlr3.Runtime;
 using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-    private const string WORD_LIST_3CHAR = "word-list-3char";
-    private const string WORD_LIST_4CHAR = "word-list-4char";
-    private const string WORD_LIST_5CHAR = "word-list-5char";
     private const string WORD_1 = "God";
     private const string WORD_2 = "Help";
     private const string WORD_3 = "Truth";
