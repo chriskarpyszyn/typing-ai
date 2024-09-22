@@ -10,9 +10,6 @@ using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-    //private const string WORD_1 = "God";
-    //private const string WORD_2 = "Help";
-    //private const string WORD_3 = "Truth";
     private const char NULL_CHAR = '\0';
     private List<GameObject> asteroids;
 
@@ -31,11 +28,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
     [SerializeField] private float letterOffset = 2.5f;
 
-    [Header("Word Lists")]
-    [SerializeField] private WordListSO specialWords;
-    [SerializeField] private WordListSO threeLetterWords;
-    [SerializeField] private WordListSO fourLetterWords;
-    [SerializeField] private WordListSO fiveLetterWords;
+
+    
+   
 
     #endregion
 
