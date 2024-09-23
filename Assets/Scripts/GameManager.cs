@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject letterPrefab;
     [SerializeField] private GameObject asteroidPrefab;
     [SerializeField] private GameObject level3GameCanvas;
-    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] public ScoreManager scoreManager;
     [SerializeField] private TextMeshProUGUI wrongCharXTMP;
 
     [Header("Game Configuration")]
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     private List<string> wordList;
     private List<GameObject> letterList;
     private int currentLetterPosition = 0;
-    private LetterSounds letterSounds;
+    public LetterSounds letterSounds;
     private int randomWordPosition;
     private string nextHardCodedWord;
     private ScaleTextAnimation scaleTextAnimation;

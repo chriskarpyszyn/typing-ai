@@ -18,17 +18,10 @@ public class WordManager : MonoBehaviour
 
     private LevelManager levelManager;
     private Dictionary<int, WordListSO> levelToWordListMap;
-    private List<string> currentWordList;
+    private List<Word> currentWordList;
     private int currentLevel;
-    private int wordsProvidedThisLevel;
-    private int specialWordPosition;
-
-
-    private void Awake()
-    {
-        InitializeLevelWordMap();
-    }
-
+    private int numWordsProvidedThisLevel;
+    private int specialWordRandPosition;
 
 
     public void Initialize(LevelManager levelManager)
@@ -40,21 +33,38 @@ public class WordManager : MonoBehaviour
         ResetForNewLevel(levelManager.GetCurrentLevel());
     }
 
+    public void OnDisable()
+    {
+        if (levelManager != null)
+        {
+            levelManager.OnLevelChanged -= HandleLevelChanged;
+        }
+    }
+
+    /// <summary>
+    /// Handle Level Changed Event
+    /// </summary>
+    /// <param name="newLevel">The new level to change to</param>
+    public void HandleLevelChanged(int newLevel)
+    {
+        ResetForNewLevel(newLevel);
+    }
+
+
     /// <summary>
     /// Returns a word from the wordlist.
     /// </summary>
     /// <returns></returns>
-    public string GetNextWord()
+    public Word GetNextWord()
     {
         if (currentWordList == null || currentWordList.Count == 0)
         {
             Debug.LogError("WordList is empty or null");
-            return string.Empty;
+            return null;
         }
 
-        wordsProvidedThisLevel++;
-
-        if (wordsProvidedThisLevel == specialWordPosition)
+        numWordsProvidedThisLevel++;
+        if (numWordsProvidedThisLevel == specialWordRandPosition)
         {
             return GetSpecialWord() ?? GetRegularWord();
         }
@@ -63,35 +73,26 @@ public class WordManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="newLevel"></param>
-    public void HandleLevelChanged(int newLevel)
-    {
-        ResetForNewLevel(newLevel);
-    }
-
-    /// <summary>
     /// Reset properties when changing level.
     /// </summary>
     private void ResetForNewLevel(int newLevel)
     {
-        currentLevel = newLevel; //dont need class prop
+        currentLevel = newLevel; //dont need class prop?
         AssignWordList();
-        wordsProvidedThisLevel = 0;
+        numWordsProvidedThisLevel = 0;
         //I don't want the special word to be first or last
-        specialWordPosition = Random.Range(2, levelManager.GetWordsPerLevel()); 
+        specialWordRandPosition = Random.Range(2, levelManager.GetWordsPerLevel()); 
     }
 
     /// <summary>
     /// Inserts a hardcoded word from the special word list for the appropriate level
     /// </summary>
     /// <returns></returns>
-    private string GetSpecialWord()
+    private Word GetSpecialWord()
     {
         if (currentLevel <= specialWords.words.Count)
         {
-            return specialWords.words[currentLevel - 1];
+            return new Word(specialWords.words[currentLevel - 1]);
         }
         else
         {
@@ -104,10 +105,10 @@ public class WordManager : MonoBehaviour
     /// Get's a random word from the word list.
     /// </summary>
     /// <returns></returns>
-    private string GetRegularWord()
+    private Word GetRegularWord()
     {
         int randomIndex = Random.Range(0, currentWordList.Count);
-        string returnWord = currentWordList[randomIndex];
+        Word returnWord = currentWordList[randomIndex];
         currentWordList.RemoveAt(randomIndex);
         return returnWord;
     }
@@ -119,12 +120,15 @@ public class WordManager : MonoBehaviour
     {
         if (levelToWordListMap.TryGetValue(currentLevel, out WordListSO wordListSO))
         {
-            currentWordList = new List<string>(wordListSO.words);
+            foreach (string word in wordListSO.words)
+            {
+                currentWordList.Add(new Word(word));
+            }
         } 
         else
         {
             Debug.LogError($"No word list found for level {currentLevel}");
-            currentWordList = new List<string>();
+            currentWordList = new List<Word>();
         }
     }
 

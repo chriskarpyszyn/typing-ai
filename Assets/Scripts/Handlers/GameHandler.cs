@@ -6,9 +6,15 @@ using UnityEngine;
 public class GameHandler : MonoBehaviour
 {
     public static GameHandler Instance;
-    [SerializeField] InputHandler inputHandler;
-    
+    [SerializeField] private InputHandler inputHandler;
+    [SerializeField] private LevelManager levelManager;
+    [SerializeField] private GameManager oldGameManager;
+    [SerializeField] private WordManager wordManager;
 
+    //TODO: to refactor out of GameHandler
+    private string currentWord; //when is it set?
+    private int currentLetterIndex; //when is it set?
+    
     private void Awake()
     {
         if (Instance == null)
@@ -23,19 +29,70 @@ public class GameHandler : MonoBehaviour
             }
         }
     }
+    private void Start()
+    {
+        levelManager.Initialize();
+        wordManager.Initialize(levelManager);
+    }
 
     private void OnEnable()
     {
         inputHandler.OnLetterInput += HandleLetterInput;
+        levelManager.OnLevelChanged += HandleLevelChanged;
+        levelManager.OnGameCompleted += HandleGameCompleted;
     }
 
     private void OnDisable()
     {
         inputHandler.OnLetterInput -= HandleLetterInput;
+        levelManager.OnLevelChanged -= HandleLevelChanged;
+        levelManager.OnGameCompleted -= HandleGameCompleted;
     }
 
     private void HandleLetterInput(char inputChar)
     {
-        Debug.Log("HELLO WORLD?! " + inputChar);
+        if (inputChar == currentWord[currentLetterIndex])
+        {
+            currentLetterIndex++;
+            if (currentLetterIndex >= currentWord.Length)
+            {
+                levelManager.WordCompleted();
+                SetNextWord();
+            }
+        }
+        else
+        {
+            oldGameManager.GetScoreManager().IncrementFailures();
+            oldGameManager.GetScoreManager().IncreaseScore(-1);
+            oldGameManager.GetScoreManager().ResetKeystrokeStreak();
+        }
+    }
+
+    private void HandleLevelChanged(int i)
+    {
+        Debug.Log($"Advancing to level: {i}");
+        //TODO: implement logic here
+    }
+
+    private void HandleGameCompleted()
+    {
+        
+    }
+
+    private void SetNextWord()
+    {
+        currentWord = wordManager.GetNextWord();
+        currentLetterIndex = 0;
+        //update UI to display new word
+    }
+
+    public void StartGame()
+    {
+        oldGameManager.StartGame();
+    }
+
+    public void StartNewGame() 
+    {
+        oldGameManager.StartNewGame();
     }
 }
