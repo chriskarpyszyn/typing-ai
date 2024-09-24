@@ -20,6 +20,9 @@ public class WordManager : MonoBehaviour
     private Dictionary<int, WordListSO> levelToWordListMap;
     private List<Word> currentWordList;
     private int currentLevel;
+    
+    private Word currentWord;
+
     private int numWordsProvidedThisLevel;
     private int specialWordRandPosition;
 
@@ -55,21 +58,29 @@ public class WordManager : MonoBehaviour
     /// Returns a word from the wordlist.
     /// </summary>
     /// <returns></returns>
-    public Word GetNextWord()
+    public Word GetAndSetNextWord()
     {
         if (currentWordList == null || currentWordList.Count == 0)
         {
             Debug.LogError("WordList is empty or null");
-            return null;
+            currentWord = null;
+            return currentWord;
         }
 
         numWordsProvidedThisLevel++;
         if (numWordsProvidedThisLevel == specialWordRandPosition)
         {
-            return GetSpecialWord() ?? GetRegularWord();
+            currentWord = GetSpecialWord() ?? GetRegularWord();
+            return currentWord;
         }
 
-        return GetRegularWord();
+        currentWord = GetRegularWord();
+        return currentWord;
+    }
+
+    public bool CheckLetter(char inputChar)
+    {
+        return currentWord.ValidateLetter(inputChar);
     }
 
     /// <summary>

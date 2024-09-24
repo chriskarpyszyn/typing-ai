@@ -27,11 +27,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float textShrinkAnimationDuration = 0.2f;
     [SerializeField] private Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
     [SerializeField] private float letterOffset = 2.5f;
-
-
-    
-   
-
     #endregion
 
     #region Public Properties
@@ -51,7 +46,7 @@ public class GameManager : MonoBehaviour
     private int numberOfWordsCompletedThisLevel = 0;
     private bool gameFinished = false;
     private List<string> wordList;
-    private List<GameObject> letterList;
+    private List<GameObject> currentWordList;
     private int currentLetterPosition = 0;
     public LetterSounds letterSounds;
     private int randomWordPosition;
@@ -62,8 +57,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
-        DOTween.Init().SetCapacity(4000,4000);
         scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
         //todo-ck do i create my game manager as a singleton or not?
@@ -74,32 +67,17 @@ public class GameManager : MonoBehaviour
             //having to do this kind of sucks to simply subscribe to an event
             //todo-ck should null check each line here
             SubscribeToFadeIn();
-
-            letterList = new List<GameObject>();
-            AssignWordList(threeLetterWords);
-            SetLevel1HardcodedWord(specialWords.words[minigameOneLevel-1]);
-            ChangeWord();
             
         } else if (SceneManager.GetActiveScene().buildIndex == 2)
         {
-            Debug.Log("OnStart");
-            SubscribeToFadeIn();
-            letterList = new List<GameObject>();
-            AssignWordList(threeLetterWords);
-            ChangeAsteroidWord();
+            //Debug.Log("OnStart");
+            //SubscribeToFadeIn();
+            //currentWordList = new List<GameObject>();
+            //AssignWordList(threeLetterWords);
+            //ChangeAsteroidWord();
         }
     }
    
-
-    /// <summary>
-    /// Helper method to setup the hardcoded word in Level 1 for each
-    /// </summary>
-    /// <param name="word"></param>
-    private void SetLevel1HardcodedWord(String word)
-    {
-        nextHardCodedWord = word;
-        randomWordPosition = Random.Range(1, numWordsPerRound); //todo-ck SPAGHAT
-    }
 
     /// <summary>
     /// Find the FadeIn canvas and subscribe to the animation complete event
@@ -125,22 +103,9 @@ public class GameManager : MonoBehaviour
         //is there a way to avoid this check in the update method?
         if (isFadeInComplete)
         {
-            CheckExitGameShortcut();
             CheckAllLettersCompleted();
             CheckLetter();
             CheckAndIncreaseTime();
-        }
-    }
-
-    private void CheckExitGameShortcut()
-    {
-        //sneaky exit
-        if (Input.GetKey(KeyCode.RightShift))
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Application.Quit();
-            }
         }
     }
 
@@ -196,14 +161,14 @@ public class GameManager : MonoBehaviour
             if (IsSuccessfullLetter(inputChar))
             {
                 //set color of word to success!!!
-                GameObject currentLetter = letterList[currentLetterPosition];
+                GameObject currentLetter = currentWordList[currentLetterPosition];
                 TypedCorrectLetter(currentLetter);
                 DecreaseLetterScale(currentLetter);
 
                 currentLetterPosition++;
                 if (currentLetterPosition < wordCharArraySize)
                 {
-                    GameObject nextLetter = letterList[currentLetterPosition];
+                    GameObject nextLetter = currentWordList[currentLetterPosition];
                     IncreaseLetterScale(nextLetter);
                 }
             }
@@ -246,7 +211,7 @@ public class GameManager : MonoBehaviour
         gameFinished = false;
         SceneManager.LoadScene(1);
         minigameOneLevel = 1; //todo-ck need a minigameOneLevel manager.
-        AssignWordList(threeLetterWords); //todo-ck refactor repeated code, youll know.
+        //AssignWordList(threeLetterWords); //todo-ck refactor repeated code, youll know.
         ChangeWord();
     }
 
@@ -357,19 +322,19 @@ public class GameManager : MonoBehaviour
             {
                 minigameOneLevel++;
                 numberOfWordsCompletedThisLevel = 0;
-                AssignWordList(fourLetterWords);
+                //AssignWordList(fourLetterWords);
                 ChangeWord(); //todo-ck this is also not great, need to refactor out
                 randomWordPosition = Random.Range(1, numWordsPerRound);
-                nextHardCodedWord = specialWords.words[minigameOneLevel-1];
+                //nextHardCodedWord = specialWords.words[minigameOneLevel-1];
 
             } else if (minigameOneLevel == 2)
             {
                 minigameOneLevel++;
                 numberOfWordsCompletedThisLevel = 0;
-                AssignWordList(fiveLetterWords);
+                //AssignWordList(fiveLetterWords);
                 ChangeWord(); //todo-ck this needs to be refactored out
                 randomWordPosition = Random.Range(1, numWordsPerRound);
-                nextHardCodedWord = specialWords.words[minigameOneLevel-1];
+                //nextHardCodedWord = specialWords.words[minigameOneLevel-1];
 
             } else if (minigameOneLevel >= 3) //fyi greater or equal, dont forget
             {
@@ -402,7 +367,7 @@ public class GameManager : MonoBehaviour
 
             ResetProperties();
 
-            IncreaseLetterScale(letterList[0]);
+            IncreaseLetterScale(currentWordList[0]);
         }
     }
 
@@ -444,7 +409,7 @@ public class GameManager : MonoBehaviour
             AddNewLetter(newLetter);
 
 
-            if (letterList.Count == 1)
+            if (currentWordList.Count == 1)
             {
                 scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration);
             }
@@ -459,18 +424,18 @@ public class GameManager : MonoBehaviour
 
     private void AddNewLetter(GameObject letter)
     {
-        letterList.Add(letter);
+        currentWordList.Add(letter);
     }
 
     //Destroys all the game objects in the word list.
     private void DestroyGameObjectWordList()
     {
-        foreach (GameObject go in letterList)
+        foreach (GameObject go in currentWordList)
         {
             Destroy(go);
         }
 
-        letterList.Clear();
+        currentWordList.Clear();
 
     }
 

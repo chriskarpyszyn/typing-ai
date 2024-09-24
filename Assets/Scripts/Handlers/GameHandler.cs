@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -12,7 +13,7 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private WordManager wordManager;
 
     //TODO: to refactor out of GameHandler
-    private string currentWord; //when is it set?
+    private Word currentWord; //when is it set?
     private int currentLetterIndex; //when is it set?
     
     private void Awake()
@@ -31,6 +32,9 @@ public class GameHandler : MonoBehaviour
     }
     private void Start()
     {
+        Application.targetFrameRate = 60;
+        DOTween.Init().SetCapacity(4000, 4000);
+
         levelManager.Initialize();
         wordManager.Initialize(levelManager);
     }
@@ -51,10 +55,10 @@ public class GameHandler : MonoBehaviour
 
     private void HandleLetterInput(char inputChar)
     {
-        if (inputChar == currentWord[currentLetterIndex])
+        if (inputChar == currentWord.GetCharAtIndex(currentLetterIndex))
         {
             currentLetterIndex++;
-            if (currentLetterIndex >= currentWord.Length)
+            if (currentLetterIndex >= currentWord.Count())
             {
                 levelManager.WordCompleted();
                 SetNextWord();
@@ -81,7 +85,7 @@ public class GameHandler : MonoBehaviour
 
     private void SetNextWord()
     {
-        currentWord = wordManager.GetNextWord();
+        currentWord = wordManager.GetAndSetNextWord();
         currentLetterIndex = 0;
         //update UI to display new word
     }
