@@ -15,7 +15,7 @@ public class GameHandler : MonoBehaviour
 
     //TODO: to refactor out of GameHandler
     private Word currentWord; //when is it set?
-    private int currentLetterIndex; //when is it set?
+
     
     private void Awake()
     {
@@ -80,6 +80,7 @@ public class GameHandler : MonoBehaviour
 
         } else
         {
+            //typed wrong letter
             oldGameManager.GetScoreManager().IncrementFailures();
             oldGameManager.GetScoreManager().IncreaseScore(-1);
             oldGameManager.GetScoreManager().ResetKeystrokeStreak();
@@ -96,13 +97,12 @@ public class GameHandler : MonoBehaviour
 
     private void HandleGameCompleted()
     {
-        
+        oldGameManager.EndGame();
     }
 
     private void SetNextWord()
     {
         currentWord = wordManager.GetAndSetNextWord();
-        currentLetterIndex = 0;
         //update UI to display new word
     }
 

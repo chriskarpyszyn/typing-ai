@@ -4,12 +4,14 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
 using UnityEngine;
 
-public class Word 
+public class Word
 {
+    private WordCanvas wordCanvas;
+    private LetterCanvas letterCanvas;
     private List<Letter> letters = new List<Letter>();
     int currentLetterIndex;
 
-    public Word(string word)
+    public Word(string word, WordCanvas canvasWord)
     {
         currentLetterIndex = 0;
         foreach (char c in word)
@@ -17,6 +19,21 @@ public class Word
             Letter letter = new Letter(c);
             this.letters.Add(letter);
         }
+        
+        
+        this.wordCanvas = canvasWord;
+        //canvasWord.Create();
+
+    }
+
+    public void SetCanvas()
+    {
+        //for example.
+    }
+
+    public void CreateCanvas()
+    {
+        //for example
     }
 
     public void AnimateFading()

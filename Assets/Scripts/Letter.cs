@@ -1,16 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Unity.Profiling.Editor;
 using UnityEngine;
 
 public class Letter 
-{  
-
-    public char LetterChar { get; set; }
-    [SerializeField] private GameObject letterPrefab;
+{
+    private LetterCanvas letterCanvas;
+    
+    public char letterChar { get; set; }
 
     public Letter(char letter)
     {
-        LetterChar = letter;
+        this.letterChar = letter;
+    }
+
+    public Letter(char letter, LetterCanvas letterCanvas)
+    {
+        this.letterChar = letter;
+        this.letterCanvas = letterCanvas;
+
+        //letterCanvas.Create();
     }
 
     public void Highlight()

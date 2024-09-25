@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     #region Serialized Fields
     [Header("References")]
-    [SerializeField] private GameObject letterParent;
+    //[SerializeField] private GameObject letterParent;
     [SerializeField] private GameObject letterPrefab;
     [SerializeField] private GameObject asteroidPrefab;
     [SerializeField] private GameObject level3GameCanvas;
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
         //asteroids = new List<GameObject>();
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            letterSounds = letterParent.GetComponent<LetterSounds>(); //todo-ck refactor sound off letter parent
+            /*letterSounds = letterParent.GetComponent<LetterSounds>();*/ //todo-ck refactor sound off letter parent
             //having to do this kind of sucks to simply subscribe to an event
             //todo-ck should null check each line here
             SubscribeToFadeIn();
@@ -127,12 +127,13 @@ public class GameManager : MonoBehaviour
 
         //another thought, asteroids that require multiple words to destroy... 
 
-        if (IsCharTyped() && (currentLetterPosition < wordCharArraySize))
+        //if (IsCharTyped() && (currentLetterPosition < wordCharArraySize))
         {
-            char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
-            if (IsSuccessfullLetter(inputChar))
-            {
-                //set color of word to success!!!
+            //char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
+            //if (IsSuccessfullLetter(inputChar))
+            //{
+                //set color of word to success!!! 
+                //not added to new code yet.
                 GameObject currentLetter = currentWordList[currentLetterPosition];
                 TypedCorrectLetter(currentLetter);
                 DecreaseLetterScale(currentLetter);
@@ -143,11 +144,11 @@ public class GameManager : MonoBehaviour
                     GameObject nextLetter = currentWordList[currentLetterPosition];
                     IncreaseLetterScale(nextLetter);
                 }
-            }
-            else
-            {
-                TypedWrongLetter();
-            }
+            //}
+            //else
+            //{
+            //    //TypedWrongLetter();
+            //}
 
         }
     }
@@ -160,7 +161,7 @@ public class GameManager : MonoBehaviour
         scoreManager.IncrementKeystrokeStreak();
     }
 
-    private void CheckAndIncreaseTime()
+    public void CheckAndIncreaseTime()
     {
         if (SceneManager.GetActiveScene().buildIndex == 1 && !gameFinished)
         {
@@ -191,15 +192,6 @@ public class GameManager : MonoBehaviour
     public ScoreManager GetScoreManager()
     {
         return ScoreManager.Instance;
-    }
-
-    private void TypedWrongLetter()
-    {
-        scoreManager.IncrementFailures();
-        scoreManager.IncreaseScore(-1);
-        scoreManager.ResetKeystrokeStreak();
-        letterSounds?.playErrorSound();
-        StartCoroutine(ShowTextTemporarily());
     }
 
     private void ResetProperties()
@@ -265,50 +257,50 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void ChangeWord()
     {
-        if (numberOfWordsCompletedThisLevel >= numWordsPerRound)
+        if (numberOfWordsCompletedThisLevel >= numWordsPerRound) //now in level manager
         {
-            if (minigameOneLevel == 1) //todo-ck we need to refactor this out.
+            if (minigameOneLevel == 1) 
             {
-                minigameOneLevel++;
-                numberOfWordsCompletedThisLevel = 0;
+                //minigameOneLevel++;
+                //numberOfWordsCompletedThisLevel = 0;
                 //AssignWordList(fourLetterWords);
-                ChangeWord(); //todo-ck this is also not great, need to refactor out
-                randomWordPosition = Random.Range(1, numWordsPerRound);
+                //ChangeWord(); 
+                //randomWordPosition = Random.Range(1, numWordsPerRound); //randomPos for hardcoded word
                 //nextHardCodedWord = specialWords.words[minigameOneLevel-1];
 
             } else if (minigameOneLevel == 2)
             {
-                minigameOneLevel++;
-                numberOfWordsCompletedThisLevel = 0;
+                //minigameOneLevel++;
+                //numberOfWordsCompletedThisLevel = 0;
                 //AssignWordList(fiveLetterWords);
-                ChangeWord(); //todo-ck this needs to be refactored out
-                randomWordPosition = Random.Range(1, numWordsPerRound);
+                //ChangeWord(); 
+                //randomWordPosition = Random.Range(1, numWordsPerRound);
                 //nextHardCodedWord = specialWords.words[minigameOneLevel-1];
 
             } else if (minigameOneLevel >= 3) //fyi greater or equal, dont forget
             {
-                EndGame();
+                //EndGame();
             }
         } else
         {
-            string nextWord = "";
-            if (numberOfWordsCompletedThisLevel == randomWordPosition)
-            {
-                //insert one of the words not from the list
-                nextWord = nextHardCodedWord;
-            } else
-            {
-                //get the next word and remove it.
-                nextWord = GetAndRemoveNextWord();
-            }
+            ////string nextWord = "";
+            //if (numberOfWordsCompletedThisLevel == randomWordPosition)
+            //{
+            //    //insert one of the words not from the list
+            //    nextWord = nextHardCodedWord;
+            //} else
+            //{
+            //    //get the next word and remove it.
+            //    nextWord = GetAndRemoveNextWord();
+            //}
 
             //keep track of the number of words completed in this minigameOneLevel
             //todo-ck move to a minigameOneLevel manager script
-            numberOfWordsCompletedThisLevel++;
+            //numberOfWordsCompletedThisLevel++;
 
             //put the characters into an array so that we can do our input checks
-            wordCharArray = nextWord.ToLower().ToCharArray();
-            wordCharArraySize = wordCharArray.Length;
+            //wordCharArray = nextWord.ToLower().ToCharArray();
+            //wordCharArraySize = wordCharArray.Length;
 
             //destroy old list and draw the next word on the scene
             DestroyGameObjectWordList();
@@ -324,7 +316,7 @@ public class GameManager : MonoBehaviour
     //Create a list of game objects that spell a word, and draw them to screen.
     private void CreateGameObjectWordList(char[] wordCharArray)
     {
-        CreateGameObjectWordList(wordCharArray, this.letterParent);
+        //CreateGameObjectWordList(wordCharArray, this.letterParent); //not moved over yet
     }
 
     private void CreateGameObjectWordList(char[] wordCharArray, GameObject letterParent)
@@ -377,7 +369,7 @@ public class GameManager : MonoBehaviour
     }
 
  
-    private void EndGame()
+    public void EndGame()
     {
         //SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
         new LevelLoader().LoadLevel(3);

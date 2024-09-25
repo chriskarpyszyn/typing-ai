@@ -16,6 +16,9 @@ public class WordManager : MonoBehaviour
     [SerializeField] private List<LevelToWordListPair> levelWordListPairs;
     [SerializeField] private WordListSO specialWords;
 
+    [SerializeField] private WordCanvas wordCanvas;
+    [SerializeField] private LetterCanvas letterCanvas;
+
     private LevelManager levelManager;
     private Dictionary<int, WordListSO> levelToWordListMap;
     private List<Word> currentWordList;
@@ -23,7 +26,7 @@ public class WordManager : MonoBehaviour
     
     private Word currentWord;
 
-    private int numWordsProvidedThisLevel;
+    private int numWordsProvidedThisLevel; //numWordsCompleted
     private int specialWordRandPosition;
 
 
@@ -103,7 +106,7 @@ public class WordManager : MonoBehaviour
     {
         if (currentLevel <= specialWords.words.Count)
         {
-            return new Word(specialWords.words[currentLevel - 1]);
+            return new Word(specialWords.words[currentLevel - 1], wordCanvas);
         }
         else
         {
