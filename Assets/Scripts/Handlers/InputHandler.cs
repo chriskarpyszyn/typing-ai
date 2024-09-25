@@ -6,8 +6,8 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     public static InputHandler Instance;
-
     public event Action<char> OnLetterInput;
+    private bool blockTyping = false;
     
     private void Awake()
     {
@@ -27,7 +27,7 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Input.anyKeyDown & !IsMouseButtonClick())
+        if (Input.anyKeyDown && !IsMouseButtonClick() && !blockTyping)
         {
             char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
             if (inputChar != '\0')

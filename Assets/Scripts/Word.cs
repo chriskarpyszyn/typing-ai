@@ -24,7 +24,7 @@ public class Word
 
     }
 
-    public char GetCharAtIndex(int i)
+    private char GetCharAtIndex(int i)
     {
         return letters[i].LetterChar;
     }
@@ -43,9 +43,16 @@ public class Word
 
         currentLetterIndex++;
 
-        //call animation? etc. etc.
+        //Set Color of Letter on Success
+
+        //Increase Size of next letter
 
         return true;
+    }
+
+    public bool IsWordCompleted()
+    {
+        return currentLetterIndex == Count();
     }
 
     public int Count()

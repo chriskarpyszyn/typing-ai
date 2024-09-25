@@ -59,8 +59,9 @@ public class GameManager : MonoBehaviour
     {
         scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
-        //todo-ck do i create my game manager as a singleton or not?
-        asteroids = new List<GameObject>();
+ 
+
+        //asteroids = new List<GameObject>();
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             letterSounds = letterParent.GetComponent<LetterSounds>(); //todo-ck refactor sound off letter parent
@@ -103,43 +104,14 @@ public class GameManager : MonoBehaviour
         //is there a way to avoid this check in the update method?
         if (isFadeInComplete)
         {
-            CheckAllLettersCompleted();
-            CheckLetter();
+            //CheckAllLettersCompleted();
+            //CheckLetter();
+
+            //TODO: move to score manager, need to get the timer out of here
             CheckAndIncreaseTime();
         }
     }
 
-    private void CheckAllLettersCompleted()
-    {
-        //check if we're successfully compelted all letters!
-        if (SceneManager.GetActiveScene().buildIndex == 1 && currentLetterPosition == wordCharArraySize && !wordCompleted)
-        {
-            scoreManager.IncreaseScore(3);
-            wordCompleted = true;
-            //letterSounds.playPositiveLongSound(); //todo-ck replace? redo?
-            letterSounds.ResetPositiveSoundPitch();
-            ChangeWord();
-        }
-    }
-
-    private bool IsCharTyped()
-    {
-        return Input.anyKeyDown && canType && !gameFinished;
-    }
-
-    private bool IsSuccessfullLetter(char inputChar)
-    {
-        return inputChar != NULL_CHAR && inputChar == wordCharArray[currentLetterPosition];
-    }
-
-    private char ExtractCharFromInput(char[] inputCharArray)
-    {
-        if (inputCharArray.Length>0)
-        {
-            return inputCharArray[0];
-        }
-        return NULL_CHAR;
-    }
     private void CheckLetter()
     {
 
@@ -215,24 +187,6 @@ public class GameManager : MonoBehaviour
         ChangeWord();
     }
 
-    /*
-     * 
-     * 
-     *         
-        
-        //todo-ck do i create my game manager as a singleton or not?
-        asteroids = new List<GameObject>();
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            
-
-            
-            AssignWordList(threeLetterWords);
-            SetLevel1HardcodedWord(specialWords.words[minigameOneLevel-1]);
-            ChangeWord();
-     * 
-     * 
-     */
 
     public ScoreManager GetScoreManager()
     {
@@ -272,7 +226,7 @@ public class GameManager : MonoBehaviour
         LetterScaleAnimation(1f, letter);
     }
 
-    private IEnumerator ShowTextTemporarily()
+    public IEnumerator ShowTextTemporarily()
     {
         canType = false;
         wrongCharXTMP.enabled = true;
@@ -281,33 +235,28 @@ public class GameManager : MonoBehaviour
         canType = true;
     }
 
-    //private bool IsMouseButtonClick()
-    //{
-    //    return (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2));
-    //}
-
     /// <summary>
     /// Method for handling the asteroid sprite and word generation.
     /// </summary>
     private void ChangeAsteroidWord()
     {
-        Debug.Log("ChangeAsteroidWord");
-        GameObject newAsteroid = Instantiate(asteroidPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-        newAsteroid.transform.SetParent(level3GameCanvas.transform);
-        asteroids.Add(newAsteroid);
-        //position it randomly x 10, y 7
-        float randomX = Random.Range(-10f, 10f);
-        float randomY = Random.Range(-7f, 7f);
-        newAsteroid.transform.position = new Vector3(randomX, randomY, -1f);
+        //Debug.Log("ChangeAsteroidWord");
+        //GameObject newAsteroid = Instantiate(asteroidPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        //newAsteroid.transform.SetParent(level3GameCanvas.transform);
+        //asteroids.Add(newAsteroid);
+        ////position it randomly x 10, y 7
+        //float randomX = Random.Range(-10f, 10f);
+        //float randomY = Random.Range(-7f, 7f);
+        //newAsteroid.transform.position = new Vector3(randomX, randomY, -1f);
 
-        Transform asteroidLetterParentTransform = newAsteroid.transform.Find("LetterParent");
-        GameObject asteroidLetterParent = asteroidLetterParentTransform.gameObject;
+        //Transform asteroidLetterParentTransform = newAsteroid.transform.Find("LetterParent");
+        //GameObject asteroidLetterParent = asteroidLetterParentTransform.gameObject;
 
-        ////add word to asteroid
-        //put the characters into an array so that we can do our input checks (repeated code)
-        wordCharArray = GetAndRemoveNextWord().ToLower().ToCharArray();
-        wordCharArraySize = wordCharArray.Length;
-        CreateGameObjectWordList(wordCharArray, asteroidLetterParent);
+        //////add word to asteroid
+        ////put the characters into an array so that we can do our input checks (repeated code)
+        //wordCharArray = GetAndRemoveNextWord().ToLower().ToCharArray();
+        //wordCharArraySize = wordCharArray.Length;
+        //CreateGameObjectWordList(wordCharArray, asteroidLetterParent);
     }
 
 
@@ -371,18 +320,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Returns the next word to be used in the game and removes it from the list
-    /// </summary>
-    /// <returns></returns>
-    private string GetAndRemoveNextWord()
-    {
-        String ret = "";
-        int randomInt = new System.Random().Next(0, wordList.Count);
-        ret = wordList[randomInt];
-        wordList.RemoveAt(randomInt);
-        return ret;
-    }
 
     //Create a list of game objects that spell a word, and draw them to screen.
     private void CreateGameObjectWordList(char[] wordCharArray)
@@ -439,20 +376,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-    /// <summary>
-    /// Takes a ScriptableObject with a Word List and assigns it to the local variable in GameManager
-    /// </summary>
-    /// <param name="wordListSO"></param>
-    private void AssignWordList(WordListSO wordListSO)
-    {
-        wordList = new List<String>(wordListSO.words);
-        currentLetterPosition = 0;
-    }
-
+ 
     private void EndGame()
     {
         //SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
-        new LevelLoader().LoadLevel(2);
+        new LevelLoader().LoadLevel(3);
         DestroyGameObjectWordList();
         gameFinished = true;
         scoreManager.DisplayEndGameStats();

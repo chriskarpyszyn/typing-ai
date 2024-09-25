@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameHandler : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class GameHandler : MonoBehaviour
         inputHandler.OnLetterInput += HandleLetterInput;
         levelManager.OnLevelChanged += HandleLevelChanged;
         levelManager.OnGameCompleted += HandleGameCompleted;
+        SceneManager.sceneLoaded += HandleOnSceneLoaded;
     }
 
     private void OnDisable()
@@ -51,24 +53,38 @@ public class GameHandler : MonoBehaviour
         inputHandler.OnLetterInput -= HandleLetterInput;
         levelManager.OnLevelChanged -= HandleLevelChanged;
         levelManager.OnGameCompleted -= HandleGameCompleted;
+        SceneManager.sceneLoaded -= HandleOnSceneLoaded;
+    }
+
+    private void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            levelManager.SetLevel(1);
+        }
     }
 
     private void HandleLetterInput(char inputChar)
     {
-        if (inputChar == currentWord.GetCharAtIndex(currentLetterIndex))
+        if (currentWord.ValidateLetter(inputChar))
         {
-            currentLetterIndex++;
-            if (currentLetterIndex >= currentWord.Count())
+            if (currentWord.IsWordCompleted())
             {
                 levelManager.WordCompleted();
                 SetNextWord();
             }
-        }
-        else
+
+            //old code
+            oldGameManager.GetScoreManager().IncreaseScore(3);
+            oldGameManager.letterSounds.ResetPositiveSoundPitch();
+
+        } else
         {
             oldGameManager.GetScoreManager().IncrementFailures();
             oldGameManager.GetScoreManager().IncreaseScore(-1);
             oldGameManager.GetScoreManager().ResetKeystrokeStreak();
+            oldGameManager.letterSounds?.playErrorSound();
+            StartCoroutine(oldGameManager.ShowTextTemporarily());
         }
     }
 
