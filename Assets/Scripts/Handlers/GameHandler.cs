@@ -71,7 +71,7 @@ public class GameHandler : MonoBehaviour
             if (currentWord.IsWordCompleted())
             {
                 levelManager.WordCompleted();
-                SetNextWord();
+                SetNextWord(); //let word handler deal w/ this
             }
 
             //old code
@@ -102,8 +102,7 @@ public class GameHandler : MonoBehaviour
 
     private void SetNextWord()
     {
-        currentWord = wordManager.GetAndSetNextWord();
-        //update UI to display new word
+        currentWord = wordManager.GetAndSetNextWord();  
     }
 
     public void StartGame()

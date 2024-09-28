@@ -32,6 +32,8 @@ public class WordManager : MonoBehaviour
 
     public void Initialize(LevelManager levelManager)
     {
+        currentWordList = new List<Word>();
+
         this.levelManager = levelManager;
         this.levelManager.OnLevelChanged += HandleLevelChanged;
 
@@ -53,16 +55,18 @@ public class WordManager : MonoBehaviour
     /// <param name="newLevel">The new level to change to</param>
     public void HandleLevelChanged(int newLevel)
     {
+        Debug.Log("Enter: HandleLevelChanged");
         ResetForNewLevel(newLevel);
     }
 
 
     /// <summary>
-    /// Returns a word from the wordlist.
+    /// Returns a wordObject from the wordlist.
     /// </summary>
     /// <returns></returns>
     public Word GetAndSetNextWord()
     {
+        Debug.Log("Enter: GetAndSetNextWord");
         if (currentWordList == null || currentWordList.Count == 0)
         {
             Debug.LogError("WordList is empty or null");
@@ -87,42 +91,59 @@ public class WordManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Reset properties when changing level.
+    /// TODO: REFACTOR Reset properties when changing level.
     /// </summary>
     private void ResetForNewLevel(int newLevel)
     {
+        //TODO: This feels like I'm doing too much in this class. 
+        //And I probably want to move some of the level logic out of the wordObject manager
+        //Into the GameHandler.....
+        //WordManager should just worry about getting, creating and drawing words and letters
+        //And validating them...
+        Debug.Log("Enter: RsetForNewLevel");
         currentLevel = newLevel; //dont need class prop?
         AssignWordList();
+        GetAndSetNextWord();
+        //level 1,2,3 --- all this level stuff should be in the game handler...
+        if (currentLevel==1||currentLevel==2||currentLevel==3)
+        {
+            GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.2f).CreateCanvas(); //hardcoding level 1 pos
+            currentWord.WithLetterCanvas(letterCanvas).CreateLetterCanvas(wordObject);
+        }
         numWordsProvidedThisLevel = 0;
-        //I don't want the special word to be first or last
+        //I don't want the special wordObject to be first or last
         specialWordRandPosition = Random.Range(2, levelManager.GetWordsPerLevel()); 
     }
 
     /// <summary>
-    /// Inserts a hardcoded word from the special word list for the appropriate level
+    /// Inserts a hardcoded wordObject from the special wordObject list for the appropriate level
     /// </summary>
     /// <returns></returns>
     private Word GetSpecialWord()
     {
+        Debug.Log("Enter: Get Special Word");
         if (currentLevel <= specialWords.words.Count)
         {
-            return new Word(specialWords.words[currentLevel - 1], wordCanvas);
+            return new Word(
+                specialWords.words[currentLevel - 1])
+                .WithWordCanvas(wordCanvas);
         }
         else
         {
-            Debug.LogWarning($"No special word defined for level: {currentLevel}.");
+            Debug.LogWarning($"No special wordObject defined for level: {currentLevel}.");
             return null;
         }
     }
 
     /// <summary>
-    /// Get's a random word from the word list.
+    /// Get's a random wordObject from the wordObject list.
     /// </summary>
     /// <returns></returns>
     private Word GetRegularWord()
     {
+        Debug.Log("Enter: Get Regular Word");
         int randomIndex = Random.Range(0, currentWordList.Count);
-        Word returnWord = currentWordList[randomIndex];
+        Word returnWord = currentWordList[randomIndex].WithWordCanvas(wordCanvas);
         currentWordList.RemoveAt(randomIndex);
         return returnWord;
     }
@@ -132,6 +153,7 @@ public class WordManager : MonoBehaviour
     /// </summary>
     private void AssignWordList()
     {
+        Debug.Log("Enter: AssignWordList");
         if (levelToWordListMap.TryGetValue(currentLevel, out WordListSO wordListSO))
         {
             foreach (string word in wordListSO.words)
@@ -141,7 +163,7 @@ public class WordManager : MonoBehaviour
         } 
         else
         {
-            Debug.LogError($"No word list found for level {currentLevel}");
+            Debug.LogError($"No wordObject list found for level {currentLevel}");
             currentWordList = new List<Word>();
         }
     }

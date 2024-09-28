@@ -8,32 +8,59 @@ public class Word
 {
     private WordCanvas wordCanvas;
     private LetterCanvas letterCanvas;
-    private List<Letter> letters = new List<Letter>();
+    private List<Letter> letters;
+
+    private float xPos;
+    private float yPos;
+    private float zPos;
+
     int currentLetterIndex;
 
-    public Word(string word, WordCanvas canvasWord)
+    public Word(string word)
     {
+        letters = new List<Letter>();
         currentLetterIndex = 0;
         foreach (char c in word)
         {
             Letter letter = new Letter(c);
             this.letters.Add(letter);
         }
-        
-        
-        this.wordCanvas = canvasWord;
-        //canvasWord.Create();
-
     }
 
-    public void SetCanvas()
+    public Word WithWordCanvas(WordCanvas wordCanvas)
     {
-        //for example.
+        this.wordCanvas = wordCanvas;
+        return this;
     }
 
-    public void CreateCanvas()
+    public Word WithLetterCanvas(LetterCanvas letterCanvas)
     {
-        //for example
+        this.letterCanvas = letterCanvas;
+        return this;
+    }
+
+    public Word WithPosition(float x, float y, float z)
+    {
+        this.xPos = x;
+        this.yPos = y;
+        this.zPos = z;
+        return this;
+    }
+
+
+    public GameObject CreateCanvas()
+    {
+        return wordCanvas.Create(xPos,yPos,zPos);
+    }
+
+    public void CreateLetterCanvas(GameObject wordObject)
+    {
+        foreach (Letter l in letters)
+        {
+            l.WithWordObject(wordObject)
+                .WithLetterCanvas(letterCanvas)
+                .CreateCanvas();
+        }
     }
 
     public void AnimateFading()
@@ -43,12 +70,12 @@ public class Word
 
     private char GetCharAtIndex(int i)
     {
-        return letters[i].LetterChar;
+        return letters[i].letterChar;
     }
 
     public char GetCharAtCurrentLetterIndex()
     {
-        return letters[currentLetterIndex].LetterChar;
+        return letters[currentLetterIndex].letterChar;
     }
 
     public bool ValidateLetter(char c)
