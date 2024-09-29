@@ -1,6 +1,6 @@
-You can play the first build [here](https://chriskarpyszyn.github.io/typing-ai/build/v0.1/index.html). 
+Youu can play the first build [here](https://chriskarpyszyn.github.io/typing-ai/build/v0.1/index.html). 
 
-
+editor v 2021.3.12f1
 
 
 ## Scene 1 Background Noise
