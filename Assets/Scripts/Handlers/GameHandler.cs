@@ -13,9 +13,6 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private GameManager oldGameManager;
     [SerializeField] private WordManager wordManager;
 
-    //TODO: to refactor out of GameHandler
-    private Word currentWord; //when is it set?
-
     
     private void Awake()
     {
@@ -66,17 +63,20 @@ public class GameHandler : MonoBehaviour
 
     private void HandleLetterInput(char inputChar)
     {
-        if (currentWord.ValidateLetter(inputChar))
+        Debug.Log("InputChar: " + inputChar);
+
+        if (wordManager.CheckLetter(inputChar))
         {
-            if (currentWord.IsWordCompleted())
+            if (wordManager.IsWordCompleted())
             {
-                levelManager.WordCompleted();
-                SetNextWord(); //let word handler deal w/ this
+                wordManager.GetAndSetNextWord();
+                wordManager.DrawWord();
+                //levelManager.WordCompleted();
             }
 
             //old code
             oldGameManager.GetScoreManager().IncreaseScore(3);
-            oldGameManager.letterSounds.ResetPositiveSoundPitch();
+            //oldGameManager.letterSounds.ResetPositiveSoundPitch();
 
         } else
         {
@@ -98,11 +98,6 @@ public class GameHandler : MonoBehaviour
     private void HandleGameCompleted()
     {
         oldGameManager.EndGame();
-    }
-
-    private void SetNextWord()
-    {
-        currentWord = wordManager.GetAndSetNextWord();  
     }
 
     public void StartGame()

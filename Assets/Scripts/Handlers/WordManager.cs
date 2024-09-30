@@ -90,6 +90,11 @@ public class WordManager : MonoBehaviour
         return currentWord.ValidateLetter(inputChar);
     }
 
+    public bool IsWordCompleted()
+    {
+        return currentWord.IsWordCompleted();
+    }
+
     /// <summary>
     /// TODO: REFACTOR Reset properties when changing level.
     /// </summary>
@@ -107,12 +112,17 @@ public class WordManager : MonoBehaviour
         //level 1,2,3 --- all this level stuff should be in the game handler...
         if (currentLevel==1||currentLevel==2||currentLevel==3)
         {
-            GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.2f).CreateCanvas(); //hardcoding level 1 pos
-            currentWord.CreateLetterCanvas(wordObject, letterCanvas);
+            DrawWord();
         }
         numWordsProvidedThisLevel = 0;
         //I don't want the special wordObject to be first or last
         specialWordRandPosition = Random.Range(2, levelManager.GetWordsPerLevel()); 
+    }
+
+    public void DrawWord()
+    {
+        GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.2f).CreateCanvas(); //hardcoding level 1 pos
+        currentWord.CreateLetterCanvas(wordObject, letterCanvas);
     }
 
     /// <summary>
