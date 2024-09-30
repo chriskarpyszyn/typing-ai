@@ -30,6 +30,9 @@ public class LevelManager : MonoBehaviour
         if (wordsCompletedInCurrentLevel >= wordsPerLevel)
         {
             AdvanceLevel();
+        } else
+        {
+            //next word...
         }
     }
 
