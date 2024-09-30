@@ -7,7 +7,6 @@ using UnityEngine;
 public class Letter 
 {
     private LetterCanvas letterCanvas;
-    private GameObject wordObject;
 
     public char letterChar { get; set; }
 
@@ -22,13 +21,7 @@ public class Letter
         return this;
     }
 
-    public Letter WithWordObject(GameObject wordObject)
-    {
-        this.wordObject = wordObject;
-        return this;
-    }
-
-    public void CreateCanvas()
+    public void CreateCanvas(GameObject wordObject)
     {
         if (letterCanvas == null) { 
             Debug.LogError("Letter.CreateCanvas: Missing LetterCanvas reference");

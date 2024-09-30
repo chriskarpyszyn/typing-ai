@@ -7,7 +7,6 @@ using UnityEngine;
 public class Word
 {
     private WordCanvas wordCanvas;
-    private LetterCanvas letterCanvas;
     private List<Letter> letters;
 
     private float xPos;
@@ -33,12 +32,6 @@ public class Word
         return this;
     }
 
-    public Word WithLetterCanvas(LetterCanvas letterCanvas)
-    {
-        this.letterCanvas = letterCanvas;
-        return this;
-    }
-
     public Word WithPosition(float x, float y, float z)
     {
         this.xPos = x;
@@ -47,19 +40,17 @@ public class Word
         return this;
     }
 
-
     public GameObject CreateCanvas()
     {
         return wordCanvas.Create(xPos,yPos,zPos);
     }
 
-    public void CreateLetterCanvas(GameObject wordObject)
+    public void CreateLetterCanvas(GameObject wordObject, LetterCanvas letterCanvas)
     {
         foreach (Letter l in letters)
         {
-            l.WithWordObject(wordObject)
-                .WithLetterCanvas(letterCanvas)
-                .CreateCanvas();
+            l.WithLetterCanvas(letterCanvas)
+                .CreateCanvas(wordObject);
         }
     }
 

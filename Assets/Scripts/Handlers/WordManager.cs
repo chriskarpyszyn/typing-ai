@@ -108,7 +108,7 @@ public class WordManager : MonoBehaviour
         if (currentLevel==1||currentLevel==2||currentLevel==3)
         {
             GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.2f).CreateCanvas(); //hardcoding level 1 pos
-            currentWord.WithLetterCanvas(letterCanvas).CreateLetterCanvas(wordObject);
+            currentWord.CreateLetterCanvas(wordObject, letterCanvas);
         }
         numWordsProvidedThisLevel = 0;
         //I don't want the special wordObject to be first or last
