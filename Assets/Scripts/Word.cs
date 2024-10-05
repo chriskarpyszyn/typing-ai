@@ -8,6 +8,7 @@ public class Word
 {
     private WordCanvas wordCanvas;
     private List<Letter> letters;
+    private GameObject wordGameObject;
 
     private float xPos;
     private float yPos;
@@ -42,7 +43,13 @@ public class Word
 
     public GameObject CreateCanvas()
     {
-        return wordCanvas.Create(xPos,yPos,zPos);
+        wordGameObject = wordCanvas.Create(xPos,yPos,zPos);
+        return wordGameObject;
+    }
+
+    public void DestroyCanvas()
+    {
+        wordCanvas.DestroyCanvas(wordGameObject);
     }
 
     public void CreateLetterCanvas(GameObject wordObject, LetterCanvas letterCanvas)

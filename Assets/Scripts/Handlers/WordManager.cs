@@ -124,6 +124,13 @@ public class WordManager : MonoBehaviour
         GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.2f).CreateCanvas(); //hardcoding level 1 pos
         currentWord.CreateLetterCanvas(wordObject, letterCanvas);
     }
+    
+    public void DestroyWord() 
+    {
+        // Destroy(wordGo);
+        currentWord.DestroyCanvas();
+        //destroy word here
+    }
 
     /// <summary>
     /// Inserts a hardcoded wordObject from the special wordObject list for the appropriate level

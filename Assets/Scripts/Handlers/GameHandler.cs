@@ -69,6 +69,7 @@ public class GameHandler : MonoBehaviour
         {
             if (wordManager.IsWordCompleted())
             {
+                wordManager.DestroyWord();
                 wordManager.GetAndSetNextWord();
                 wordManager.DrawWord();
                 //levelManager.WordCompleted();
