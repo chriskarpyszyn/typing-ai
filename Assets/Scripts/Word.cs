@@ -85,9 +85,10 @@ public class Word
     {
         if (GetCharAtCurrentLetterIndex() != c)
         {
+            Debug.Log("Validate False");
             return false;
         }
-
+        Debug.Log("Validate True");
         GetLetterAtCurrentIndex().HighlightSuccessLetter();
 
         currentLetterIndex++;

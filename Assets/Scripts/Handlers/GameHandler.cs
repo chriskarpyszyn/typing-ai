@@ -63,35 +63,26 @@ public class GameHandler : MonoBehaviour
 
     private void HandleLetterInput(char inputChar)
     {
-        Debug.Log("InputChar: " + inputChar);
 
         //we will move all this word manager stuff into wordmanager not game handler
-        if (wordManager.CheckLetter(inputChar))
-        {
+        //if (wordManager.CheckLetter(inputChar))
+        //{
 
-            if (wordManager.IsWordCompleted())
-            {
-                wordManager.DestroyWord();
-                wordManager.GetAndSetNextWord();
-                wordManager.DrawWord();
-                //levelManager.WordCompleted();
-            }
 
-           
+         
+        //    //old code
+        //    oldGameManager.GetScoreManager().IncreaseScore(3);
+        //    //oldGameManager.letterSounds.ResetPositiveSoundPitch();
 
-            //old code
-            oldGameManager.GetScoreManager().IncreaseScore(3);
-            //oldGameManager.letterSounds.ResetPositiveSoundPitch();
-
-        } else
-        {
-            //typed wrong letter
-            oldGameManager.GetScoreManager().IncrementFailures();
-            oldGameManager.GetScoreManager().IncreaseScore(-1);
-            oldGameManager.GetScoreManager().ResetKeystrokeStreak();
-            oldGameManager.letterSounds?.playErrorSound();
-            StartCoroutine(oldGameManager.ShowTextTemporarily());
-        }
+        //} else
+        //{
+        //    //typed wrong letter
+        //    oldGameManager.GetScoreManager().IncrementFailures();
+        //    oldGameManager.GetScoreManager().IncreaseScore(-1);
+        //    oldGameManager.GetScoreManager().ResetKeystrokeStreak();
+        //    oldGameManager.letterSounds?.playErrorSound();
+        //    StartCoroutine(oldGameManager.ShowTextTemporarily());
+        //}
     }
 
     private void HandleLevelChanged(int i)

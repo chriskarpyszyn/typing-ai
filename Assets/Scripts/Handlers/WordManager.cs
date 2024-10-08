@@ -13,6 +13,8 @@ public class WordManager : MonoBehaviour
         public WordListSO wordList;
     }
 
+    [SerializeField] private InputHandler inputHandler;
+
     [SerializeField] private List<LevelToWordListPair> levelWordListPairs;
     [SerializeField] private WordListSO specialWords;
 
@@ -30,12 +32,14 @@ public class WordManager : MonoBehaviour
     private int specialWordRandPosition;
 
 
+    //word handler prob doesnt need to even know about gamehandler
     public void Initialize(LevelManager levelManager)
     {
         currentWordList = new List<Word>();
 
         this.levelManager = levelManager;
         this.levelManager.OnLevelChanged += HandleLevelChanged;
+        this.inputHandler.OnLetterInput += HandleLetterInput;
 
         InitializeLevelWordMap();
         ResetForNewLevel(levelManager.GetCurrentLevel());
@@ -47,6 +51,36 @@ public class WordManager : MonoBehaviour
         {
             levelManager.OnLevelChanged -= HandleLevelChanged;
         }
+        inputHandler.OnLetterInput -= HandleLetterInput;
+    }
+
+    public void HandleLetterInput(char inputChar)
+    {
+        Debug.Log(inputChar);
+        if (CheckLetter(inputChar))
+        {
+            Debug.Log("TRUE");
+            if (IsWordCompleted())
+            {
+                Debug.Log("Do I get here");
+                DestroyWord();
+                GetAndSetNextWord();
+                DrawWord();
+                //level manager - word completed - event? 
+            }
+
+            //else - letter is good, word is not completed
+        } else
+        {
+            ////typed wrong letter
+            //oldGameManager.GetScoreManager().IncrementFailures();
+            //oldGameManager.GetScoreManager().IncreaseScore(-1);
+            //oldGameManager.GetScoreManager().ResetKeystrokeStreak();
+            //oldGameManager.letterSounds?.playErrorSound();
+            //StartCoroutine(oldGameManager.ShowTextTemporarily());
+        }
+
+
     }
 
     /// <summary>
