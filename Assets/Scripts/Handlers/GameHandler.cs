@@ -65,8 +65,10 @@ public class GameHandler : MonoBehaviour
     {
         Debug.Log("InputChar: " + inputChar);
 
+        //we will move all this word manager stuff into wordmanager not game handler
         if (wordManager.CheckLetter(inputChar))
         {
+
             if (wordManager.IsWordCompleted())
             {
                 wordManager.DestroyWord();
@@ -74,6 +76,8 @@ public class GameHandler : MonoBehaviour
                 wordManager.DrawWord();
                 //levelManager.WordCompleted();
             }
+
+           
 
             //old code
             oldGameManager.GetScoreManager().IncreaseScore(3);

@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
         //then typing o would register against both.
 
         //another thought, asteroids that require multiple words to destroy... 
-
+        GameObject currentLetter = null; //delete me, not useful.
         //if (IsCharTyped() && (currentLetterPosition < wordCharArraySize))
         {
             //char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
@@ -134,9 +134,9 @@ public class GameManager : MonoBehaviour
             //{
                 //set color of word to success!!! 
                 //not added to new code yet.
-                GameObject currentLetter = currentWordList[currentLetterPosition];
-                TypedCorrectLetter(currentLetter);
-                DecreaseLetterScale(currentLetter);
+                //GameObject currentLetter = currentWordList[currentLetterPosition];
+                TypedCorrectLetter(currentLetter); //change color here
+                DecreaseLetterScale(currentLetter); //animate destruction
 
                 currentLetterPosition++;
                 if (currentLetterPosition < wordCharArraySize)
@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
 
     private void TypedCorrectLetter(GameObject letter)
     {
-        letter.GetComponent<TextMeshPro>().color = successColor;
+        //letter.GetComponent<TextMeshPro>().color = successColor; - implemented in letterCanvas
         letterSounds?.playPositiveSound();
         scoreManager.IncreaseScore(2);
         scoreManager.IncrementKeystrokeStreak();
@@ -303,7 +303,7 @@ public class GameManager : MonoBehaviour
             //wordCharArraySize = wordCharArray.Length;
 
             //destroy old list and draw the next word on the scene
-            DestroyGameObjectWordList();
+            //DestroyGameObjectWordList();
             CreateGameObjectWordList(wordCharArray);
 
             ResetProperties();
@@ -335,7 +335,7 @@ public class GameManager : MonoBehaviour
             newLetter.transform.SetParent(letterParent.transform, false);
             newLetter.name = "offset" + firstLetterPositionX;
             tmpLetter.text = c.ToString().ToUpper();
-            AddNewLetter(newLetter);
+            //AddNewLetter(newLetter);
 
 
             if (currentWordList.Count == 1)
@@ -351,29 +351,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void AddNewLetter(GameObject letter)
-    {
-        currentWordList.Add(letter);
-    }
-
-    //Destroys all the game objects in the word list.
-    private void DestroyGameObjectWordList()
-    {
-        foreach (GameObject go in currentWordList)
-        {
-            Destroy(go);
-        }
-
-        currentWordList.Clear();
-
-    }
 
  
     public void EndGame()
     {
         //SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
         new LevelLoader().LoadLevel(3);
-        DestroyGameObjectWordList();
+        //DestroyGameObjectWordList();
         gameFinished = true;
         scoreManager.DisplayEndGameStats();
     }

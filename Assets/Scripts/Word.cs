@@ -57,7 +57,7 @@ public class Word
         foreach (Letter l in letters)
         {
             l.WithLetterCanvas(letterCanvas)
-                .CreateCanvas(wordObject);
+                .CreateObject(wordObject);
         }
     }
 
@@ -76,6 +76,11 @@ public class Word
         return letters[currentLetterIndex].letterChar;
     }
 
+    public Letter GetLetterAtCurrentIndex()
+    {
+        return letters[currentLetterIndex];
+    }
+
     public bool ValidateLetter(char c)
     {
         if (GetCharAtCurrentLetterIndex() != c)
@@ -83,10 +88,9 @@ public class Word
             return false;
         }
 
+        GetLetterAtCurrentIndex().HighlightSuccessLetter();
+
         currentLetterIndex++;
-
-        //Set Color of Letter on Success
-
         //Increase Size of next letter
 
         return true;

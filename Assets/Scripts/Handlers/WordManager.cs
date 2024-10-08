@@ -90,6 +90,7 @@ public class WordManager : MonoBehaviour
         return currentWord.ValidateLetter(inputChar);
     }
 
+
     public bool IsWordCompleted()
     {
         return currentWord.IsWordCompleted();

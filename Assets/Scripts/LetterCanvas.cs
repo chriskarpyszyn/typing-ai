@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class LetterCanvas : MonoBehaviour
 {
-    public void Create(Letter letter, GameObject wordCanvas)
+
+    [SerializeField] private Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
+
+    public GameObject Create(Letter letter, GameObject wordCanvas)
     {
         Debug.Log("Enter Letter Create Canvas");
         Vector3 letterPosition = new Vector3(0, 0, 0);
@@ -20,6 +23,13 @@ public class LetterCanvas : MonoBehaviour
 
         tmpLetter.name = "letterCanvas:" + letter.letterChar;
         tmpLetter.text = letter.letterChar.ToString().ToUpper();
+
+        return newLetterCanvas;
+    }
+
+    public void ChangeColor(GameObject letter)
+    {
+        letter.GetComponent<TextMeshPro>().color = successColor;
     }
 
     //private void CreateGameObjectWordList(char[] wordCharArray, GameObject letterParent)
