@@ -24,11 +24,9 @@ public class WordManager : MonoBehaviour
     private LevelManager levelManager;
     private Dictionary<int, WordListSO> levelToWordListMap;
     private List<Word> currentWordList;
-    private int currentLevel;
     
     private Word currentWord;
 
-    private int numWordsProvidedThisLevel; //numWordsCompleted
     private int specialWordRandPosition;
 
 
@@ -39,10 +37,11 @@ public class WordManager : MonoBehaviour
 
         this.levelManager = levelManager;
         this.levelManager.OnLevelChanged += HandleLevelChanged;
+        this.levelManager.OnNextWord += HandleNextWord;
         this.inputHandler.OnLetterInput += HandleLetterInput;
 
         InitializeLevelWordMap();
-        ResetForNewLevel(levelManager.GetCurrentLevel());
+        ResetForNewLevel();
     }
 
     public void OnDisable()
@@ -64,23 +63,29 @@ public class WordManager : MonoBehaviour
             {
                 Debug.Log("Do I get here");
                 DestroyWord();
-                GetAndSetNextWord();
-                DrawWord();
-                //level manager - word completed - event? 
+                levelManager.WordCompleted();
             }
-
-            //else - letter is good, word is not completed
         } else
         {
             ////typed wrong letter
             //oldGameManager.GetScoreManager().IncrementFailures();
             //oldGameManager.GetScoreManager().IncreaseScore(-1);
             //oldGameManager.GetScoreManager().ResetKeystrokeStreak();
+
+            //implement a sound manager here...
             //oldGameManager.letterSounds?.playErrorSound();
+
+            //add this to the word manager, i think it's a good place for it.
             //StartCoroutine(oldGameManager.ShowTextTemporarily());
         }
 
 
+    }
+
+    public void HandleNextWord()
+    {
+        GetAndSetNextWord();
+        DrawWord();
     }
 
     /// <summary>
@@ -89,8 +94,8 @@ public class WordManager : MonoBehaviour
     /// <param name="newLevel">The new level to change to</param>
     public void HandleLevelChanged(int newLevel)
     {
-        Debug.Log("Enter: HandleLevelChanged");
-        ResetForNewLevel(newLevel);
+        Debug.Log("Enter: HandleLevelChanged: " + newLevel);
+        ResetForNewLevel();
     }
 
 
@@ -108,8 +113,7 @@ public class WordManager : MonoBehaviour
             return currentWord;
         }
 
-        numWordsProvidedThisLevel++;
-        if (numWordsProvidedThisLevel == specialWordRandPosition)
+        if (levelManager.GetWordsCompletedInCurrentLevel() == specialWordRandPosition)
         {
             currentWord = GetSpecialWord() ?? GetRegularWord();
             return currentWord;
@@ -133,25 +137,20 @@ public class WordManager : MonoBehaviour
     /// <summary>
     /// TODO: REFACTOR Reset properties when changing level.
     /// </summary>
-    private void ResetForNewLevel(int newLevel)
+    private void ResetForNewLevel()
     {
-        //TODO: This feels like I'm doing too much in this class. 
-        //And I probably want to move some of the level logic out of the wordObject manager
-        //Into the GameHandler.....
-        //WordManager should just worry about getting, creating and drawing words and letters
-        //And validating them...
         Debug.Log("Enter: RsetForNewLevel");
-        currentLevel = newLevel; //dont need class prop?
+        //I don't want the special wordObject to be first or last
+        specialWordRandPosition = Random.Range(2, levelManager.GetWordsPerLevel());
+
         AssignWordList();
         GetAndSetNextWord();
         //level 1,2,3 --- all this level stuff should be in the game handler...
+        int currentLevel = levelManager.GetCurrentLevel();
         if (currentLevel==1||currentLevel==2||currentLevel==3)
         {
             DrawWord();
         }
-        numWordsProvidedThisLevel = 0;
-        //I don't want the special wordObject to be first or last
-        specialWordRandPosition = Random.Range(2, levelManager.GetWordsPerLevel()); 
     }
 
     public void DrawWord()
@@ -174,15 +173,15 @@ public class WordManager : MonoBehaviour
     private Word GetSpecialWord()
     {
         Debug.Log("Enter: Get Special Word");
-        if (currentLevel <= specialWords.words.Count)
+        if (levelManager.GetCurrentLevel() <= specialWords.words.Count)
         {
             return new Word(
-                specialWords.words[currentLevel - 1])
+                specialWords.words[levelManager.GetCurrentLevel() - 1])
                 .WithWordCanvas(wordCanvas);
         }
         else
         {
-            Debug.LogWarning($"No special wordObject defined for level: {currentLevel}.");
+            Debug.LogWarning($"No special wordObject defined for level: {levelManager.GetCurrentLevel()}.");
             return null;
         }
     }
@@ -206,7 +205,9 @@ public class WordManager : MonoBehaviour
     private void AssignWordList()
     {
         Debug.Log("Enter: AssignWordList");
-        if (levelToWordListMap.TryGetValue(currentLevel, out WordListSO wordListSO))
+
+        currentWordList.Clear();
+        if (levelToWordListMap.TryGetValue(levelManager.GetCurrentLevel(), out WordListSO wordListSO))
         {
             foreach (string word in wordListSO.words)
             {
@@ -215,7 +216,7 @@ public class WordManager : MonoBehaviour
         } 
         else
         {
-            Debug.LogError($"No wordObject list found for level {currentLevel}");
+            Debug.LogError($"No wordObject list found for level {levelManager.GetCurrentLevel()}");
             currentWordList = new List<Word>();
         }
     }

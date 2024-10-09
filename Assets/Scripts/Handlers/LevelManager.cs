@@ -15,41 +15,48 @@ public class LevelManager : MonoBehaviour
     private int wordsCompletedInCurrentLevel;
 
     public event Action<int> OnLevelChanged;
+    public event Action OnNextWord;
     public event Action OnGameCompleted;
 
     public void Initialize()
     {
         //currentLevel = initialLevel;
-        wordsCompletedInCurrentLevel = 0;
+        wordsCompletedInCurrentLevel = 1;
         OnLevelChanged?.Invoke(currentLevel);
     }
 
     public void WordCompleted()
     {
-        wordsCompletedInCurrentLevel++;
         if (wordsCompletedInCurrentLevel >= wordsPerLevel)
         {
             AdvanceLevel();
         } else
         {
-            //next word...
+            NextWord();
         }
+    }
+
+    private void NextWord()
+    {
+        wordsCompletedInCurrentLevel++;
+        OnNextWord?.Invoke();
     }
 
     private void AdvanceLevel()
     {
         currentLevel++;
-        wordsCompletedInCurrentLevel = 0;
+        wordsCompletedInCurrentLevel = 1;
         InvokeNextLevelOrEndGame();
     }
 
     public void SetLevel(int level)
     {
         currentLevel = level;
-        wordsCompletedInCurrentLevel = 0;
+        wordsCompletedInCurrentLevel = 1;
         InvokeNextLevelOrEndGame();
     }
 
+   
     private void InvokeNextLevelOrEndGame()
     {
         if (currentLevel > maxLevel)
@@ -65,4 +72,5 @@ public class LevelManager : MonoBehaviour
     public int GetCurrentLevel() => currentLevel;
     public int GetWordsPerLevel() => wordsPerLevel;
     public float GetLevelProgress() => (float)wordsCompletedInCurrentLevel / wordsPerLevel;
+    public int GetWordsCompletedInCurrentLevel() => wordsCompletedInCurrentLevel;
 }

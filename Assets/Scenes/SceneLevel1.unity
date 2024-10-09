@@ -423,6 +423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a234f21be8560ac41abb20a190e1a898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputHandler: {fileID: 1892385188}
   levelWordListPairs:
   - level: 1
     wordList: {fileID: 11400000, guid: 2f7e2d27da349c246aeb68d4c11773e0, type: 2}

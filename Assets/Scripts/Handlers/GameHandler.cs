@@ -39,7 +39,6 @@ public class GameHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        inputHandler.OnLetterInput += HandleLetterInput;
         levelManager.OnLevelChanged += HandleLevelChanged;
         levelManager.OnGameCompleted += HandleGameCompleted;
         SceneManager.sceneLoaded += HandleOnSceneLoaded;
@@ -47,7 +46,6 @@ public class GameHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        inputHandler.OnLetterInput -= HandleLetterInput;
         levelManager.OnLevelChanged -= HandleLevelChanged;
         levelManager.OnGameCompleted -= HandleGameCompleted;
         SceneManager.sceneLoaded -= HandleOnSceneLoaded;
@@ -59,30 +57,6 @@ public class GameHandler : MonoBehaviour
         {
             levelManager.SetLevel(1);
         }
-    }
-
-    private void HandleLetterInput(char inputChar)
-    {
-
-        //we will move all this word manager stuff into wordmanager not game handler
-        //if (wordManager.CheckLetter(inputChar))
-        //{
-
-
-         
-        //    //old code
-        //    oldGameManager.GetScoreManager().IncreaseScore(3);
-        //    //oldGameManager.letterSounds.ResetPositiveSoundPitch();
-
-        //} else
-        //{
-        //    //typed wrong letter
-        //    oldGameManager.GetScoreManager().IncrementFailures();
-        //    oldGameManager.GetScoreManager().IncreaseScore(-1);
-        //    oldGameManager.GetScoreManager().ResetKeystrokeStreak();
-        //    oldGameManager.letterSounds?.playErrorSound();
-        //    StartCoroutine(oldGameManager.ShowTextTemporarily());
-        //}
     }
 
     private void HandleLevelChanged(int i)
