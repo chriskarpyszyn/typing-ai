@@ -46,4 +46,9 @@ public class InputHandler : MonoBehaviour
     {
         return inputCharArray.Length > 0 ? inputCharArray[0] : '\0';
     }
+
+    public void SetBlockTyping(bool b)
+    {
+        this.blockTyping = b;
+    }
 }

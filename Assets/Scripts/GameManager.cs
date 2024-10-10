@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject asteroidPrefab;
     [SerializeField] private GameObject level3GameCanvas;
     [SerializeField] public ScoreManager scoreManager;
-    [SerializeField] private TextMeshProUGUI wrongCharXTMP;
+   
 
     [Header("Game Configuration")]
     [SerializeField] private int numWordsPerRound = 5;    
@@ -135,14 +135,14 @@ public class GameManager : MonoBehaviour
                 //set color of word to success!!! 
                 //not added to new code yet.
                 //GameObject currentLetter = currentWordList[currentLetterPosition];
-                TypedCorrectLetter(currentLetter); //change color here
-                DecreaseLetterScale(currentLetter); //animate destruction
+                //TypedCorrectLetter(currentLetter); //change color here
+                //DecreaseLetterScale(currentLetter); //animate destruction
 
                 currentLetterPosition++;
                 if (currentLetterPosition < wordCharArraySize)
                 {
                     GameObject nextLetter = currentWordList[currentLetterPosition];
-                    IncreaseLetterScale(nextLetter);
+                    //IncreaseLetterScale(nextLetter);
                 }
             //}
             //else
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
     private void TypedCorrectLetter(GameObject letter)
     {
         //letter.GetComponent<TextMeshPro>().color = successColor; - implemented in letterCanvas
-        letterSounds?.playPositiveSound();
+        //letterSounds?.playPositiveSound();
         scoreManager.IncreaseScore(2);
         scoreManager.IncrementKeystrokeStreak();
     }
@@ -200,32 +200,9 @@ public class GameManager : MonoBehaviour
         wordCompleted = false;
     }
 
-    private void LetterScaleAnimation(float toSize, GameObject letter)
-    {
-        scaleTextAnimation.ScaleAnimation(
-            letter,
-            new Vector3(toSize, toSize, toSize),
-            0.1f);
-    }
 
-    private void IncreaseLetterScale(GameObject letter)
-    {
-        LetterScaleAnimation(1.2f, letter);
-    }
 
-    private void DecreaseLetterScale(GameObject letter)
-    {
-        LetterScaleAnimation(1f, letter);
-    }
 
-    public IEnumerator ShowTextTemporarily()
-    {
-        canType = false;
-        wrongCharXTMP.enabled = true;
-        yield return new WaitForSeconds(0.25f);
-        wrongCharXTMP.enabled = false;
-        canType = true;
-    }
 
     /// <summary>
     /// Method for handling the asteroid sprite and word generation.
@@ -308,7 +285,7 @@ public class GameManager : MonoBehaviour
 
             ResetProperties();
 
-            IncreaseLetterScale(currentWordList[0]);
+            //IncreaseLetterScale(currentWordList[0]);
         }
     }
 
@@ -338,6 +315,7 @@ public class GameManager : MonoBehaviour
             //AddNewLetter(newLetter);
 
 
+            //todo: letter fade in
             if (currentWordList.Count == 1)
             {
                 scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration);
@@ -346,7 +324,6 @@ public class GameManager : MonoBehaviour
             {
                 scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration).SetDelay(cumulativeDelay);
                 cumulativeDelay = cumulativeDelay + overlapDelay;
-
             }
         }
     }

@@ -13,6 +13,6 @@ public class WordCanvas : MonoBehaviour
     
     public void DestroyCanvas(GameObject gameObject)
     {
-        Destroy(gameObject);
+        Destroy(gameObject, 1f);
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using TMPro;
 using UnityEngine;
 
 public class WordManager : MonoBehaviour
@@ -20,6 +20,7 @@ public class WordManager : MonoBehaviour
 
     [SerializeField] private WordCanvas wordCanvas;
     [SerializeField] private LetterCanvas letterCanvas;
+    [SerializeField] private TextMeshProUGUI TMPwrongCharX;
 
     private LevelManager levelManager;
     private Dictionary<int, WordListSO> levelToWordListMap;
@@ -38,7 +39,7 @@ public class WordManager : MonoBehaviour
         this.levelManager = levelManager;
         this.levelManager.OnLevelChanged += HandleLevelChanged;
         this.levelManager.OnNextWord += HandleNextWord;
-        this.inputHandler.OnLetterInput += HandleLetterInput;
+        inputHandler.OnLetterInput += HandleLetterInput;
 
         InitializeLevelWordMap();
         ResetForNewLevel();
@@ -75,11 +76,9 @@ public class WordManager : MonoBehaviour
             //implement a sound manager here...
             //oldGameManager.letterSounds?.playErrorSound();
 
-            //add this to the word manager, i think it's a good place for it.
-            //StartCoroutine(oldGameManager.ShowTextTemporarily());
+            
+            StartCoroutine(ShowTextTemporarily());
         }
-
-
     }
 
     public void HandleNextWord()
@@ -157,13 +156,13 @@ public class WordManager : MonoBehaviour
     {
         GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.2f).CreateCanvas(); //hardcoding level 1 pos
         currentWord.CreateLetterCanvas(wordObject, letterCanvas);
+        currentWord.GetLetterAtCurrentIndex().LetterScaleIncreaseFX();
     }
     
     public void DestroyWord() 
     {
-        // Destroy(wordGo);
+        currentWord.CanvasShrinkFX();
         currentWord.DestroyCanvas();
-        //destroy word here
     }
 
     /// <summary>
@@ -231,5 +230,14 @@ public class WordManager : MonoBehaviour
         {
             levelToWordListMap[pair.level] = pair.wordList;
         }
+    }
+
+    private IEnumerator ShowTextTemporarily()
+    {
+        inputHandler.SetBlockTyping(true);
+        TMPwrongCharX.enabled = true;
+        yield return new WaitForSeconds(0.25f);
+        TMPwrongCharX.enabled = false;
+        inputHandler.SetBlockTyping(false);
     }
 }

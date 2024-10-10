@@ -35,9 +35,28 @@ public class Letter
         letterObject = letterCanvas.Create(this, wordObject);
     }
 
+    public void LetterScaleIncreaseFX()
+    {
+        letterCanvas.IncreaseLetterScale(letterObject);
+    }
+
+    public void LetterScaleDecreaseFX()
+    {
+        letterCanvas.DecreaseLetterScale(letterObject);
+    }
+
     public void HighlightSuccessLetter()
     {
         letterCanvas.ChangeColor(letterObject);
+    }
+
+    public void PlaySuccessSound(float pitch)
+    {
+        AudioSource audioSource = letterObject?.GetComponent<AudioSource>();
+        float positiveSoundVol = 0.5f;
+        audioSource.volume = positiveSoundVol;
+        audioSource.pitch = pitch;
+        audioSource.Play();
     }
 
 }

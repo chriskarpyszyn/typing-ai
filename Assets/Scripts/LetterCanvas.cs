@@ -32,6 +32,25 @@ public class LetterCanvas : MonoBehaviour
         letter.GetComponent<TextMeshPro>().color = successColor;
     }
 
+    private void LetterScaleAnimation(float toSize, GameObject letter)
+    {
+        ScaleTextAnimation scaleTextAnimation = new ScaleTextAnimation();
+        scaleTextAnimation.ScaleAnimation(
+            letter,
+            new Vector3(toSize, toSize, toSize),
+            0.1f);
+    }
+
+    public void IncreaseLetterScale(GameObject letter)
+    {
+        LetterScaleAnimation(1.2f, letter);
+    }
+
+    public void DecreaseLetterScale(GameObject letter)
+    {
+        LetterScaleAnimation(1f, letter);
+    }
+
     //private void CreateGameObjectWordList(char[] wordCharArray, GameObject letterParent)
     //{
     //    //currentLetterPosition = 0;

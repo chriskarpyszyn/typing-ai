@@ -10,12 +10,9 @@ public class LetterSounds : MonoBehaviour
     [SerializeField] private AudioClip positiveSound;
     [SerializeField] private AudioClip positiveLongSound;
 
-    [SerializeField] private float positiveSoundVol = 0.5f;
     [SerializeField] private float positiveLongSoungVol = 0.5f;
 
-    private float positiveIncremenet = 0.2f;
-    private float positiveSoundPitch = 0.6f;
-    private const float POSITIVE_SOUND_PITCH_START_VALUE = 0.6f;
+
 
     void Start()
     {
@@ -28,27 +25,17 @@ public class LetterSounds : MonoBehaviour
         playSound(errorSound, 1.2f, 0.3f, false);
     }
 
-    public void playPositiveSound()
-    {
-        playSound(positiveSound, IncreasePositivePitchShift(), positiveSoundVol, false);
-    }
+    //public void playPositiveSound()
+    //{
+    //    playSound(positiveSound, IncreasePositivePitchShift(), positiveSoundVol, false);
+    //}
 
     public void playPositiveLongSound()
     {
         playSound(positiveLongSound, 1f, positiveLongSoungVol, true);
     }
 
-    public void ResetPositiveSoundPitch()
-    {
-        positiveSoundPitch = POSITIVE_SOUND_PITCH_START_VALUE;
-    }
-
-    private float IncreasePositivePitchShift()
-    {
-        positiveSoundPitch += positiveIncremenet;
-        return positiveSoundPitch;
-    }
-
+ 
     private void playSound(AudioClip audioClip, float pitch, float vol, bool shiftPitch)
     {
         AudioSource audioSources = getAvailableAudioSource();

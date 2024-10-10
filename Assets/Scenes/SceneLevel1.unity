@@ -434,6 +434,7 @@ MonoBehaviour:
   specialWords: {fileID: 11400000, guid: f945086ba2ab9f0479af0b15e423187d, type: 2}
   wordCanvas: {fileID: 5062299357730601871, guid: 84ad5bd9c41644345a17b60d974456be, type: 3}
   letterCanvas: {fileID: -7154951342781853302, guid: c268ed18b88767841a7b9716e811ab0d, type: 3}
+  TMPwrongCharX: {fileID: 1246771121}
 --- !u!4 &514767256
 Transform:
   m_ObjectHideFlags: 0
@@ -893,7 +894,7 @@ GameObject:
   - component: {fileID: 1246771122}
   - component: {fileID: 1246771121}
   m_Layer: 5
-  m_Name: TextFailureX
+  m_Name: TMPWrongCharX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

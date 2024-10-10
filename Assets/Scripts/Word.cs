@@ -16,6 +16,9 @@ public class Word
 
     int currentLetterIndex;
 
+    private float positiveIncremenet = 0.2f;
+    private float positiveSoundPitch = 0.6f;
+
     public Word(string word)
     {
         letters = new List<Letter>();
@@ -45,6 +48,12 @@ public class Word
     {
         wordGameObject = wordCanvas.Create(xPos,yPos,zPos);
         return wordGameObject;
+    }
+
+    public void CanvasShrinkFX()
+    {
+        ScaleTextAnimation sta = new ScaleTextAnimation();
+        sta.ScaleAnimation(wordGameObject, new Vector3(0, 0, 0), 0.001f);
     }
 
     public void DestroyCanvas()
@@ -89,10 +98,18 @@ public class Word
             return false;
         }
         Debug.Log("Validate True");
-        GetLetterAtCurrentIndex().HighlightSuccessLetter();
+
+        Letter currentLetter = GetLetterAtCurrentIndex();
+        currentLetter.HighlightSuccessLetter();
+        currentLetter.PlaySuccessSound(positiveSoundPitch);
+        positiveSoundPitch += positiveIncremenet;
+        currentLetter.LetterScaleDecreaseFX();
 
         currentLetterIndex++;
-        //Increase Size of next letter
+        
+        if (!IsWordCompleted()) {
+            GetLetterAtCurrentIndex().LetterScaleIncreaseFX();
+        }
 
         return true;
     }

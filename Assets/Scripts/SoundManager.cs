@@ -48,10 +48,29 @@ public class SoundManager : MonoBehaviour
         audioSources[0].Play();
     }
 
-    private void Update()
+    public void PlayBackgroundNoise()
     {
-        //PitchShift();
+        //todo-ck (we probably want to initialize all AudioSource component settings in code?
+        //todo-ck extract this into a method to setup looping music
+        audioSources[0].volume = backgroundMusicVol;
+        audioSources[1].clip = spaceshipHum;
+        audioSources[1].volume = spaceshipHumVol;
+        audioSources[1].loop = true;
+        audioSources[2].clip = radioSound;
+        audioSources[2].volume = radioSoundVol;
+        audioSources[2].loop = true;
+        audioSources[1].Play();
+        audioSources[2].Play();
     }
+
+    public void PlayErrorSound()
+    {
+
+    }
+
+    //private int GetPosOrNeg() { 
+    //    return (int)Mathf.Sign(Random.value - 0.5f);
+    //}
 
     //todo-ck no longer wobbling the background music pitch, maybe later?
     //public void PitchShift()
@@ -82,23 +101,4 @@ public class SoundManager : MonoBehaviour
     //        pitchTick++;
     //    }
     //}
-
-    public void PlayBackgroundNoise()
-    {
-        //todo-ck (we probably want to initialize all AudioSource component settings in code?
-        //todo-ck extract this into a method to setup looping music
-        audioSources[0].volume = backgroundMusicVol;
-        audioSources[1].clip = spaceshipHum;
-        audioSources[1].volume = spaceshipHumVol;
-        audioSources[1].loop = true;
-        audioSources[2].clip = radioSound;
-        audioSources[2].volume = radioSoundVol;
-        audioSources[2].loop = true;
-        audioSources[1].Play();
-        audioSources[2].Play();
-    }
-
-    private int GetPosOrNeg() { 
-        return (int)Mathf.Sign(Random.value - 0.5f);
-    }
 }
