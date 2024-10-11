@@ -179,13 +179,8 @@ public class GameManager : MonoBehaviour
     public void StartNewGame()
     {
         scoreManager.ResetStats();
-        ResetProperties();
-        numberOfWordsCompletedThisLevel = 0;
         gameFinished = false;
         SceneManager.LoadScene(1);
-        minigameOneLevel = 1; //todo-ck need a minigameOneLevel manager.
-        //AssignWordList(threeLetterWords); //todo-ck refactor repeated code, youll know.
-        ChangeWord();
     }
 
 
@@ -194,19 +189,8 @@ public class GameManager : MonoBehaviour
         return ScoreManager.Instance;
     }
 
-    private void ResetProperties()
-    {
-        currentLetterPosition = 0;
-        wordCompleted = false;
-    }
 
 
-
-
-
-    /// <summary>
-    /// Method for handling the asteroid sprite and word generation.
-    /// </summary>
     private void ChangeAsteroidWord()
     {
         //Debug.Log("ChangeAsteroidWord");
@@ -227,108 +211,6 @@ public class GameManager : MonoBehaviour
         //wordCharArraySize = wordCharArray.Length;
         //CreateGameObjectWordList(wordCharArray, asteroidLetterParent);
     }
-
-
-    /// <summary>
-    /// Change Word method for handling all of the Scene 1 logic for changing each word
-    /// </summary>
-    private void ChangeWord()
-    {
-        if (numberOfWordsCompletedThisLevel >= numWordsPerRound) //now in level manager
-        {
-            if (minigameOneLevel == 1) 
-            {
-                //minigameOneLevel++;
-                //numberOfWordsCompletedThisLevel = 0;
-                //AssignWordList(fourLetterWords);
-                //ChangeWord(); 
-                //randomWordPosition = Random.Range(1, numWordsPerRound); //randomPos for hardcoded word
-                //nextHardCodedWord = specialWords.words[minigameOneLevel-1];
-
-            } else if (minigameOneLevel == 2)
-            {
-                //minigameOneLevel++;
-                //numberOfWordsCompletedThisLevel = 0;
-                //AssignWordList(fiveLetterWords);
-                //ChangeWord(); 
-                //randomWordPosition = Random.Range(1, numWordsPerRound);
-                //nextHardCodedWord = specialWords.words[minigameOneLevel-1];
-
-            } else if (minigameOneLevel >= 3) //fyi greater or equal, dont forget
-            {
-                //EndGame();
-            }
-        } else
-        {
-            ////string nextWord = "";
-            //if (numberOfWordsCompletedThisLevel == randomWordPosition)
-            //{
-            //    //insert one of the words not from the list
-            //    nextWord = nextHardCodedWord;
-            //} else
-            //{
-            //    //get the next word and remove it.
-            //    nextWord = GetAndRemoveNextWord();
-            //}
-
-            //keep track of the number of words completed in this minigameOneLevel
-            //todo-ck move to a minigameOneLevel manager script
-            //numberOfWordsCompletedThisLevel++;
-
-            //put the characters into an array so that we can do our input checks
-            //wordCharArray = nextWord.ToLower().ToCharArray();
-            //wordCharArraySize = wordCharArray.Length;
-
-            //destroy old list and draw the next word on the scene
-            //DestroyGameObjectWordList();
-            CreateGameObjectWordList(wordCharArray);
-
-            ResetProperties();
-
-            //IncreaseLetterScale(currentWordList[0]);
-        }
-    }
-
-
-    //Create a list of game objects that spell a word, and draw them to screen.
-    private void CreateGameObjectWordList(char[] wordCharArray)
-    {
-        //CreateGameObjectWordList(wordCharArray, this.letterParent); //not moved over yet
-    }
-
-    private void CreateGameObjectWordList(char[] wordCharArray, GameObject letterParent)
-    {
-        currentLetterPosition = 0;
-        float animationDuration = 0.4f;
-        float overlapDelay = 0.04f;
-        float cumulativeDelay = overlapDelay;
-
-        float firstLetterPositionX = -6;
-        foreach (char c in wordCharArray)
-        {
-            GameObject newLetter = Instantiate(letterPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            TextMeshPro tmpLetter = newLetter.GetComponent<TextMeshPro>();
-            tmpLetter.color = new Color(tmpLetter.color.r, tmpLetter.color.g, tmpLetter.color.b, 0);
-            newLetter.transform.SetParent(letterParent.transform, false);
-            newLetter.name = "offset" + firstLetterPositionX;
-            tmpLetter.text = c.ToString().ToUpper();
-            //AddNewLetter(newLetter);
-
-
-            //todo: letter fade in
-            if (currentWordList.Count == 1)
-            {
-                scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration);
-            }
-            else
-            {
-                scaleTextAnimation.FadeTMPAnimation(tmpLetter, 1, animationDuration).SetDelay(cumulativeDelay);
-                cumulativeDelay = cumulativeDelay + overlapDelay;
-            }
-        }
-    }
-
-
  
     public void EndGame()
     {
