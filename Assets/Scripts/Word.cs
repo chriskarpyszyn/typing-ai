@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
 using UnityEngine;
@@ -68,6 +69,23 @@ public class Word
             l.WithLetterCanvas(letterCanvas)
                 .CreateObject(wordObject);
         }
+
+        float animationDuration = 0.4f;
+        float overlapDelay = 0.04f;
+        float cumulativeDelay = overlapDelay;
+        int letterCount = letters.Count;
+
+        for (int i = 0; i<letterCount; i++)
+        {
+            if (i==0)
+            {
+                letters[i].FadeInLetterFX(animationDuration, 0);
+            } else
+            {
+                letters[i].FadeInLetterFX(animationDuration, cumulativeDelay);
+                cumulativeDelay = cumulativeDelay + overlapDelay;
+            }
+        }
     }
 
     public void AnimateFading()
@@ -100,7 +118,7 @@ public class Word
         Debug.Log("Validate True");
 
         Letter currentLetter = GetLetterAtCurrentIndex();
-        currentLetter.HighlightSuccessLetter();
+        currentLetter.HighlightSuccessLetterFX();
         currentLetter.PlaySuccessSound(positiveSoundPitch);
         positiveSoundPitch += positiveIncremenet;
         currentLetter.LetterScaleDecreaseFX();

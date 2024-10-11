@@ -45,9 +45,14 @@ public class Letter
         letterCanvas.DecreaseLetterScale(letterObject);
     }
 
-    public void HighlightSuccessLetter()
+    public void HighlightSuccessLetterFX()
     {
         letterCanvas.ChangeColor(letterObject);
+    }
+
+    public void FadeInLetterFX(float animationDuration, float delay)
+    {
+        letterCanvas.LetterFadeInAnimation(letterObject, animationDuration, delay);
     }
 
     public void PlaySuccessSound(float pitch)
