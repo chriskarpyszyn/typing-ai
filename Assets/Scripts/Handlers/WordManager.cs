@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WordManager : MonoBehaviour
 {
@@ -64,6 +65,9 @@ public class WordManager : MonoBehaviour
         if (CheckLetter(inputChar))
         {
             Debug.Log("TRUE");
+            //scoreManager.IncreaseScore(2);
+            //scoreManager.IncrementKeystrokeStreak();
+
             if (IsWordCompleted())
             {
                 Debug.Log("Do I get here");

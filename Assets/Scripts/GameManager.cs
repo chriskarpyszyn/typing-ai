@@ -10,23 +10,13 @@ using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-    private const char NULL_CHAR = '\0';
-    private List<GameObject> asteroids;
 
     #region Serialized Fields
     [Header("References")]
     //[SerializeField] private GameObject letterParent;
-    [SerializeField] private GameObject letterPrefab;
-    [SerializeField] private GameObject asteroidPrefab;
     [SerializeField] private GameObject level3GameCanvas;
     [SerializeField] public ScoreManager scoreManager;
    
-
-    [Header("Game Configuration")]
-    [SerializeField] private int numWordsPerRound = 5;    
-    [SerializeField] private float textShrinkAnimationDuration = 0.2f;
-    [SerializeField] private Color successColor = new Color(0.439f, 0.812f, 0.498f, 1f);
-    [SerializeField] private float letterOffset = 2.5f;
     #endregion
 
     #region Public Properties
@@ -34,49 +24,17 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Private Properties
-    private char[] wordCharArray;
-    private int wordCharArraySize;
-    private bool wordCompleted = false;
-    private bool canType = true;
-
-    //minigameOneLevel 1 is referencing a specific minigameOneLevel within the first minigame.
-    private int minigameOneLevel = 1; //todo-ck i can prob find a better way to do this...
-    
-    
-    private int numberOfWordsCompletedThisLevel = 0;
     private bool gameFinished = false;
-    private List<string> wordList;
-    private List<GameObject> currentWordList;
-    private int currentLetterPosition = 0;
-    public LetterSounds letterSounds;
-    private int randomWordPosition;
-    private string nextHardCodedWord;
-    private ScaleTextAnimation scaleTextAnimation;
     private bool isFadeInComplete = false;
     #endregion
 
     private void Start()
     {
-        scaleTextAnimation = new ScaleTextAnimation();
         scoreManager = ScoreManager.Instance;
- 
-
-        //asteroids = new List<GameObject>();
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            /*letterSounds = letterParent.GetComponent<LetterSounds>();*/ //todo-ck refactor sound off letter parent
-            //having to do this kind of sucks to simply subscribe to an event
-            //todo-ck should null check each line here
             SubscribeToFadeIn();
-            
-        } else if (SceneManager.GetActiveScene().buildIndex == 2)
-        {
-            //Debug.Log("OnStart");
-            //SubscribeToFadeIn();
-            //currentWordList = new List<GameObject>();
-            //AssignWordList(threeLetterWords);
-            //ChangeAsteroidWord();
-        }
+        } 
     }
    
 
@@ -110,55 +68,6 @@ public class GameManager : MonoBehaviour
             //TODO: move to score manager, need to get the timer out of here
             CheckAndIncreaseTime();
         }
-    }
-
-    private void CheckLetter()
-    {
-
-        //3 words on screen
-        //fox, kid, bot
-        //start typing F - then I'm typing against Fox
-        //what if I type B next.. is that a wrong input or does it work with the word Bot
-        //then if I type O, do both Fox and Bot register a char
-
-        //if i have two words Foo, Fox.
-        //then typing F would register against both.
-        //then typing o would register against both.
-
-        //another thought, asteroids that require multiple words to destroy... 
-        GameObject currentLetter = null; //delete me, not useful.
-        //if (IsCharTyped() && (currentLetterPosition < wordCharArraySize))
-        {
-            //char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());
-            //if (IsSuccessfullLetter(inputChar))
-            //{
-                //set color of word to success!!! 
-                //not added to new code yet.
-                //GameObject currentLetter = currentWordList[currentLetterPosition];
-                //TypedCorrectLetter(currentLetter); //change color here
-                //DecreaseLetterScale(currentLetter); //animate destruction
-
-                currentLetterPosition++;
-                if (currentLetterPosition < wordCharArraySize)
-                {
-                    GameObject nextLetter = currentWordList[currentLetterPosition];
-                    //IncreaseLetterScale(nextLetter);
-                }
-            //}
-            //else
-            //{
-            //    //TypedWrongLetter();
-            //}
-
-        }
-    }
-
-    private void TypedCorrectLetter(GameObject letter)
-    {
-        //letter.GetComponent<TextMeshPro>().color = successColor; - implemented in letterCanvas
-        //letterSounds?.playPositiveSound();
-        scoreManager.IncreaseScore(2);
-        scoreManager.IncrementKeystrokeStreak();
     }
 
     public void CheckAndIncreaseTime()
