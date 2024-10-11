@@ -20,10 +20,7 @@ public class LetterSounds : MonoBehaviour
     }
 
 
-    public void playErrorSound()
-    {
-        playSound(errorSound, 1.2f, 0.3f, false);
-    }
+  
 
     //public void playPositiveSound()
     //{

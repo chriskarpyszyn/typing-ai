@@ -30,10 +30,14 @@ public class WordManager : MonoBehaviour
 
     private int specialWordRandPosition;
 
+    private AudioSource errorAudioSource;
+
 
     //word handler prob doesnt need to even know about gamehandler
     public void Initialize(LevelManager levelManager)
     {
+        errorAudioSource = GetComponent<AudioSource>();
+
         currentWordList = new List<Word>();
 
         this.levelManager = levelManager;
@@ -73,9 +77,7 @@ public class WordManager : MonoBehaviour
             //oldGameManager.GetScoreManager().IncreaseScore(-1);
             //oldGameManager.GetScoreManager().ResetKeystrokeStreak();
 
-            //implement a sound manager here...
-            //oldGameManager.letterSounds?.playErrorSound();
-
+            new Sounds().PlaySound(errorAudioSource, 1.2f, 0.3f);
             
             StartCoroutine(ShowTextTemporarily());
         }
