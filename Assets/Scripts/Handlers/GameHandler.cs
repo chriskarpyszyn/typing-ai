@@ -32,29 +32,39 @@ public class GameHandler : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         DOTween.Init().SetCapacity(4000, 4000);
+        SceneManager.sceneLoaded += HandleOnSceneLoaded;
+       
+    }
 
-        levelManager.Initialize();
-        wordManager.Initialize(levelManager);
+    private void InitializeManagers()
+    {
+        levelManager = FindObjectOfType<LevelManager>();
+        levelManager?.Initialize();
+        if (levelManager == null) { Debug.Log("Cannot find LevelManager in scene"); }
+        wordManager = FindObjectOfType<WordManager>();
+        wordManager?.Initialize(levelManager);
+        if (wordManager == null) { Debug.Log("Cannot find WordManager in scene"); }
     }
 
     private void OnEnable()
     {
-        levelManager.OnLevelChanged += HandleLevelChanged;
-        levelManager.OnGameCompleted += HandleGameCompleted;
-        SceneManager.sceneLoaded += HandleOnSceneLoaded;
+
     }
 
     private void OnDisable()
     {
+        SceneManager.sceneLoaded -= HandleOnSceneLoaded;
         levelManager.OnLevelChanged -= HandleLevelChanged;
         levelManager.OnGameCompleted -= HandleGameCompleted;
-        SceneManager.sceneLoaded -= HandleOnSceneLoaded;
     }
 
     private void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
+            InitializeManagers();
+            levelManager.OnLevelChanged += HandleLevelChanged;
+            levelManager.OnGameCompleted += HandleGameCompleted;
             levelManager.SetLevel(1);
         }
     }

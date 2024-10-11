@@ -37,6 +37,10 @@ public class WordManager : MonoBehaviour
     //word handler prob doesnt need to even know about gamehandler
     public void Initialize(LevelManager levelManager)
     {
+
+        inputHandler = FindObjectOfType<InputHandler>();
+
+        inputHandler.OnLetterInput += HandleLetterInput;
         errorAudioSource = GetComponent<AudioSource>();
 
         currentWordList = new List<Word>();
@@ -44,10 +48,10 @@ public class WordManager : MonoBehaviour
         this.levelManager = levelManager;
         this.levelManager.OnLevelChanged += HandleLevelChanged;
         this.levelManager.OnNextWord += HandleNextWord;
-        inputHandler.OnLetterInput += HandleLetterInput;
+        
 
         InitializeLevelWordMap();
-        ResetForNewLevel();
+        //ResetForNewLevel();
     }
 
     public void OnDisable()
