@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,23 +7,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class ScoreManager
+public class ScoreManager : MonoBehaviour
 {
-    // Singleton instance
-    private static ScoreManager _instance;
 
-    // Property to access the instance
-    public static ScoreManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new ScoreManager();
-            }
-            return _instance;
-        }
-    }
+    public static ScoreManager Instance;
+
+    //public UnityEvent<string, string> submitScoreEvent;
+    public event Action<string,string> OnSubmitScore;
 
     private int score = 0;
 
@@ -32,11 +23,41 @@ public class ScoreManager
     private int failures = 0;
     private float elapsedTime = 0f;
 
-    private ScoreManager()
+    private LevelManager levelManager;
+
+    private bool timerIsOn = true;
+
+    private void Awake()
     {
-        // Initialize your score manager here (e.g., set initial score)
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else
+        {
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        levelManager = FindObjectOfType<LevelManager>();
+        levelManager.OnGameCompleted += HandleGameCompleted;
     }
-    
+
+    private void OnDisable()
+    {
+        levelManager.OnGameCompleted -= HandleGameCompleted;
+    }
+
+    private void Update()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 1 && timerIsOn)
+        {
+            IncreaseElapsedTime(Time.deltaTime);
+        }
+    }
+
     public int GetScore()
     {
         return this.score;
@@ -127,8 +148,10 @@ public class ScoreManager
         this.elapsedTime = 0;
     }
 
-    public void DisplayEndGameStats()
+    private void HandleGameCompleted()
     {
+
+        timerIsOn = false;
 
         //TODO-CK-17 Refactor this out.
         GameObject textTotalScoreObject = GameObject.Find("TextTotalScore");
@@ -136,6 +159,16 @@ public class ScoreManager
         {
             TextMeshProUGUI textTotalScore = textTotalScoreObject.GetComponent<TextMeshProUGUI>();
             textTotalScore.text = "Total Score: " + this.score;
+        }
+    }
+
+    public void SubmitScore()
+    {
+        GameObject inputHighScoreNameObject = GameObject.Find("LeaderboardInputField");
+        if (inputHighScoreNameObject != null)
+        {
+            TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
+            OnSubmitScore.Invoke(inputHighScoreName.text, GetElapsedTimeString()); 
         }
     }
 }

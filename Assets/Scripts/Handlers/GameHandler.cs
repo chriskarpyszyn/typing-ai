@@ -1,6 +1,8 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +14,8 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private LevelManager levelManager;
     [SerializeField] private GameManager oldGameManager;
     [SerializeField] private WordManager wordManager;
+
+    private bool gameFinished = false;
 
     
     private void Awake()
@@ -77,7 +81,8 @@ public class GameHandler : MonoBehaviour
 
     private void HandleGameCompleted()
     {
-        oldGameManager.EndGame();
+        new LevelLoader().LoadScene(3);
+        gameFinished = true;
     }
 
     public void StartGame()

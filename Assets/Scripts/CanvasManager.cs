@@ -8,11 +8,14 @@ public class CanvasManager : MonoBehaviour
     public TMP_InputField leaderboardInputfield;
     public GameManager gm;
 
+    private ScoreManager scoreManager;
+
     // Start is called before the first frame update
     void Start()
     {
         
     }
+
 
     // Update is called once per frame
     void Update()
@@ -24,13 +27,15 @@ public class CanvasManager : MonoBehaviour
     {
         string NO_USERNAME_TEXT = "Unknown";
 
+        ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+
         //current score is less than the high score
-        if (gm.GetScoreManager().GetElapsedTimeFloat() >= leaderboardHighScore)
+        if (scoreManager.GetElapsedTimeFloat() >= leaderboardHighScore)
         {
-            textTotalTime.text = "Your time: " + gm.GetScoreManager().GetElapsedTimeString();
+            textTotalTime.text = "Your time: " + scoreManager.GetElapsedTimeString();
         } else
         {
-            textTotalTime.text = "New Best Time: " + gm.GetScoreManager().GetElapsedTimeString();
+            textTotalTime.text = "New Best Time: " + scoreManager.GetElapsedTimeString();
         }
 
         //if a name exists, populate the LeaderboardInputfield Text

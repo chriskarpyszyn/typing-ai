@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Public Properties
-    public UnityEvent<string, string> submitScoreEvent;
+    
     #endregion
 
     #region Private Properties
@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        scoreManager = ScoreManager.Instance;
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             SubscribeToFadeIn();
@@ -57,31 +56,10 @@ public class GameManager : MonoBehaviour
         isFadeInComplete = true;
     }
 
-    private void Update()
-    {
-        //is there a way to avoid this check in the update method?
-        if (isFadeInComplete)
-        {
-            //CheckAllLettersCompleted();
-            //CheckLetter();
-
-            //TODO: move to score manager, need to get the timer out of here
-            CheckAndIncreaseTime();
-        }
-    }
-
-    public void CheckAndIncreaseTime()
-    {
-        if (SceneManager.GetActiveScene().buildIndex == 1 && !gameFinished)
-        {
-            ScoreManager.Instance.IncreaseElapsedTime(Time.deltaTime);
-        }
-    }
-
     //StartGame is called when clicking the Start Game button on the title screen.
     public void StartGame()
     {
-        new LevelLoader().LoadLevel(1);
+        new LevelLoader().LoadScene(1);
         GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
     }
     //StartNewGame is called when clicking the Start New button on the end screen.
@@ -91,13 +69,6 @@ public class GameManager : MonoBehaviour
         gameFinished = false;
         SceneManager.LoadScene(1);
     }
-
-
-    public ScoreManager GetScoreManager()
-    {
-        return ScoreManager.Instance;
-    }
-
 
 
     private void ChangeAsteroidWord()
@@ -119,25 +90,5 @@ public class GameManager : MonoBehaviour
         //wordCharArray = GetAndRemoveNextWord().ToLower().ToCharArray();
         //wordCharArraySize = wordCharArray.Length;
         //CreateGameObjectWordList(wordCharArray, asteroidLetterParent);
-    }
- 
-    public void EndGame()
-    {
-        //SceneManager.LoadScene(2); //todo-ck i hate having hard coded constants, breaks if I add  another scene
-        new LevelLoader().LoadLevel(3);
-        //DestroyGameObjectWordList();
-        gameFinished = true;
-        scoreManager.DisplayEndGameStats();
-    }
-
-    public void SubmitScore()
-    {
-        //TODO-CK-17 Refactor this out.
-        GameObject inputHighScoreNameObject = GameObject.Find("LeaderboardInputField");
-        if (inputHighScoreNameObject != null)
-        {
-            TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
-            submitScoreEvent.Invoke(inputHighScoreName.text, scoreManager.GetElapsedTimeString()); //testing the string value of score
-        }
     }
 }

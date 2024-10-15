@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class LevelLoader
 {
 
-    public void LoadLevel(int sceneIndex)
+    public void LoadScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
     }

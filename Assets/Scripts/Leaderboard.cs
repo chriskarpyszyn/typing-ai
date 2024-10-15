@@ -23,11 +23,24 @@ public class Leaderboard : MonoBehaviour
 
     private string publicLeaderboardKey;
 
+    private ScoreManager scoreManager;
+
     private void Start()
     {
         LoadConfig();
         publicLeaderboardKey = configData.publicKey;
         GetLeaderboard();
+    }
+
+    private void Awake()
+    {
+        scoreManager = FindObjectOfType<ScoreManager>();
+        scoreManager.OnSubmitScore += SetLeaderboardEntry;
+    }
+
+    private void OnDisable()
+    {
+        scoreManager.OnSubmitScore -= SetLeaderboardEntry;
     }
 
     private void LoadConfig()
