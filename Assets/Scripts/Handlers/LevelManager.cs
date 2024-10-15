@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
 {
 
     //TODO: I'd love to have game data centralized somewhere
-    [SerializeField] private int wordsPerLevel = 5;
+    private int wordsPerLevel = 2;
     
     private int maxLevel = 3;
     private int currentLevel;
@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     public event Action<int> OnLevelChanged;
     public event Action OnNextWord;
     public event Action OnGameCompleted;
+    public event Action OnNewGame;
 
     public void Initialize()
     {
@@ -65,6 +66,13 @@ public class LevelManager : MonoBehaviour
         {
             OnLevelChanged?.Invoke(currentLevel);
         }
+    }
+
+    public void NewGame()
+    {
+        Debug.Log("INVOKE NEW GAME");
+        SetLevel(1);
+        OnNewGame?.Invoke();
     }
 
     public int GetCurrentLevel() => currentLevel;

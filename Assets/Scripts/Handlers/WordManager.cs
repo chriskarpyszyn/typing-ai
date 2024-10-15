@@ -65,7 +65,6 @@ public class WordManager : MonoBehaviour
 
     public void HandleLetterInput(char inputChar)
     {
-        Debug.Log(inputChar);
         if (CheckLetter(inputChar))
         {
             Debug.Log("TRUE");

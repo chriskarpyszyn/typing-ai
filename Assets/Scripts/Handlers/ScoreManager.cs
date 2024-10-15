@@ -12,9 +12,6 @@ public class ScoreManager : MonoBehaviour
 
     public static ScoreManager Instance;
 
-    //public UnityEvent<string, string> submitScoreEvent;
-    public event Action<string,string> OnSubmitScore;
-
     private int score = 0;
 
     //end game stats
@@ -41,13 +38,21 @@ public class ScoreManager : MonoBehaviour
             }
         }
 
-        levelManager = FindObjectOfType<LevelManager>();
-        levelManager.OnGameCompleted += HandleGameCompleted;
+        if (levelManager == null)
+        {
+            levelManager = FindObjectOfType<LevelManager>();
+            levelManager.OnGameCompleted += HandleGameCompleted;
+            levelManager.OnNewGame += HandleNewGame;
+        }
     }
 
     private void OnDisable()
     {
-        levelManager.OnGameCompleted -= HandleGameCompleted;
+        if (levelManager != null)
+        {
+            levelManager.OnGameCompleted -= HandleGameCompleted;
+            levelManager.OnNewGame -= HandleNewGame;
+        }
     }
 
     private void Update()
@@ -105,10 +110,10 @@ public class ScoreManager : MonoBehaviour
     {
         ResetScore();
         ResetElapsedTime();
+        timerIsOn = true;
         keystrokeStreakMax = 0;
         keystrokeStreak = 0;
         failures = 0;
-        elapsedTime = 0;
     }
 
     public void IncrementFailures()
@@ -145,7 +150,9 @@ public class ScoreManager : MonoBehaviour
 
     private void ResetElapsedTime()
     {
+        Debug.Log("RESET ELAPSED TIME" + elapsedTime);
         this.elapsedTime = 0;
+        Debug.Log("RESET ELAPSED TIME" + elapsedTime);
     }
 
     private void HandleGameCompleted()
@@ -162,13 +169,9 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void SubmitScore()
+    private void HandleNewGame()
     {
-        GameObject inputHighScoreNameObject = GameObject.Find("LeaderboardInputField");
-        if (inputHighScoreNameObject != null)
-        {
-            TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
-            OnSubmitScore.Invoke(inputHighScoreName.text, GetElapsedTimeString()); 
-        }
+        Debug.Log("ENTER: Handle New Game");
+        ResetStats();
     }
 }

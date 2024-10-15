@@ -65,9 +65,7 @@ public class GameManager : MonoBehaviour
     //StartNewGame is called when clicking the Start New button on the end screen.
     public void StartNewGame()
     {
-        scoreManager.ResetStats();
-        gameFinished = false;
-        SceneManager.LoadScene(1);
+
     }
 
 

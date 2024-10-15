@@ -92,6 +92,10 @@ public class GameHandler : MonoBehaviour
 
     public void StartNewGame() 
     {
-        oldGameManager.StartNewGame();
+        Debug.Log("Enter: Start New Game");
+        gameFinished = false;
+        SceneManager.LoadScene(1);
+        levelManager.NewGame();
+        Debug.Log("Exit: Start New Game");
     }
 }

@@ -27,7 +27,6 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Input anything " + Input.inputString);
         if (Input.anyKeyDown && !IsMouseButtonClick() && !blockTyping)
         {
             char inputChar = ExtractCharFromInput(Input.inputString.ToCharArray());

@@ -23,7 +23,7 @@ public class Leaderboard : MonoBehaviour
 
     private string publicLeaderboardKey;
 
-    private ScoreManager scoreManager;
+    private EndGameManager endGameManager;
 
     private void Start()
     {
@@ -34,13 +34,14 @@ public class Leaderboard : MonoBehaviour
 
     private void Awake()
     {
-        scoreManager = FindObjectOfType<ScoreManager>();
-        scoreManager.OnSubmitScore += SetLeaderboardEntry;
+        Debug.Log("On Leaderboard AWAKE");
+        endGameManager = FindObjectOfType<EndGameManager>();
+        endGameManager.OnSubmitScore += SetLeaderboardEntry;
     }
 
     private void OnDisable()
     {
-        scoreManager.OnSubmitScore -= SetLeaderboardEntry;
+        endGameManager.OnSubmitScore -= SetLeaderboardEntry;
     }
 
     private void LoadConfig()
@@ -77,6 +78,7 @@ public class Leaderboard : MonoBehaviour
 
     public void SetLeaderboardEntry(string userName, string timeValue)
     {
+        Debug.Log($"Enter: SetLeaderboardEntry  userName:{userName} timeValue:{timeValue}");
         float floatTime = float.Parse(timeValue);
         float timeValuex10 = floatTime * 10;
         int intTime = (int)Math.Round(timeValuex10);

@@ -1226,6 +1226,50 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &278349806
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 278349808}
+  - component: {fileID: 278349807}
+  m_Layer: 0
+  m_Name: EndGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &278349807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278349806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6492b9fbf97b5cf41a2ad28d25974f36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &278349808
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278349806}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &306930932
 GameObject:
   m_ObjectHideFlags: 0
@@ -4500,8 +4544,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1557123935}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 278349807}
+        m_TargetAssemblyTypeName: EndGameManager, Assembly-CSharp
         m_MethodName: SubmitScore
         m_Mode: 1
         m_Arguments:
@@ -4769,8 +4813,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1557123935}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 278349807}
+        m_TargetAssemblyTypeName: EndGameManager, Assembly-CSharp
         m_MethodName: StartNewGame
         m_Mode: 1
         m_Arguments:
@@ -4848,28 +4892,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad37ac7ba055224e9cfc8af5b6abb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  letterParent: {fileID: 0}
-  letterPrefab: {fileID: 5811492632237980674, guid: c268ed18b88767841a7b9716e811ab0d, type: 3}
-  wrongCharXTMP: {fileID: 0}
-  numWordsPerRound: 5
-  textShrinkAnimationDuration: 0.2
-  successColor: {r: 0.439, g: 0.812, b: 0.498, a: 1}
-  letterOffset: 2
-  submitScoreEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 407380555}
-        m_TargetAssemblyTypeName: Leaderboard, Assembly-CSharp
-        m_MethodName: SetLeaderboardEntry
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  level3GameCanvas: {fileID: 0}
+  scoreManager: {fileID: 0}
 --- !u!4 &1557123936
 Transform:
   m_ObjectHideFlags: 0
