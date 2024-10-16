@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
 {
 
     //TODO: I'd love to have game data centralized somewhere
-    private int wordsPerLevel = 2;
+    private int wordsPerLevel = 6;
     
     private int maxLevel = 3;
     private int currentLevel;
@@ -70,7 +70,6 @@ public class LevelManager : MonoBehaviour
 
     public void NewGame()
     {
-        Debug.Log("INVOKE NEW GAME");
         SetLevel(1);
         OnNewGame?.Invoke();
     }

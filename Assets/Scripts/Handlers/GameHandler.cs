@@ -87,7 +87,8 @@ public class GameHandler : MonoBehaviour
 
     public void StartGame()
     {
-        oldGameManager.StartGame();
+        new LevelLoader().LoadScene(1);
+        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
     }
 
     public void StartNewGame() 

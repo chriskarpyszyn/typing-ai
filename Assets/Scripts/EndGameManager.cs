@@ -20,7 +20,7 @@ public class EndGameManager : MonoBehaviour
             Debug.Log($"On Submit Score: {OnSubmitScore}");
 
             TMP_InputField inputHighScoreName = inputHighScoreNameObject.GetComponent<TMP_InputField>();
-            OnSubmitScore?.Invoke(inputHighScoreName.text, scoreManager.GetElapsedTimeString());
+            OnSubmitScore?.Invoke(inputHighScoreName.text, Score.Instance.GetElapsedTimeString());
         }
     }
 

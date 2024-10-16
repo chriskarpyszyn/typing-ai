@@ -27,15 +27,13 @@ public class CanvasManager : MonoBehaviour
     {
         string NO_USERNAME_TEXT = "Unknown";
 
-        ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
-
         //current score is less than the high score
-        if (scoreManager.GetElapsedTimeFloat() >= leaderboardHighScore)
+        if (Score.Instance.GetElapsedTime() >= leaderboardHighScore)
         {
-            textTotalTime.text = "Your time: " + scoreManager.GetElapsedTimeString();
+            textTotalTime.text = "Your time: " + Score.Instance.GetElapsedTimeString();
         } else
         {
-            textTotalTime.text = "New Best Time: " + scoreManager.GetElapsedTimeString();
+            textTotalTime.text = "New Best Time: " + Score.Instance.GetElapsedTimeString();
         }
 
         //if a name exists, populate the LeaderboardInputfield Text

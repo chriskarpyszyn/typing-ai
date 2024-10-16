@@ -56,18 +56,7 @@ public class GameManager : MonoBehaviour
         isFadeInComplete = true;
     }
 
-    //StartGame is called when clicking the Start Game button on the title screen.
-    public void StartGame()
-    {
-        new LevelLoader().LoadScene(1);
-        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayBackgroundNoise();
-    }
-    //StartNewGame is called when clicking the Start New button on the end screen.
-    public void StartNewGame()
-    {
-
-    }
-
+    
 
     private void ChangeAsteroidWord()
     {

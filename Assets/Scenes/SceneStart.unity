@@ -225,22 +225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad37ac7ba055224e9cfc8af5b6abb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  letterParent: {fileID: 0}
-  letterPrefab: {fileID: 539131232529207551, guid: 9ecb1e064fcaa424dbe8d7018d66ca85, type: 3}
-  asteroidPrefab: {fileID: 0}
   level3GameCanvas: {fileID: 0}
-  wrongCharXTMP: {fileID: 0}
-  numWordsPerRound: 5
-  textShrinkAnimationDuration: 0.2
-  successColor: {r: 0.439, g: 0.812, b: 0.498, a: 1}
-  letterOffset: 2
-  specialWords: {fileID: 0}
-  threeLetterWords: {fileID: 0}
-  fourLetterWords: {fileID: 0}
-  fiveLetterWords: {fileID: 0}
-  submitScoreEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  scoreManager: {fileID: 0}
 --- !u!4 &377956874
 Transform:
   m_ObjectHideFlags: 0
@@ -340,8 +326,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 377956873}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1811750953}
+        m_TargetAssemblyTypeName: GameHandler, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
@@ -1398,6 +1384,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputHandler: {fileID: 2094919282}
+  levelManager: {fileID: 0}
+  oldGameManager: {fileID: 0}
+  wordManager: {fileID: 0}
 --- !u!4 &1811750954
 Transform:
   m_ObjectHideFlags: 0
