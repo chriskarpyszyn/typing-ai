@@ -1,63 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
-using Random = UnityEngine.Random;
-using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-
-    #region Serialized Fields
-    [Header("References")]
-    //[SerializeField] private GameObject letterParent;
-    [SerializeField] private GameObject level3GameCanvas;
-    [SerializeField] public ScoreManager scoreManager;
-   
-    #endregion
-
-    #region Public Properties
-    
-    #endregion
-
-    #region Private Properties
-    private bool gameFinished = false;
-    private bool isFadeInComplete = false;
-    #endregion
-
-    private void Start()
-    {
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            SubscribeToFadeIn();
-        } 
-    }
-   
-
-    /// <summary>
-    /// Find the FadeIn canvas and subscribe to the animation complete event
-    /// TODO: We should move this code elsewhere
-    /// </summary>
-    private void SubscribeToFadeIn()
-    {
-        GameObject fadeInCanvas = GameObject.Find("FadeInCanvas");
-        Transform fadeInImage = fadeInCanvas.transform.Find("FadeInImage");
-        FadeIn fadeInScript = fadeInImage.GetComponent<FadeIn>();
-        fadeInScript.EventOnFadeInComplete += HandleFadeInComplete;
-    }
-    /// <summary>
-    /// Handle the event by flipping a local bool.
-    /// </summary>
-    private void HandleFadeInComplete()
-    {
-        isFadeInComplete = true;
-    }
-
-    
-
     private void ChangeAsteroidWord()
     {
         //Debug.Log("ChangeAsteroidWord");

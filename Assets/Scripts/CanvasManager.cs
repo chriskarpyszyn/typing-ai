@@ -6,22 +6,6 @@ public class CanvasManager : MonoBehaviour
 
     public TextMeshProUGUI textTotalTime;
     public TMP_InputField leaderboardInputfield;
-    public GameManager gm;
-
-    private ScoreManager scoreManager;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void UpdateFinalScore(float leaderboardHighScore, string leaderboardUserName)
     {

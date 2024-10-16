@@ -37,7 +37,6 @@ public class GameHandler : MonoBehaviour
         Application.targetFrameRate = 60;
         DOTween.Init().SetCapacity(4000, 4000);
         SceneManager.sceneLoaded += HandleOnSceneLoaded;
-       
     }
 
     private void InitializeManagers()
@@ -50,15 +49,9 @@ public class GameHandler : MonoBehaviour
         if (wordManager == null) { Debug.Log("Cannot find WordManager in scene"); }
     }
 
-    private void OnEnable()
-    {
-
-    }
-
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= HandleOnSceneLoaded;
-        levelManager.OnLevelChanged -= HandleLevelChanged;
         levelManager.OnGameCompleted -= HandleGameCompleted;
     }
 
@@ -67,16 +60,9 @@ public class GameHandler : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             InitializeManagers();
-            levelManager.OnLevelChanged += HandleLevelChanged;
             levelManager.OnGameCompleted += HandleGameCompleted;
             levelManager.SetLevel(1);
         }
-    }
-
-    private void HandleLevelChanged(int i)
-    {
-        Debug.Log($"Advancing to level: {i}");
-        //TODO: implement logic here
     }
 
     private void HandleGameCompleted()

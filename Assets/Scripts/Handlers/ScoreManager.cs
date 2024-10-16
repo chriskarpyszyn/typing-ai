@@ -9,14 +9,29 @@ using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
+
+    [SerializeField] FadeIn fadeIn;
+    private bool increaseTime = false;
+
     private void Start()
     {
         Score.Instance.SetElapsedTime(0f);
+        fadeIn.EventOnFadeInComplete += HandleFadeInComplete;
+    }
+
+    private void OnDisable()
+    {
+        fadeIn.EventOnFadeInComplete -= HandleFadeInComplete;
+    }
+
+    private void HandleFadeInComplete()
+    {
+        increaseTime = true;
     }
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().buildIndex == 1)
+        if (SceneManager.GetActiveScene().buildIndex == 1 && increaseTime)
         {
             IncreaseElapsedTime(Time.deltaTime);
         }
