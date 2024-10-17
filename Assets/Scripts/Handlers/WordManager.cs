@@ -34,7 +34,6 @@ public class WordManager : MonoBehaviour
     private AudioSource errorAudioSource;
 
 
-    //word handler prob doesnt need to even know about gamehandler
     public void Initialize(LevelManager levelManager)
     {
 
@@ -51,7 +50,6 @@ public class WordManager : MonoBehaviour
         
 
         InitializeLevelWordMap();
-        //ResetForNewLevel();
     }
 
     public void OnDisable()

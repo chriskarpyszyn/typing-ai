@@ -12,7 +12,6 @@ public class GameHandler : MonoBehaviour
     public static GameHandler Instance;
     [SerializeField] private InputHandler inputHandler;
     [SerializeField] private LevelManager levelManager;
-    [SerializeField] private GameManager oldGameManager;
     [SerializeField] private WordManager wordManager;
 
     private bool gameFinished = false;
@@ -57,6 +56,7 @@ public class GameHandler : MonoBehaviour
 
     private void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log("ENTER: HANDLE ON SCENE LOADED");
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             InitializeManagers();
