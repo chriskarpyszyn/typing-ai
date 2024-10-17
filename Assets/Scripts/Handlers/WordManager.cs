@@ -161,7 +161,8 @@ public class WordManager : MonoBehaviour
 
     public void DrawWord()
     {
-        GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.2f).CreateCanvas(); //hardcoding level 1 pos
+        //todo-ck extract hardcoded values, maybe.
+        GameObject wordObject = currentWord.WithPosition(0, -0.5f, -0.5f).CreateCanvas(); //hardcoding level 1 pos
         currentWord.CreateLetterCanvas(wordObject, letterCanvas);
         currentWord.GetLetterAtCurrentIndex().LetterScaleIncreaseFX();
     }

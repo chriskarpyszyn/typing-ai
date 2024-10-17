@@ -11,12 +11,10 @@ public class Leaderboard : MonoBehaviour
 {
     private ConfigData configData;
 
-    [SerializeField]
-    private List<TextMeshProUGUI> names;
-    [SerializeField]
-    private List<TextMeshProUGUI> scores;
-    [SerializeField]
-    private TMP_InputField userNameInputField;
+    [SerializeField] private List<TextMeshProUGUI> names;
+    [SerializeField] private List<TextMeshProUGUI> scores;
+    [SerializeField] private TMP_InputField userNameInputField;
+    [SerializeField] GameObject spinner;
 
     private String userName;
     private float highScore;
@@ -55,6 +53,7 @@ public class Leaderboard : MonoBehaviour
 
     public void GetLeaderboard()
     {
+        spinner.GetComponent<SpriteRenderer>().enabled = true;
         LeaderboardCreator.GetPersonalEntry(publicLeaderboardKey, ((msg) =>
         {
             this.userName = msg.Username;
@@ -73,11 +72,13 @@ public class Leaderboard : MonoBehaviour
                 names[i].text = msg[i].Username;
                 scores[i].text = ((float)msg[i].Score / 10).ToString();
             }
+            spinner.GetComponent<SpriteRenderer>().enabled = false;
         }));
     }
 
     public void SetLeaderboardEntry(string userName, string timeValue)
     {
+        spinner.GetComponent<SpriteRenderer>().enabled = true;
         Debug.Log($"Enter: SetLeaderboardEntry  userName:{userName} timeValue:{timeValue}");
         float floatTime = float.Parse(timeValue);
         float timeValuex10 = floatTime * 10;
@@ -86,6 +87,7 @@ public class Leaderboard : MonoBehaviour
         {
             //LeaderboardCreator.ResetPlayer  
             GetLeaderboard();
+            spinner.GetComponent<SpriteRenderer>().enabled = false;
         }));
     }
 
