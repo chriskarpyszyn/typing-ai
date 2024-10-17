@@ -23,6 +23,12 @@ public class WordManager : MonoBehaviour
     [SerializeField] private LetterCanvas letterCanvas;
     [SerializeField] private TextMeshProUGUI TMPwrongCharX;
 
+    [SerializeField] private AudioClip soundWrongChar;
+    [SerializeField] private AudioClip soundGod;
+    [SerializeField] private AudioClip soundHelp;
+    [SerializeField] private AudioClip soundTruth;
+
+
     private LevelManager levelManager;
     private Dictionary<int, WordListSO> levelToWordListMap;
     private List<Word> currentWordList;
@@ -31,7 +37,7 @@ public class WordManager : MonoBehaviour
 
     private int specialWordRandPosition;
 
-    private AudioSource errorAudioSource;
+    private List<AudioSource> audioSources;
 
 
     public void Initialize(LevelManager levelManager)
@@ -40,7 +46,7 @@ public class WordManager : MonoBehaviour
         inputHandler = FindObjectOfType<InputHandler>();
 
         inputHandler.OnLetterInput += HandleLetterInput;
-        errorAudioSource = GetComponent<AudioSource>();
+        audioSources = new List<AudioSource>(GetComponents<AudioSource>());
 
         currentWordList = new List<Word>();
 
@@ -65,13 +71,11 @@ public class WordManager : MonoBehaviour
     {
         if (CheckLetter(inputChar))
         {
-            Debug.Log("TRUE");
             //scoreManager.IncreaseScore(2);
             //scoreManager.IncrementKeystrokeStreak();
 
             if (IsWordCompleted())
             {
-                Debug.Log("Do I get here");
                 DestroyWord();
                 levelManager.WordCompleted();
             }
@@ -82,7 +86,8 @@ public class WordManager : MonoBehaviour
             //oldGameManager.GetScoreManager().IncreaseScore(-1);
             //oldGameManager.GetScoreManager().ResetKeystrokeStreak();
 
-            new Sounds().PlaySound(errorAudioSource, 1.2f, 0.3f);
+            Sounds sounds = new Sounds();
+            sounds.PlaySound(audioSources, soundWrongChar, 1.2f, 0.3f);
             
             StartCoroutine(ShowTextTemporarily());
         }
@@ -100,7 +105,6 @@ public class WordManager : MonoBehaviour
     /// <param name="newLevel">The new level to change to</param>
     public void HandleLevelChanged(int newLevel)
     {
-        Debug.Log("Enter: HandleLevelChanged: " + newLevel);
         ResetForNewLevel();
     }
 
@@ -145,7 +149,6 @@ public class WordManager : MonoBehaviour
     /// </summary>
     private void ResetForNewLevel()
     {
-        Debug.Log("Enter: RsetForNewLevel");
         //I don't want the special wordObject to be first or last
         specialWordRandPosition = Random.Range(2, levelManager.GetWordsPerLevel());
 
@@ -179,7 +182,6 @@ public class WordManager : MonoBehaviour
     /// <returns></returns>
     private Word GetSpecialWord()
     {
-        Debug.Log("Enter: Get Special Word");
         if (levelManager.GetCurrentLevel() <= specialWords.words.Count)
         {
             return new Word(
@@ -211,8 +213,6 @@ public class WordManager : MonoBehaviour
     /// </summary>
     private void AssignWordList()
     {
-        Debug.Log("Enter: AssignWordList");
-
         currentWordList.Clear();
         if (levelToWordListMap.TryGetValue(levelManager.GetCurrentLevel(), out WordListSO wordListSO))
         {
