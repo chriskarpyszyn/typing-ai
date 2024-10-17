@@ -36,6 +36,7 @@ public class GameHandler : MonoBehaviour
         Application.targetFrameRate = 60;
         DOTween.Init().SetCapacity(4000, 4000);
         SceneManager.sceneLoaded += HandleOnSceneLoaded;
+        InitializeOnSceneOneStart();
     }
 
     private void InitializeManagers()
@@ -56,7 +57,11 @@ public class GameHandler : MonoBehaviour
 
     private void HandleOnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("ENTER: HANDLE ON SCENE LOADED");
+        InitializeOnSceneOneStart();
+    }
+
+    private void InitializeOnSceneOneStart()
+    {
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             InitializeManagers();
