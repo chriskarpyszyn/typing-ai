@@ -1,9 +1,4 @@
 using DG.Tweening;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -34,7 +29,7 @@ public class GameHandler : MonoBehaviour
     private void Start()
     {
         Application.targetFrameRate = 60;
-        DOTween.Init().SetCapacity(4000, 4000);
+        DOTween.Init().SetCapacity(30000, 30000);
         SceneManager.sceneLoaded += HandleOnSceneLoaded;
         InitializeOnSceneOneStart();
     }

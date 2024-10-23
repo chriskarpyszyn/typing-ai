@@ -396,6 +396,12 @@ MonoBehaviour:
   soundGod: {fileID: 8300000, guid: 66cb9fa3f146e7440ae4a6f3f9aa85ea, type: 3}
   soundHelp: {fileID: 8300000, guid: a3efed5084dc63646b01f167cf5a8f20, type: 3}
   soundTruth: {fileID: 8300000, guid: a6cbe4484c4649842aa31dcf8c7a6d74, type: 3}
+  godVol: 0.1
+  godPitch: 0.75
+  helpVol: 0.3
+  helpPitch: 1.3
+  truthVol: 0.2
+  truthPitch: 0.72
 --- !u!4 &514767256
 Transform:
   m_ObjectHideFlags: 0

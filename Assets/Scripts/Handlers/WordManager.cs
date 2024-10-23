@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class WordManager : MonoBehaviour
 {
@@ -27,6 +26,13 @@ public class WordManager : MonoBehaviour
     [SerializeField] private AudioClip soundGod;
     [SerializeField] private AudioClip soundHelp;
     [SerializeField] private AudioClip soundTruth;
+
+    public float godVol;
+    public float godPitch;
+    public float helpVol;
+    public float helpPitch;
+    public float truthVol;
+    public float truthPitch;
 
 
     private LevelManager levelManager;
@@ -76,6 +82,7 @@ public class WordManager : MonoBehaviour
 
             if (IsWordCompleted())
             {
+                PlaySpecialWordSound();
                 DestroyWord();
                 levelManager.WordCompleted();
             }
@@ -90,6 +97,24 @@ public class WordManager : MonoBehaviour
             sounds.PlaySound(audioSources, soundWrongChar, 1.2f, 0.3f);
             
             StartCoroutine(ShowTextTemporarily());
+        }
+    }
+
+    private void PlaySpecialWordSound()
+    {
+        Sounds sounds = new Sounds();
+        if (currentWord.wordString == specialWords.words[0])
+        {
+            Debug.Log("God");
+            sounds.PlaySound(audioSources, soundGod, godPitch, godVol);
+        } else if (currentWord.wordString == specialWords.words[1])
+        {
+            Debug.Log("Help");
+            sounds.PlaySound(audioSources, soundHelp, helpPitch, truthPitch);
+        } else if (currentWord.wordString == specialWords.words[2])
+        {
+            Debug.Log("Truth");
+            sounds.PlaySound(audioSources, soundTruth, truthPitch, truthVol);
         }
     }
 
@@ -139,7 +164,7 @@ public class WordManager : MonoBehaviour
     }
 
 
-    public bool IsWordCompleted()
+    private bool IsWordCompleted()
     {
         return currentWord.IsWordCompleted();
     }

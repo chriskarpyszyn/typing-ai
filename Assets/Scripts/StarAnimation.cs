@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using Mono.Cecil;
 
 public class StarAnimation : MonoBehaviour
 {
 
     [SerializeField] private float maxStarSize = 2f;
-    private float duration = 0.5f;
+    private float duration = 0.3f;
 
     private static int numberOfStars = 0;
+
+    private readonly float Z_POS = 0.007943317f;
 
     private Sequence mySeq;
 
@@ -20,14 +19,15 @@ public class StarAnimation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        float randoFloato = Random.Range(0, duration-0.35f);
+        float randoFloato = Random.Range(0, duration-0.40f);
         float randomSizeFloat = Random.Range(-randomSizeRange, randomSizeRange);
 
         Sequence mySeq = DOTween.Sequence();
         mySeq.PrependInterval(randoFloato);
         mySeq.Append(transform.DOScale(maxStarSize+randomSizeFloat, duration).SetEase(Ease.Linear));
         mySeq.Append(transform.DOScale(0f, duration).SetEase(Ease.Linear));
-        mySeq.OnComplete(MyCallback);
+        mySeq.SetLoops(-1);
+        mySeq.OnStepComplete(MyCallback);
     }
 
     // Update is called once per frame
@@ -38,35 +38,56 @@ public class StarAnimation : MonoBehaviour
 
     public void MyCallback()
     {
-        if (numberOfStars < 200)
+        this.transform.position = new Vector3(GetRandomX(), GetRandomY(), Z_POS);
+        if (numberOfStars < 5)
         {
             CreateClone();
-            int randomMax = 6;
+            CreateClone();
+            CreateClone();
+            CreateClone();
+            CreateClone();
+            CreateClone();
+            CreateClone();
+        }
+
+        if (numberOfStars < 600)
+        {
+            CreateClone();
+            int randomMax = 4;
             int randomInt = Random.Range(1, randomMax);
             if (randomInt == randomMax/2)
             {
+                CreateClone();
+                CreateClone();
                 CreateClone();
             }
 
 
         }
-        mySeq.Kill();
-        Destroy(gameObject);
-        numberOfStars--;
+        //mySeq.Kill();
+        //Destroy(gameObject);
+        //numberOfStars--;
     }
 
     private GameObject CreateClone()
     {
         numberOfStars++;
-        float canvasX = 950f*2;
-        float canvasY = 540f*2;
-        float randomX = Random.Range(0, canvasX);
-        float randomY = Random.Range(0, canvasY);
-
         GameObject newStar = Instantiate(gameObject);
         newStar.transform.SetParent(transform.parent);
-        newStar.transform.position = new Vector3(randomX, randomY, 0.007943317f);
+        newStar.transform.position = new Vector3(GetRandomX(), GetRandomY(), Z_POS);
         newStar.transform.rotation = Quaternion.Euler(0f, 0f, Random.Range(-180,180));
         return newStar;
+    }
+
+    private float GetRandomX()
+    {
+        float canvasX = 950f * 2;
+        return Random.Range(0, canvasX);
+    }
+
+    private float GetRandomY()
+    {
+        float canvasY = 540f * 2;
+        return Random.Range(0, canvasY);
     }
 }

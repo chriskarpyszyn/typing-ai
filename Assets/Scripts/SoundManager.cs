@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 
@@ -13,11 +10,13 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip backgroundMusic;
     [SerializeField] private AudioClip spaceshipHum;
     [SerializeField] private AudioClip radioSound;
+    [SerializeField] private AudioClip titleNameSfx;
 
     [SerializeField] private float titleMusicVol = 0.7f;
     [SerializeField] private float backgroundMusicVol = 0.2f;
     [SerializeField] private float spaceshipHumVol = 0.35f;
     [SerializeField] private float radioSoundVol = 0.05f;
+    [SerializeField] private float titleNameSfxVol = 0.8f;
 
     private int pitchTick = 0;
     private int pitchTickRefreshAt = 10;
@@ -61,11 +60,6 @@ public class SoundManager : MonoBehaviour
         audioSources[2].loop = true;
         audioSources[1].Play();
         audioSources[2].Play();
-    }
-
-    public void PlayErrorSound()
-    {
-
     }
 
     //private int GetPosOrNeg() { 

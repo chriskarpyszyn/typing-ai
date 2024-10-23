@@ -1,7 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 using UnityEngine;
 
 public class StarRotationAnimation : MonoBehaviour
@@ -25,8 +22,10 @@ public class StarRotationAnimation : MonoBehaviour
         {
             seq.SetLoops(0);
         }
-        seq.Append(transform.DORotate(new Vector3(0, 0, zEnd), duration, RotateMode.LocalAxisAdd).SetEase(Ease.Linear));
-        
+        if (transform != null)
+        {
+            seq.Append(transform.DORotate(new Vector3(0, 0, zEnd), duration, RotateMode.LocalAxisAdd).SetEase(Ease.Linear));
+        }
     }
 
     // Update is called once per frame

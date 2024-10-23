@@ -1,8 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor;
 using UnityEngine;
 
 public class Word
@@ -10,6 +6,7 @@ public class Word
     private WordCanvas wordCanvas;
     private List<Letter> letters;
     private GameObject wordGameObject;
+    public string wordString;
 
     private float xPos;
     private float yPos;
@@ -22,6 +19,7 @@ public class Word
 
     public Word(string word)
     {
+        wordString = word;
         letters = new List<Letter>();
         currentLetterIndex = 0;
         foreach (char c in word)

@@ -1,10 +1,5 @@
-using System;
-using Newtonsoft.Json.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour

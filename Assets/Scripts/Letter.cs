@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Unity.Profiling.Editor;
 using UnityEngine;
 
 public class Letter 

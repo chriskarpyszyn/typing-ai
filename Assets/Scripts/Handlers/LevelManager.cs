@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
 
     //TODO: I'd love to have game data centralized somewhere
-    private int wordsPerLevel = 6;
+    private int wordsPerLevel = 20;
     
     private int maxLevel = 3;
     private int currentLevel;

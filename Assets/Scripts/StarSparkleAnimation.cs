@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +18,7 @@ public class StarSparkleAnimation : MonoBehaviour
         Color noOpacity = new Color(currCol.r, currCol.g, currCol.b, 0);
         Color fullOpacity = new Color(currCol.r, currCol.g, currCol.b, 0.5f+fullOpacityRange);
 
-        float time = 0.125f;
+        float time = 0.11f;
 
         seq = DOTween.Sequence();
         seq.SetLoops(0);
@@ -39,12 +37,6 @@ public class StarSparkleAnimation : MonoBehaviour
                 .Append(image.DOColor(currCol, time));
         }
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void OnDestroy()
